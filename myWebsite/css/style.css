@@ -1,8 +1,33 @@
+#page_wrapper{
+    background-image: url("../img/default_background.jpg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: auto;
+}
+
+#header_block{
+    width: 100%
+}
+
+.header_text{
+    float: left;
+    width: 80%;
+}
+
+.header_gif{
+    margin-left: auto;
+    margin-right: 0;
+    width: 20%;
+    
+}
+
 #head{
     font-family: Arial;
     font-size: 30px;
     font-weight: 200;
-    color: #000000;
+    color: #ffffff;
     margin-top: 20px;
     width: 100%;
 }
@@ -18,6 +43,7 @@
 #menu{
     font-family: 'Courier New', Courier, monospace;
     font-size: 20px;
+    color: #ffffff;
     text-align: center;
 }
 
@@ -26,11 +52,24 @@
     padding: 20px;
     margin-left: 10px;
     margin-right: 10px;
+    color: #ffffff;
+}
+
+a:link{
+    color: #ffffff;
+}
+
+a:visited{
+    color: #ffffff;
+}
+
+a:hover{
+    color: #ffff32;
 }
 
 #body{
     font-family:Arial;
     font-size: 14px;
-    color: black;
+    color: #ffffff;
     margin-top: 50px;
 }
