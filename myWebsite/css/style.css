@@ -1,0 +1,36 @@
+#head{
+    font-family: Arial;
+    font-size: 30px;
+    font-weight: 200;
+    color: #000000;
+    margin-top: 20px;
+    width: 100%;
+}
+
+#description{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+    font-style: italic;
+    color: grey;
+    width: 100%;
+}
+
+#menu{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    text-align: center;
+}
+
+.menu_button{
+    display: inline-block;
+    padding: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#body{
+    font-family:Arial;
+    font-size: 14px;
+    color: black;
+    margin-top: 50px;
+}
