@@ -16,11 +16,16 @@
     width: 80%;
 }
 
-.header_gif{
+.wrap{
     margin-left: auto;
     margin-right: 0;
     width: 20%;
-    
+    height: 300px;
+    overflow: hidden;
+}
+
+.logoGif{
+    margin: -5px 0px 0px -5px;
 }
 
 #head{
@@ -72,4 +77,38 @@ a:hover{
     font-size: 14px;
     color: #ffffff;
     margin-top: 50px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 80%;
+    height: 20rem;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, .15);
+    
+    backdrop-filter: blur(5px);
+  }
+
+#members td{
+    border: 100px transparent;
+    padding: 10px;
+}
+
+#members tr{
+    background-color: #ffffff;
+    /* opacity: 0.5; */
+}
+
+#members tr:after{
+    opacity: 0.5;
+}
+
+.members_pic{
+    width: 500px;
+    height: auto;
+    object-fit: scale-down;
 }
