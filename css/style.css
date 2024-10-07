@@ -101,3 +101,9 @@ a:hover{
     object-fit: scale-down;
     padding: 20px;
 }
+
+.members_para{
+    width:200px;
+    margin-left: auto;
+    margin-right: auto;
+}
