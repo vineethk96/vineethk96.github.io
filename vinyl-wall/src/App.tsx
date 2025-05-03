@@ -5,13 +5,28 @@ import Record from './components/Record';
 import RecordPlayer from './components/RecordPlayer';
 import Dialog from './components/Dialog';
 
+interface RecordData {
+  id: number;
+  imageUrl: string;
+}
+
 function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRecordId, setSelectedRecordId] = useState<number | null>(null);
-  const [recordPositions, setRecordPositions] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8]);
+
+  const [records, setRecords] = useState<RecordData[]>([
+    { id: 1, imageUrl: '/images/Traveler_Album.png' },
+    { id: 2, imageUrl: '/images/HotStone_Album.png' },
+    { id: 3, imageUrl: '/images/record3.jpg' },
+    { id: 4, imageUrl: '/images/record4.jpg' },
+    { id: 5, imageUrl: '/images/record5.jpg' },
+    { id: 6, imageUrl: '/images/record6.jpg' },
+    { id: 7, imageUrl: '/images/record7.jpg' },
+    { id: 8, imageUrl: '/images/record8.jpg' },
+  ]);
 
   const moveRecord = (fromIndex: number, toIndex: number) => {
-    setRecordPositions((prev) => {
+    setRecords((prev) => {
       const updated = [...prev];
       const [moved] = updated.splice(fromIndex, 1);
       updated.splice(toIndex, 0, moved);
@@ -32,13 +47,14 @@ function App() {
   return (
     <div className="container">
       <div className="record-wall">
-        {recordPositions.map((id, index) => (
+        {records.map((record, index) => (
           <Record
-            key={id}
-            id={id}
+            key={record.id}
+            id={record.id}
             index={index}
             moveRecord={moveRecord}
             onDropToPlayer={handleDropToPlayer}
+            imageUrl={record.imageUrl}
           />
         ))}
       </div>
