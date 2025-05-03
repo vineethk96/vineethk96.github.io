@@ -1,3 +1,4 @@
+// App.tsx
 import React, { useState } from 'react';
 import './App.css';
 import Record from './components/Record';
@@ -9,31 +10,18 @@ function App() {
   const [selectedRecordId, setSelectedRecordId] = useState<number | null>(null);
   const [recordPositions, setRecordPositions] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8]);
 
-  const handleDragStart = (recordId: number) => {
-    const event = window.event as DragEvent;
-    if (event.dataTransfer) {
-      event.dataTransfer.setData('text/plain', recordId.toString());
-    }
+  const moveRecord = (fromIndex: number, toIndex: number) => {
+    setRecordPositions((prev) => {
+      const updated = [...prev];
+      const [moved] = updated.splice(fromIndex, 1);
+      updated.splice(toIndex, 0, moved);
+      return updated;
+    });
   };
 
-  const handleDrop = (recordId: number) => {
+  const handleDropToPlayer = (recordId: number) => {
     setSelectedRecordId(recordId);
     setIsDialogOpen(true);
-  };
-
-  const handleRecordDrop = (event: React.DragEvent, targetId: number) => {
-    event.preventDefault();
-    const sourceId = parseInt(event.dataTransfer.getData('text/plain'));
-    
-    // Swap positions
-    setRecordPositions(prevPositions => {
-      const newPositions = [...prevPositions];
-      const sourceIndex = newPositions.indexOf(sourceId);
-      const targetIndex = newPositions.indexOf(targetId);
-      [newPositions[sourceIndex], newPositions[targetIndex]] = 
-      [newPositions[targetIndex], newPositions[sourceIndex]];
-      return newPositions;
-    });
   };
 
   const handleCloseDialog = () => {
@@ -44,16 +32,17 @@ function App() {
   return (
     <div className="container">
       <div className="record-wall">
-        {recordPositions.map((id) => (
-          <Record 
-            key={id} 
-            id={id} 
-            onDragStart={handleDragStart}
-            onDrop={handleRecordDrop}
+        {recordPositions.map((id, index) => (
+          <Record
+            key={id}
+            id={id}
+            index={index}
+            moveRecord={moveRecord}
+            onDropToPlayer={handleDropToPlayer}
           />
         ))}
       </div>
-      <RecordPlayer onDrop={handleDrop} />
+      <RecordPlayer onDropToPlayer={handleDropToPlayer} />
       <Dialog
         isOpen={isDialogOpen}
         recordId={selectedRecordId}
@@ -63,4 +52,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

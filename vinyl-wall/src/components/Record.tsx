@@ -1,40 +1,56 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 
 interface RecordProps {
     id: number;
-    onDragStart: (id: number) => void;
-    onDrop: (event: React.DragEvent, id: number) => void;
+    index: number;
+    moveRecord: (fromIndex: number, toIndex: number) => void;
+    onDropToPlayer: (recordId: number) => void;
 }
 
-const Record: React.FC<RecordProps> = ({ id, onDragStart, onDrop }) => {
-    const handleDragStart = (event: React.DragEvent) => {
-        onDragStart(id);
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/plain', id.toString());
-    };
+const ItemType = {
+    RECORD: 'record',
+};
 
-    const handleDragOver = (event: React.DragEvent) => {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    };
+const Record: React.FC<RecordProps> = ({ id, index, moveRecord, onDropToPlayer }) => {
+    const [{ isDragging }, dragRef] = useDrag(() => ({
+        type: ItemType.RECORD,
+        item: { id, index },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    }), [id, index]);
 
-    const handleDrop = (event: React.DragEvent) => {
-        event.preventDefault();
-        onDrop(event, id);
+    const [, dropRef] = useDrop(() => ({
+        accept: ItemType.RECORD,
+        hover: (item: { id: number; index: number }) => {
+            if (item.index !== index) {
+                moveRecord(item.index, index);
+                item.index = index;
+            }
+        },
+    }), [index]);
+
+    const divRef = useRef<HTMLDivElement>(null);
+
+    // Combine both dragRef and dropRef with divRef
+    const combinedRef = (node: HTMLDivElement | null) => {
+        dragRef(node);  // Attach drag functionality
+        dropRef(node);  // Attach drop functionality
+        if (divRef.current) {
+            divRef.current = node;  // Attach divRef (if necessary for other purposes)
+        }
     };
 
     return (
         <div
+            ref={combinedRef}
             className="record"
-            draggable
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            data-record-id={id}
+            style={{ opacity: isDragging ? 0 : 1 }}
         >
             Record {id}
         </div>
     );
 };
 
-export default Record; 
+export default Record;
