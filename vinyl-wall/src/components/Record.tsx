@@ -23,10 +23,11 @@ const Record: React.FC<RecordProps> = ({ id, index, moveRecord, onDropToPlayer }
 
     const [, dropRef] = useDrop(() => ({
         accept: ItemType.RECORD,
-        hover: (item: { id: number; index: number }) => {
+        // Only move the record when the item is dropped
+        drop: (item: { id: number; index: number }) => {
             if (item.index !== index) {
-                moveRecord(item.index, index);
-                item.index = index;
+                moveRecord(item.index, index); // Swap the records only when dropped
+                item.index = index; // Update the dragged item's index
             }
         },
     }), [index]);
