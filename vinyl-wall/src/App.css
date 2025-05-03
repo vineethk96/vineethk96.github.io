@@ -25,7 +25,7 @@ body {
     padding: 20px;
 }
 
-.record {
+/* .record {
     background-color: #333;
     color: white;
     padding: 20px;
@@ -34,6 +34,22 @@ body {
     cursor: move;
     transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+} */
+
+.record {
+    width: 200px;             /* Set width to 200px */
+    height: 200px;            /* Set height to 200px */
+    background-size: cover;   /* Ensure the image covers the square without distortion */
+    background-position: center; /* Center the image within the square */
+    border-radius: 10px;      /* Optional: Add rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for a 3D effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;  /* Text color, in case you add text inside */
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Optional: add text shadow for readability */
 }
 
 .record:hover {

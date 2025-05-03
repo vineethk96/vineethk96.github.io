@@ -6,13 +6,14 @@ interface RecordProps {
     index: number;
     moveRecord: (fromIndex: number, toIndex: number) => void;
     onDropToPlayer: (recordId: number) => void;
+    imageUrl: string;  // New prop for the record image URL
 }
 
 const ItemType = {
     RECORD: 'record',
 };
 
-const Record: React.FC<RecordProps> = ({ id, index, moveRecord, onDropToPlayer }) => {
+const Record: React.FC<RecordProps> = ({ id, index, moveRecord, onDropToPlayer, imageUrl }) => {
     const [{ isDragging }, dragRef] = useDrag(() => ({
         type: ItemType.RECORD,
         item: { id, index },
@@ -23,11 +24,10 @@ const Record: React.FC<RecordProps> = ({ id, index, moveRecord, onDropToPlayer }
 
     const [, dropRef] = useDrop(() => ({
         accept: ItemType.RECORD,
-        // Only move the record when the item is dropped
         drop: (item: { id: number; index: number }) => {
             if (item.index !== index) {
-                moveRecord(item.index, index); // Swap the records only when dropped
-                item.index = index; // Update the dragged item's index
+                moveRecord(item.index, index);
+                item.index = index;
             }
         },
     }), [index]);
@@ -36,10 +36,10 @@ const Record: React.FC<RecordProps> = ({ id, index, moveRecord, onDropToPlayer }
 
     // Combine both dragRef and dropRef with divRef
     const combinedRef = (node: HTMLDivElement | null) => {
-        dragRef(node);  // Attach drag functionality
-        dropRef(node);  // Attach drop functionality
+        dragRef(node);
+        dropRef(node);
         if (divRef.current) {
-            divRef.current = node;  // Attach divRef (if necessary for other purposes)
+            divRef.current = node;
         }
     };
 
@@ -47,9 +47,12 @@ const Record: React.FC<RecordProps> = ({ id, index, moveRecord, onDropToPlayer }
         <div
             ref={combinedRef}
             className="record"
-            style={{ opacity: isDragging ? 0 : 1 }}
+            style={{
+                opacity: isDragging ? 0 : 1,
+                backgroundImage: `url(${imageUrl})`,  // Set the background image for the record
+            }}
         >
-            Record {id}
+            {/* You could add content here if needed */}
         </div>
     );
 };
