@@ -1,7 +1,7 @@
 {
   "name": "vinyl-wall",
   "version": "0.1.0",
-  "homepage": "https://vineethk96.github.io/vinyl-wall",
+  "homepage": "https://vineethk96.github.io",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -20,9 +20,9 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -b main -d build",
     "start": "react-scripts start",
-    "build": "react-scripts build && mv build ../",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
