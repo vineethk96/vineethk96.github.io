@@ -1,30 +1,37 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useDrop } from 'react-dnd';
 
 interface RecordPlayerProps {
-    onDrop: (recordId: number) => void;
+    onDropToPlayer: (recordId: number) => void;
 }
 
-const RecordPlayer: React.FC<RecordPlayerProps> = ({ onDrop }) => {
-    const handleDragOver = (event: React.DragEvent) => {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    };
+const ItemType = {
+    RECORD: 'record',
+};
 
-    const handleDrop = (event: React.DragEvent) => {
-        event.preventDefault();
-        const recordId = parseInt(event.dataTransfer.getData('text/plain'));
-        onDrop(recordId);
+const RecordPlayer: React.FC<RecordPlayerProps> = ({ onDropToPlayer }) => {
+    const [, dropRef] = useDrop(() => ({
+        accept: ItemType.RECORD,
+        drop: (item: { id: number }) => {
+            onDropToPlayer(item.id);
+        },
+    }), []);
+
+    const divRef = useRef<HTMLDivElement>(null);
+
+    // Combine both refs: the drop functionality and the div ref
+    const combinedRef = (node: HTMLDivElement | null) => {
+        dropRef(node); // Attach the drop functionality
+        if (divRef.current) {
+            divRef.current = node; // Attach to the divRef
+        }
     };
 
     return (
-        <div
-            className="record-player"
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-        >
+        <div ref={combinedRef} className="record-player">
             Record Player
         </div>
     );
 };
 
-export default RecordPlayer; 
+export default RecordPlayer;
