@@ -17,7 +17,7 @@ function App() {
   const [records, setRecords] = useState<RecordData[]>([
     { id: 1, imageUrl: '/images/Traveler_Album.png' },
     { id: 2, imageUrl: '/images/HotStone_Album.png' },
-    { id: 3, imageUrl: '/images/record3.jpg' },
+    { id: 3, imageUrl: '/images/gestureRecog_Album.png' },
     { id: 4, imageUrl: '/images/record4.jpg' },
     { id: 5, imageUrl: '/images/record5.jpg' },
     { id: 6, imageUrl: '/images/record6.jpg' },
