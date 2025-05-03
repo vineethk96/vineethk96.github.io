@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/vinyl-wall/static/css/main.367eae30.chunk.css",
-    "main.js": "/vinyl-wall/static/js/main.d500a73a.chunk.js",
-    "main.js.map": "/vinyl-wall/static/js/main.d500a73a.chunk.js.map",
-    "runtime~main.js": "/vinyl-wall/static/js/runtime~main.3c46739e.js",
-    "runtime~main.js.map": "/vinyl-wall/static/js/runtime~main.3c46739e.js.map",
-    "static/js/2.ab3b10bb.chunk.js": "/vinyl-wall/static/js/2.ab3b10bb.chunk.js",
-    "static/js/2.ab3b10bb.chunk.js.map": "/vinyl-wall/static/js/2.ab3b10bb.chunk.js.map",
-    "index.html": "/vinyl-wall/index.html",
-    "precache-manifest.3948067186cf1f98d7fb7515b7afe952.js": "/vinyl-wall/precache-manifest.3948067186cf1f98d7fb7515b7afe952.js",
-    "service-worker.js": "/vinyl-wall/service-worker.js",
-    "static/css/main.367eae30.chunk.css.map": "/vinyl-wall/static/css/main.367eae30.chunk.css.map"
+    "main.css": "/static/css/main.367eae30.chunk.css",
+    "main.js": "/static/js/main.d500a73a.chunk.js",
+    "main.js.map": "/static/js/main.d500a73a.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/js/2.ab3b10bb.chunk.js": "/static/js/2.ab3b10bb.chunk.js",
+    "static/js/2.ab3b10bb.chunk.js.map": "/static/js/2.ab3b10bb.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.7bcc1fbe281b6188ce0819dba84be71c.js": "/precache-manifest.7bcc1fbe281b6188ce0819dba84be71c.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.367eae30.chunk.css.map": "/static/css/main.367eae30.chunk.css.map"
   }
 }
