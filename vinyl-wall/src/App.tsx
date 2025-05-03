@@ -21,9 +21,9 @@ function App() {
     setIsDialogOpen(true);
   };
 
-  const handleRecordDrop = (e: React.DragEvent, targetId: number) => {
-    e.preventDefault();
-    const sourceId = parseInt(e.dataTransfer.getData('text/plain'));
+  const handleRecordDrop = (event: React.DragEvent, targetId: number) => {
+    event.preventDefault();
+    const sourceId = parseInt(event.dataTransfer.getData('text/plain'));
     
     // Swap positions
     setRecordPositions(prevPositions => {

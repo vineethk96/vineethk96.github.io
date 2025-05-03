@@ -32,16 +32,18 @@ body {
     border-radius: 8px;
     text-align: center;
     cursor: move;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .record:hover {
     transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .record.dragging {
-    opacity: 0.5;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .record-player {

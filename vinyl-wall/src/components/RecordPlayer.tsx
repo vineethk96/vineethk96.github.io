@@ -5,13 +5,14 @@ interface RecordPlayerProps {
 }
 
 const RecordPlayer: React.FC<RecordPlayerProps> = ({ onDrop }) => {
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
+    const handleDragOver = (event: React.DragEvent) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
     };
 
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        const recordId = parseInt(e.dataTransfer.getData('text/plain'));
+    const handleDrop = (event: React.DragEvent) => {
+        event.preventDefault();
+        const recordId = parseInt(event.dataTransfer.getData('text/plain'));
         onDrop(recordId);
     };
 
