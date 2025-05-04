@@ -19,7 +19,7 @@ function App() {
     { id: 2, imageUrl: '/images/HotStone_Album.png' },
     { id: 3, imageUrl: '/images/GestureRecog_Album.png' },
     { id: 4, imageUrl: '/images/WaterVisualizer_Album.png' },
-    { id: 5, imageUrl: '/images/record5.jpg' },
+    { id: 5, imageUrl: '/images/Lumos_Album.png' },
     { id: 6, imageUrl: '/images/record6.jpg' },
     { id: 7, imageUrl: '/images/record7.jpg' },
     { id: 8, imageUrl: '/images/record8.jpg' },
