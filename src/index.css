@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-sans antialiased;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+  }
+  
+  .blueprint-bg {
+    background-image: 
+      linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .circuit-trace {
+    position: relative;
+  }
+  
+  .circuit-trace::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .circuit-trace:hover::before {
+    opacity: 1;
+  }
+  
+  .data-packet {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .data-packet::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    width: 20px;
+    height: 4px;
+    background: #22c55e;
+    border-radius: 2px;
+    transform: translateY(-50%);
+    animation: dataFlow 2s ease-in-out infinite;
+  }
+}
