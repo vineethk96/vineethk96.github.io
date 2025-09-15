@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
@@ -10,8 +10,8 @@ const SystemMapD3 = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
-  // Generate graph data from centralized projects
-  const graphData = {
+  // Memoize graph data to prevent recreation on every render
+  const graphData = useMemo(() => ({
     nodes: PROJECTS.filter(project => project.title && project.mapColor).map(project => ({
       id: project.id,
       name: project.title,
@@ -21,12 +21,8 @@ const SystemMapD3 = () => {
       color: project.mapColor,
       size: project.size
     })),
-    links: SYSTEM_MAP_LINKS.filter(link => {
-      // Only include links where both source and target nodes exist
-      const nodeIds = PROJECTS.filter(p => p.title && p.mapColor).map(p => p.id);
-      return nodeIds.includes(link.source) && nodeIds.includes(link.target);
-    })
-  };
+    links: SYSTEM_MAP_LINKS
+  }), []); // Empty dependency array since PROJECTS and SYSTEM_MAP_LINKS are constants
 
   const handleNodeClick = useCallback((node) => {
     setSelectedNode(node);
@@ -182,7 +178,7 @@ const SystemMapD3 = () => {
     return () => {
       simulation.stop();
     };
-  }, [dimensions, handleNodeClick, handleBackgroundClick, graphData]);
+  }, [dimensions, handleNodeClick, handleBackgroundClick]); // Removed graphData from dependencies
 
   return (
     <div className="relative">

@@ -416,7 +416,7 @@ export const PERSONAL_STORY = {
 // System Map Links (project relationships)
 export const SYSTEM_MAP_LINKS = [
   // Research Application
-  { source: 'anemometer', target: 'ieee-robot', relationship: 'research-application' },
+  { source: 'anemometer', target: 'lumos', relationship: 'research-application' },
 
   // IoT ecosystem connections
   { source: 'lumos', target: 'hot-stone', relationship: 'iot-platform' },
