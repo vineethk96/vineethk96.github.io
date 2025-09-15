@@ -3,11 +3,49 @@
 This guide explains how to add new projects, prototypes, and blog posts to the portfolio website.
 
 ## Table of Contents
-- [Adding Projects](#adding-projects)
-- [Adding Prototypes](#adding-prototypes)
-- [Adding Blog Posts](#adding-blog-posts)
+- [Quick Start with Automation Scripts](#quick-start-with-automation-scripts)
+- [Manual Content Addition](#manual-content-addition)
+  - [Adding Projects](#adding-projects)
+  - [Adding Prototypes](#adding-prototypes)
+  - [Adding Blog Posts](#adding-blog-posts)
+- [Content Management Scripts](#content-management-scripts)
 - [Image Management](#image-management)
 - [SystemMap Configuration](#systemmap-configuration)
+
+## Quick Start with Automation Scripts
+
+The fastest way to add new content is using the automation scripts:
+
+### Adding New Content
+
+```bash
+# Navigate to your project directory
+cd /path/to/vineethk96.github.io
+
+# Run the add content script
+node scripts/add-content.js
+```
+
+The script will guide you through:
+1. Choosing content type (Project/Prototype/Blog Post)
+2. Entering all required information
+3. Automatically generating IDs and formatting
+4. Adding the content to your constants.js file
+
+### Deleting Content
+
+```bash
+# Run the delete content script
+node scripts/delete-content.js
+```
+
+The script will:
+1. Show you all existing content
+2. Let you select what to delete
+3. Remove it from constants.js and SystemMap links
+4. Provide cleanup instructions for images
+
+## Manual Content Addition
 
 ## Adding Projects
 
@@ -115,7 +153,7 @@ Edit `src/data/constants.js` and add a new blog post to the `BLOG_POSTS` array:
   date: '2024-12-15',
   readTime: '8 min read',
   category: 'IoT Architecture', // 'IoT Architecture', 'Urban IoT', 'Design Process', 'Research'
-  author: 'Vineeth Kumar', // Optional, defaults to your name
+  author: 'Vineeth Kirandumkara', // Optional, defaults to your name
   tags: ['IoT', 'Architecture', 'Scaling'],
   images: [
     {
@@ -226,6 +264,70 @@ Define relationships between projects in `SYSTEM_MAP_LINKS`:
    - Check tablet layouts
    - Verify desktop experience
 
+## Content Management Scripts
+
+### Script Features
+
+The automation scripts provide:
+
+#### Add Content Script (`scripts/add-content.js`)
+- **Interactive prompts** for all required fields
+- **Automatic ID generation** from titles
+- **Smart defaults** for dates, years, and common values
+- **Icon and color assignment** based on categories
+- **SystemMap integration** options for projects
+- **Preview before saving** to review your input
+- **Image path generation** with naming conventions
+
+#### Delete Content Script (`scripts/delete-content.js`)
+- **List all existing content** by type
+- **Safe deletion** with confirmation prompts
+- **Automatic cleanup** of SystemMap links for projects
+- **Image cleanup instructions** for manual removal
+- **Backup recommendations** before deletion
+
+### Script Usage Examples
+
+#### Adding a New IoT Project
+```bash
+node scripts/add-content.js
+# Select: 1 (Project)
+# Follow prompts for title, description, etc.
+# Script automatically:
+# - Generates ID: "smart-thermostat-iot"
+# - Assigns icon: Cpu (for IoT category)
+# - Creates image path: /projCovers/smart-thermostat-iot-cover.jpg
+# - Offers SystemMap integration
+```
+
+#### Adding a Hardware Prototype
+```bash
+node scripts/add-content.js
+# Select: 2 (Prototype)
+# Script automatically:
+# - Formats date as YYYY-MM
+# - Assigns category-appropriate tags
+# - Creates lab-style image paths
+```
+
+#### Deleting Old Content
+```bash
+node scripts/delete-content.js
+# Select content type
+# Choose from numbered list
+# Confirm deletion
+# Follow cleanup instructions
+```
+
+### Script Validation
+
+The scripts include:
+- **Input validation** for required fields
+- **Format checking** for dates, URLs, and IDs
+- **Duplicate ID prevention**
+- **Category validation** against predefined options
+- **File existence checks** before writing
+
 ## Deployment
 
 After adding content:
@@ -240,6 +342,25 @@ After adding content:
    npm run deploy
    ```
 
+## URL Structure and Navigation
+
+The portfolio now uses proper routing with unique URLs for each page:
+
+### URL Patterns
+- **Projects**: `/projects` (listing) → `/projects/{project-id}` (detail)
+- **Prototypes**: `/lab` (listing) → `/lab/{prototype-id}` (detail)  
+- **Blog Posts**: `/blog` (listing) → `/blog/{blog-id}` (detail)
+
+### Browser Navigation
+- **Back Button**: Works naturally with browser history
+- **Direct Links**: Users can bookmark and share specific project/prototype/blog URLs
+- **SEO Friendly**: Each page has its own URL for better search indexing
+
+### Navigation Features
+- Click any project card, SystemMap node, prototype card, or blog post to navigate to its detail page
+- Use browser back button or the "Back to [Section]" buttons to return
+- All navigation preserves browser history for proper user experience
+
 ## Troubleshooting
 
 ### Common Issues
@@ -253,11 +374,17 @@ After adding content:
    - Ensure project has both `mapColor` and `mapSize`
    - Check that project `id` is unique
 
-3. **Links not working:**
-   - Verify `id` fields are unique and consistent
-   - Check that referenced projects exist
+3. **Routing issues:**
+   - Verify `id` fields are unique and URL-safe (no spaces or special characters)
+   - Check that referenced projects exist in constants.js
+   - Ensure React Router is properly configured
 
-4. **Styling issues:**
+4. **Script errors:**
+   - Run scripts from the project root directory
+   - Check that Node.js is installed
+   - Verify constants.js file exists and is properly formatted
+
+5. **Styling issues:**
    - Ensure Tailwind classes are correct
    - Check for typos in color names
    - Verify responsive classes are applied

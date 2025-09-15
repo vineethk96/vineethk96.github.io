@@ -1,9 +1,11 @@
 import React, { useCallback, useRef, useEffect, useState } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { PROJECTS, SYSTEM_MAP_LINKS } from '../data/constants';
 
-const SystemMap = ({ onProjectSelect }) => {
+const SystemMap = () => {
+  const navigate = useNavigate();
   const fgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
@@ -29,17 +31,9 @@ const SystemMap = ({ onProjectSelect }) => {
   // Handle node click
   const handleNodeClick = useCallback((node) => {
     setSelectedNode(node);
-    // If onProjectSelect callback is provided, navigate to project detail
-    if (onProjectSelect) {
-      onProjectSelect(node.id);
-    } else {
-      // Focus camera on node (fallback behavior)
-      if (fgRef.current) {
-        fgRef.current.centerAt(node.x, node.y, 1000);
-        fgRef.current.zoom(2, 1000);
-      }
-    }
-  }, [onProjectSelect]);
+    // Navigate to project detail page
+    navigate(`/projects/${node.id}`);
+  }, [navigate]);
 
   // Handle background click
   const handleBackgroundClick = useCallback(() => {

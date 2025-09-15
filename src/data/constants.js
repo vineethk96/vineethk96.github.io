@@ -444,7 +444,7 @@ export const SYSTEM_MAP_LINKS = [
 
 // Prototypes Data (moved from Lab.js)
 export const PROTOTYPES = [
-  {
+{
     id: 'anemometer-breadboard',
     title: 'Anemometer Signal Conditioning',
     category: 'hardware',
@@ -647,7 +647,37 @@ export const PROTOTYPES = [
       <p>Custom Kibana dashboards provided network administrators with actionable insights into traffic patterns and potential security threats.</p>
     `,
     testResults: 'Successfully monitored 500+ network devices with 99.9% uptime and real-time alerting.'
-  }
+  },
+  {
+  id: 'ultrasonic-3d-anemometer',
+  title: 'ultrasonic 3d anemometer',
+  description: '3D anemometer to measure wind flows in urban environments.',
+  detailedDescription: 'TODO',
+  category: 'hardware',
+  date: '2025-06',
+  tags: [
+    'IoT',
+    'Electrical',
+    'Ultrasonic',
+    'Sensors'
+  ],
+  notes: 'Inductance is important.',
+  materials: [
+    'Ultrasonic sensors',
+    'ESP32',
+    'Oscilliscope',
+    'Signal Conditioning',
+    'Phase-Lock Loop'
+  ],
+  images: [
+    {
+      url: '/prototypes/ultrasonic-3d-anemometer-image.jpg',
+      alt: 'ultrasonic 3d anemometer - Prototype Image',
+      caption: 'Lab setup'
+    }
+  ],
+  testResults: 'Failed, however, learned a lot'
+}
 ];
 
 // Blog Posts Data

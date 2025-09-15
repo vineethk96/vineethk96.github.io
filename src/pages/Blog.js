@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Calendar, Clock, ArrowRight, BookOpen, Lightbulb, Cpu, Building } from 'lucide-react';
 import { BLOG_POSTS } from '../data/constants';
-import BlogDetail from './BlogDetail';
 
 const Blog = () => {
-  const [selectedBlog, setSelectedBlog] = useState(null);
-
-  // If a blog is selected, show the detail view
-  if (selectedBlog) {
-    return (
-      <BlogDetail 
-        blogId={selectedBlog} 
-        onBack={() => setSelectedBlog(null)} 
-      />
-    );
-  }
 
   // Add UI properties to blog posts for display
   const blogPosts = BLOG_POSTS.map(post => ({
@@ -78,9 +67,9 @@ const Blog = () => {
               key={post.id}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              className="group cursor-pointer"
-              onClick={() => setSelectedBlog(post.id)}
+              className="group"
             >
+              <Link to={`/blog/${post.id}`} className="block">
               <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700">
                 {/* Header with gradient */}
                 <div className={`h-2 bg-gradient-to-r ${post.color}`}></div>
@@ -144,6 +133,7 @@ const Blog = () => {
                   </div>
                 </div>
               </div>
+              </Link>
             </motion.article>
           ))}
         </motion.div>

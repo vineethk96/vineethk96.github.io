@@ -1,10 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Tag, Wrench, TestTube } from 'lucide-react';
 import { PROTOTYPES } from '../data/constants';
 import ImageCarousel from '../components/ImageCarousel';
 
-const PrototypeDetail = ({ prototypeId, onBack }) => {
+const PrototypeDetail = () => {
+  const { prototypeId } = useParams();
+  const navigate = useNavigate();
   const prototype = PROTOTYPES.find(p => p.id === prototypeId);
 
   if (!prototype) {
@@ -15,7 +18,7 @@ const PrototypeDetail = ({ prototypeId, onBack }) => {
             Prototype Not Found
           </h1>
           <button
-            onClick={onBack}
+            onClick={() => navigate('/lab')}
             className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
           >
             ← Back to Lab
@@ -49,7 +52,7 @@ const PrototypeDetail = ({ prototypeId, onBack }) => {
       {/* Back Button */}
       <motion.button
         variants={itemVariants}
-        onClick={onBack}
+        onClick={() => navigate('/lab')}
         className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mb-6 transition-colors"
       >
         <ArrowLeft size={20} />

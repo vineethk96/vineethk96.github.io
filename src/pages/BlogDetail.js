@@ -1,10 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Tag, Clock, User } from 'lucide-react';
 import { BLOG_POSTS } from '../data/constants';
 import ImageCarousel from '../components/ImageCarousel';
 
-const BlogDetail = ({ blogId, onBack }) => {
+const BlogDetail = () => {
+  const { blogId } = useParams();
+  const navigate = useNavigate();
   const blog = BLOG_POSTS.find(b => b.id === blogId);
 
   if (!blog) {
@@ -15,7 +18,7 @@ const BlogDetail = ({ blogId, onBack }) => {
             Blog Post Not Found
           </h1>
           <button
-            onClick={onBack}
+            onClick={() => navigate('/blog')}
             className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
           >
             ← Back to Blog
@@ -49,7 +52,7 @@ const BlogDetail = ({ blogId, onBack }) => {
       {/* Back Button */}
       <motion.button
         variants={itemVariants}
-        onClick={onBack}
+        onClick={() => navigate('/blog')}
         className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mb-6 transition-colors"
       >
         <ArrowLeft size={20} />
@@ -65,7 +68,7 @@ const BlogDetail = ({ blogId, onBack }) => {
         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
           <div className="flex items-center gap-1">
             <User size={16} />
-            {blog.author || 'Vineeth Kumar'}
+            {blog.author || 'Vineeth Kirandumkara'}
           </div>
           <div className="flex items-center gap-1">
             <Calendar size={16} />
@@ -245,7 +248,7 @@ console.log("Building with:", example);`}</code>
               <div>
                 <span className="font-medium text-gray-900 dark:text-white">Author:</span>
                 <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {blog.author || 'Vineeth Kumar'}
+                  {blog.author || 'Vineeth Kirandumkara'}
                 </span>
               </div>
             </div>

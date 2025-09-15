@@ -3,21 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Grid, Network } from 'lucide-react';
 import SystemMap from '../components/SystemMapD3';
 import ProjectGrid from '../components/ProjectGrid';
-import ProjectDetail from './ProjectDetail';
 
 const Projects = () => {
   const [viewMode, setViewMode] = useState('map'); // 'map' or 'grid'
-  const [selectedProject, setSelectedProject] = useState(null);
-
-  // If a project is selected, show the detail view
-  if (selectedProject) {
-    return (
-      <ProjectDetail 
-        projectId={selectedProject} 
-        onBack={() => setSelectedProject(null)} 
-      />
-    );
-  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -99,7 +87,7 @@ const Projects = () => {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
               >
-                <SystemMap onProjectSelect={setSelectedProject} />
+                <SystemMap />
               </motion.div>
             ) : (
               <motion.div

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { BookOpen, Camera, Code, Zap, Wrench, Lightbulb, Filter, ArrowRight } from 'lucide-react';
 import { PROTOTYPES } from '../data/constants';
-import PrototypeDetail from './PrototypeDetail';
 
 const Lab = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedPrototype, setSelectedPrototype] = useState(null);
 
   const categories = [
     { id: 'all', name: 'All Prototypes', icon: BookOpen },
@@ -18,16 +17,6 @@ const Lab = () => {
   const filteredPrototypes = selectedCategory === 'all' 
     ? PROTOTYPES 
     : PROTOTYPES.filter(p => p.category === selectedCategory);
-
-  // If a prototype is selected, show the detail view
-  if (selectedPrototype) {
-    return (
-      <PrototypeDetail 
-        prototypeId={selectedPrototype} 
-        onBack={() => setSelectedPrototype(null)} 
-      />
-    );
-  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -103,10 +92,10 @@ const Lab = () => {
               key={prototype.id}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              className="group cursor-pointer"
-              onClick={() => setSelectedPrototype(prototype.id)}
+              className="group"
             >
-              <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 relative">
+              <Link to={`/lab/${prototype.id}`} className="block">
+                <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 relative">
                 {/* Notebook paper effect */}
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-50/50 to-orange-50/50 dark:from-yellow-900/10 dark:to-orange-900/10 pointer-events-none"></div>
                 <div className="absolute top-0 left-8 w-0.5 h-full bg-red-200 dark:bg-red-800/50 pointer-events-none"></div>
@@ -201,7 +190,8 @@ const Lab = () => {
                     ))}
                   </div>
                 </div>
-              </div>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>

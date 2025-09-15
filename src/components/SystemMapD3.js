@@ -1,9 +1,11 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
 import { PROJECTS, SYSTEM_MAP_LINKS } from '../data/constants';
 
-const SystemMapD3 = ({ onProjectSelect }) => {
+const SystemMapD3 = () => {
+  const navigate = useNavigate();
   const svgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
@@ -28,11 +30,9 @@ const SystemMapD3 = ({ onProjectSelect }) => {
 
   const handleNodeClick = useCallback((node) => {
     setSelectedNode(node);
-    // If onProjectSelect callback is provided, navigate to project detail
-    if (onProjectSelect) {
-      onProjectSelect(node.id);
-    }
-  }, [onProjectSelect]);
+    // Navigate to project detail page
+    navigate(`/projects/${node.id}`);
+  }, [navigate]);
 
   const handleBackgroundClick = useCallback(() => {
     setSelectedNode(null);
