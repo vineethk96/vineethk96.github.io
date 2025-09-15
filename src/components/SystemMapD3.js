@@ -64,10 +64,10 @@ const SystemMapD3 = () => {
 
     // Create simulation
     const simulation = d3.forceSimulation(graphData.nodes)
-      .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(20))
-      .force("charge", d3.forceManyBody().strength(-10))
+      .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(100))
+      .force("charge", d3.forceManyBody().strength(-300))
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(d => d.size * 3));
+      .force("collision", d3.forceCollide().radius(d => (d.size || 20) + 10));
 
     // Initialize nodes with random positions within container bounds (with 25px buffer)
     graphData.nodes.forEach(node => {
@@ -85,6 +85,7 @@ const SystemMapD3 = () => {
 
     // Create links
     const link = svg.append("g")
+      .attr("class", "links")
       .selectAll("line")
       .data(graphData.links)
       .join("line")
@@ -101,8 +102,9 @@ const SystemMapD3 = () => {
         return relationshipColors[d.relationship] || '#64748b';
       })
       .attr("stroke-width", 2)
-      .attr("stroke-dasharray", "5,5")
-      .attr("opacity", 0.6);
+      .attr("stroke-dasharray", "8,4")
+      .attr("opacity", 0.7)
+      .attr("fill", "none");
 
     // Create nodes
     const node = svg.append("g")
