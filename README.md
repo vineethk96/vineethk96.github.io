@@ -1,4 +1,4 @@
-# Portfolio Website - Vineeth Krishnamurthy
+# Portfolio Website - Vineeth Kirandumkara
 
 A modern, interactive portfolio website built with React, featuring a dynamic SystemMap visualization and centralized data management. This portfolio showcases projects, experience, and skills with beautiful animations and responsive design.
 
