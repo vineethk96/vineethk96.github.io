@@ -1,115 +1,45 @@
 import React, { useCallback, useRef, useEffect, useState } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 import { motion } from 'framer-motion';
+import { PROJECTS, SYSTEM_MAP_LINKS } from '../data/constants';
 
-const SystemMap = () => {
+const SystemMap = ({ onProjectSelect }) => {
   const fgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
-  // Project data with connections
+  // Generate graph data from centralized projects
   const graphData = {
-    nodes: [
-      {
-        id: 'anemometer',
-        name: 'Smart Ultrasonic Anemometer',
-        category: 'iot-sensor',
-        description: 'IoT wind measurement system with real-time data processing',
-        technologies: ['Arduino', 'IoT', 'Cloud', 'Sensors'],
-        color: '#3b82f6',
-        size: 8
-      },
-      {
-        id: 'gesture',
-        name: 'Gesture Recognizer',
-        category: 'ml-embedded',
-        description: 'ML-powered gesture recognition using flex sensors',
-        technologies: ['ML', 'Sensors', 'Embedded', 'Arduino'],
-        color: '#8b5cf6',
-        size: 7
-      },
-      {
-        id: 'hotstone',
-        name: 'Hot Stone IoT',
-        category: 'iot-design',
-        description: 'Tactile warmth-sharing device for emotional connections',
-        technologies: ['IoT', 'Design', 'Prototyping', 'ESP32'],
-        color: '#f59e0b',
-        size: 6
-      },
-      {
-        id: 'traveler',
-        name: 'Traveler App',
-        category: 'mobile-cloud',
-        description: 'Flutter travel app with cloud backend',
-        technologies: ['Flutter', 'Supabase', 'Maps API', 'Mobile'],
-        color: '#10b981',
-        size: 7
-      },
-      {
-        id: 'lumos',
-        name: 'Lumos Lighting',
-        category: 'iot-control',
-        description: 'MQTT smart lighting with intuitive controls',
-        technologies: ['MQTT', 'Smart Home', 'Sensors', 'ESP32'],
-        color: '#f59e0b',
-        size: 6
-      },
-      {
-        id: 'dissertation',
-        name: 'Turbulent Spaces',
-        category: 'research',
-        description: 'Urban IoT research for smart city applications',
-        technologies: ['Research', 'Urban IoT', 'Architecture', 'Scalability'],
-        color: '#6366f1',
-        size: 9
-      },
-      {
-        id: 'ieee-robot',
-        name: 'IEEE Autonomous Robot',
-        category: 'embedded-systems',
-        description: 'Autonomous robot for IEEE competition',
-        technologies: ['Embedded', 'Robotics', 'C++', 'Sensors'],
-        color: '#ef4444',
-        size: 6
-      },
-      {
-        id: 'vehicle-app',
-        name: 'Vehicle Browser App',
-        category: 'mobile-cloud',
-        description: 'iOS app with AWS backend for vehicle browsing',
-        technologies: ['iOS', 'AWS', 'Swift', 'REST API'],
-        color: '#06b6d4',
-        size: 5
-      }
-    ],
-    links: [
-      // IoT ecosystem connections
-      { source: 'anemometer', target: 'dissertation', relationship: 'research-application' },
-      { source: 'hotstone', target: 'dissertation', relationship: 'research-application' },
-      { source: 'lumos', target: 'hotstone', relationship: 'iot-platform' },
-      { source: 'anemometer', target: 'lumos', relationship: 'iot-platform' },
-      
-      // Technology evolution
-      { source: 'ieee-robot', target: 'gesture', relationship: 'embedded-evolution' },
-      { source: 'gesture', target: 'anemometer', relationship: 'sensor-progression' },
-      { source: 'vehicle-app', target: 'traveler', relationship: 'mobile-evolution' },
-      
-      // System architecture connections
-      { source: 'traveler', target: 'dissertation', relationship: 'cloud-architecture' },
-      { source: 'vehicle-app', target: 'ieee-robot', relationship: 'systems-thinking' }
-    ]
+    nodes: PROJECTS.filter(project => project.title && project.mapColor).map(project => ({
+      id: project.id,
+      name: project.title,
+      category: project.category,
+      description: project.description,
+      technologies: project.technologies,
+      color: project.mapColor,
+      size: project.size
+    })),
+    links: SYSTEM_MAP_LINKS.filter(link => {
+      // Only include links where both source and target nodes exist
+      const nodeIds = PROJECTS.filter(p => p.title && p.mapColor).map(p => p.id);
+      return nodeIds.includes(link.source) && nodeIds.includes(link.target);
+    })
   };
 
   // Handle node click
   const handleNodeClick = useCallback((node) => {
     setSelectedNode(node);
-    // Focus camera on node
-    if (fgRef.current) {
-      fgRef.current.centerAt(node.x, node.y, 1000);
-      fgRef.current.zoom(2, 1000);
+    // If onProjectSelect callback is provided, navigate to project detail
+    if (onProjectSelect) {
+      onProjectSelect(node.id);
+    } else {
+      // Focus camera on node (fallback behavior)
+      if (fgRef.current) {
+        fgRef.current.centerAt(node.x, node.y, 1000);
+        fgRef.current.zoom(2, 1000);
+      }
     }
-  }, []);
+  }, [onProjectSelect]);
 
   // Handle background click
   const handleBackgroundClick = useCallback(() => {
@@ -159,8 +89,8 @@ const SystemMap = () => {
       'research-application': '#6366f1',
       'iot-platform': '#10b981',
       'embedded-evolution': '#f59e0b',
-      'sensor-progression': '#8b5cf6',
-      'mobile-evolution': '#06b6d4',
+      'sensor-system': '#8b5cf6',
+      'mobile-app': '#06b6d4',
       'cloud-architecture': '#10b981',
       'systems-thinking': '#ef4444'
     };
@@ -206,12 +136,47 @@ const SystemMap = () => {
           width={dimensions.width}
           height={dimensions.height}
           nodeCanvasObject={nodeCanvasObject}
-          linkCanvasObject={linkCanvasObject}
           onNodeClick={handleNodeClick}
           onBackgroundClick={handleBackgroundClick}
-          cooldownTicks={100}
-          d3AlphaDecay={0.02}
-          d3VelocityDecay={0.3}
+          cooldownTicks={200}
+          d3AlphaDecay={0.01}
+          d3VelocityDecay={0.4}
+          d3ReheatSimulation={false}
+          d3ForceConfig={{
+            charge: { strength: -80, distanceMax: 150 },
+            link: { distance: 40, strength: 0.8 },
+            center: { x: 0.5, y: 0.5, strength: 0.05 },
+            collision: { radius: 15, strength: 0.7 }
+          }}
+          nodeRelSize={4}
+          warmupTicks={100}
+          onNodeDrag={(node) => {
+            // Constrain node position during drag to container bounds (with 25px buffer)
+            const { width, height } = dimensions;
+            const nodeRadius = node.size || 20;
+            const buffer = 25;
+            const minX = buffer + nodeRadius;
+            const maxX = width - buffer - nodeRadius;
+            const minY = buffer + nodeRadius;
+            const maxY = height - buffer - nodeRadius;
+            node.x = Math.max(minX, Math.min(maxX, node.x));
+            node.y = Math.max(minY, Math.min(maxY, node.y));
+          }}
+          linkWidth={link => 2}
+          linkColor={link => {
+            const relationshipColors = {
+              'research-application': '#6366f1',
+              'iot-platform': '#10b981',
+              'embedded-evolution': '#f59e0b',
+              'sensor-progression': '#8b5cf6',
+              'mobile-evolution': '#06b6d4',
+              'cloud-architecture': '#10b981',
+              'systems-thinking': '#ef4444'
+            };
+            return relationshipColors[link.relationship] || '#64748b';
+          }}
+          linkLineDash={[5, 5]}
+          linkDirectionalParticles={0}
           enableNodeDrag={true}
           enableZoomInteraction={true}
           enablePanInteraction={true}

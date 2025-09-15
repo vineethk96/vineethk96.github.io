@@ -1,104 +1,38 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import * as d3 from 'd3';
+import { PROJECTS, SYSTEM_MAP_LINKS } from '../data/constants';
 
-const SystemMapD3 = () => {
+const SystemMapD3 = ({ onProjectSelect }) => {
   const svgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
-  // Project data with connections
+  // Generate graph data from centralized projects
   const graphData = {
-    nodes: [
-      {
-        id: 'anemometer',
-        name: 'Smart Ultrasonic Anemometer',
-        category: 'iot-sensor',
-        description: 'IoT wind measurement system with real-time data processing',
-        technologies: ['Arduino', 'IoT', 'Cloud', 'Sensors'],
-        color: '#3b82f6',
-        size: 8
-      },
-      {
-        id: 'gesture',
-        name: 'Gesture Recognizer',
-        category: 'ml-embedded',
-        description: 'ML-powered gesture recognition using flex sensors',
-        technologies: ['ML', 'Sensors', 'Embedded', 'Arduino'],
-        color: '#8b5cf6',
-        size: 7
-      },
-      {
-        id: 'hotstone',
-        name: 'Hot Stone IoT',
-        category: 'iot-design',
-        description: 'Tactile warmth-sharing device for emotional connections',
-        technologies: ['IoT', 'Design', 'Prototyping', 'ESP32'],
-        color: '#f59e0b',
-        size: 6
-      },
-      {
-        id: 'traveler',
-        name: 'Traveler App',
-        category: 'mobile-cloud',
-        description: 'Flutter travel app with cloud backend',
-        technologies: ['Flutter', 'Supabase', 'Maps API', 'Mobile'],
-        color: '#10b981',
-        size: 7
-      },
-      {
-        id: 'lumos',
-        name: 'Lumos Lighting',
-        category: 'iot-control',
-        description: 'MQTT smart lighting with intuitive controls',
-        technologies: ['MQTT', 'Smart Home', 'Sensors', 'ESP32'],
-        color: '#f59e0b',
-        size: 6
-      },
-      {
-        id: 'dissertation',
-        name: 'Turbulent Spaces',
-        category: 'research',
-        description: 'Urban IoT research for smart city applications',
-        technologies: ['Research', 'Urban IoT', 'Architecture', 'Scalability'],
-        color: '#6366f1',
-        size: 9
-      },
-      {
-        id: 'ieee-robot',
-        name: 'IEEE Autonomous Robot',
-        category: 'embedded-systems',
-        description: 'Autonomous robot for IEEE competition',
-        technologies: ['Embedded', 'Robotics', 'C++', 'Sensors'],
-        color: '#ef4444',
-        size: 6
-      },
-      {
-        id: 'vehicle-app',
-        name: 'Vehicle Browser App',
-        category: 'mobile-cloud',
-        description: 'iOS app with AWS backend for vehicle browsing',
-        technologies: ['iOS', 'AWS', 'Swift', 'REST API'],
-        color: '#06b6d4',
-        size: 5
-      }
-    ],
-    links: [
-      { source: 'anemometer', target: 'dissertation', relationship: 'research-application' },
-      { source: 'hotstone', target: 'dissertation', relationship: 'research-application' },
-      { source: 'lumos', target: 'hotstone', relationship: 'iot-platform' },
-      { source: 'anemometer', target: 'lumos', relationship: 'iot-platform' },
-      { source: 'ieee-robot', target: 'gesture', relationship: 'embedded-evolution' },
-      { source: 'gesture', target: 'anemometer', relationship: 'sensor-progression' },
-      { source: 'vehicle-app', target: 'traveler', relationship: 'mobile-evolution' },
-      { source: 'traveler', target: 'dissertation', relationship: 'cloud-architecture' },
-      { source: 'vehicle-app', target: 'ieee-robot', relationship: 'systems-thinking' }
-    ]
+    nodes: PROJECTS.filter(project => project.title && project.mapColor).map(project => ({
+      id: project.id,
+      name: project.title,
+      category: project.category,
+      description: project.description,
+      technologies: project.technologies,
+      color: project.mapColor,
+      size: project.size
+    })),
+    links: SYSTEM_MAP_LINKS.filter(link => {
+      // Only include links where both source and target nodes exist
+      const nodeIds = PROJECTS.filter(p => p.title && p.mapColor).map(p => p.id);
+      return nodeIds.includes(link.source) && nodeIds.includes(link.target);
+    })
   };
 
   const handleNodeClick = useCallback((node) => {
     setSelectedNode(node);
-  }, []);
+    // If onProjectSelect callback is provided, navigate to project detail
+    if (onProjectSelect) {
+      onProjectSelect(node.id);
+    }
+  }, [onProjectSelect]);
 
   const handleBackgroundClick = useCallback(() => {
     setSelectedNode(null);
@@ -130,10 +64,24 @@ const SystemMapD3 = () => {
 
     // Create simulation
     const simulation = d3.forceSimulation(graphData.nodes)
-      .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(100))
-      .force("charge", d3.forceManyBody().strength(-300))
+      .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(20))
+      .force("charge", d3.forceManyBody().strength(-10))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("collision", d3.forceCollide().radius(d => d.size * 3));
+
+    // Initialize nodes with random positions within container bounds (with 25px buffer)
+    graphData.nodes.forEach(node => {
+      if (!node.x || !node.y) {
+        const nodeRadius = node.size || 20;
+        const buffer = 25;
+        const minX = buffer + nodeRadius;
+        const maxX = width - buffer - nodeRadius;
+        const minY = buffer + nodeRadius;
+        const maxY = height - buffer - nodeRadius;
+        node.x = minX + Math.random() * (maxX - minX);
+        node.y = minY + Math.random() * (maxY - minY);
+      }
+    });
 
     // Create links
     const link = svg.append("g")
@@ -145,8 +93,8 @@ const SystemMapD3 = () => {
           'research-application': '#6366f1',
           'iot-platform': '#10b981',
           'embedded-evolution': '#f59e0b',
-          'sensor-progression': '#8b5cf6',
-          'mobile-evolution': '#06b6d4',
+          'sensor-system': '#8b5cf6',
+          'mobile-app': '#06b6d4',
           'cloud-architecture': '#10b981',
           'systems-thinking': '#ef4444'
         };
@@ -212,8 +160,15 @@ const SystemMapD3 = () => {
     }
 
     function dragged(event, d) {
-      d.fx = event.x;
-      d.fy = event.y;
+      // Constrain drag position to container boundaries (with 25px buffer)
+      const nodeRadius = d.size || 20;
+      const buffer = 25;
+      const minX = buffer + nodeRadius;
+      const maxX = width - buffer - nodeRadius;
+      const minY = buffer + nodeRadius;
+      const maxY = height - buffer - nodeRadius;
+      d.fx = Math.max(minX, Math.min(maxX, event.x));
+      d.fy = Math.max(minY, Math.min(maxY, event.y));
     }
 
     function dragended(event, d) {
@@ -225,7 +180,7 @@ const SystemMapD3 = () => {
     return () => {
       simulation.stop();
     };
-  }, [dimensions, handleNodeClick, handleBackgroundClick]);
+  }, [dimensions, handleNodeClick, handleBackgroundClick, graphData]);
 
   return (
     <div className="relative">

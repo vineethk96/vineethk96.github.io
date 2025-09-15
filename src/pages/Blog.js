@@ -1,54 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, BookOpen, Lightbulb, Cpu, Building } from 'lucide-react';
+import { BLOG_POSTS } from '../data/constants';
+import BlogDetail from './BlogDetail';
 
 const Blog = () => {
-  const blogPosts = [
-    {
-      id: 'reverse-engineering-nest',
-      title: 'Reverse-engineering Nest: Lessons in IoT Scaling',
-      excerpt: 'What we can learn from Nest\'s journey from startup prototype to Google\'s mass-market smart home ecosystem. Exploring architecture decisions that enabled millions of connected thermostats.',
-      date: '2024-12-15',
-      readTime: '8 min read',
-      category: 'IoT Architecture',
-      icon: Building,
-      tags: ['IoT', 'Scaling', 'Architecture', 'Case Study'],
-      color: 'from-blue-500 to-cyan-500'
-    },
-    {
-      id: 'urban-sensing-challenges',
-      title: 'Urban Sensing Challenges: Scaling from 1 Device → 1000',
-      excerpt: 'The technical and logistical hurdles of deploying IoT sensors across urban environments. From power management to data aggregation, lessons from real-world deployments.',
-      date: '2024-11-28',
-      readTime: '12 min read',
-      category: 'Urban IoT',
-      icon: Cpu,
-      tags: ['Urban IoT', 'Sensors', 'Deployment', 'Scalability'],
-      color: 'from-green-500 to-emerald-500'
-    },
-    {
-      id: 'system-diagrams-wireframes',
-      title: 'Why System Diagrams are as Important as Wireframes',
-      excerpt: 'In connected product design, understanding data flows and system architecture is crucial for creating seamless user experiences. How to think in systems, not just interfaces.',
-      date: '2024-11-10',
-      readTime: '6 min read',
-      category: 'Design Process',
-      icon: Lightbulb,
-      tags: ['Design', 'Systems Thinking', 'UX', 'Architecture'],
-      color: 'from-purple-500 to-pink-500'
-    },
-    {
-      id: 'dissertation-reflections',
-      title: 'Reflections from MSc Dissertation: IoT for Cities',
-      excerpt: 'Key insights from researching turbulent urban environments and connected sensing systems. How IoT can help cities become more responsive to citizen needs.',
-      date: '2024-10-22',
-      readTime: '10 min read',
-      category: 'Research',
-      icon: BookOpen,
-      tags: ['Research', 'Smart Cities', 'Urban Planning', 'IoT'],
-      color: 'from-orange-500 to-red-500'
-    }
-  ];
+  const [selectedBlog, setSelectedBlog] = useState(null);
+
+  // If a blog is selected, show the detail view
+  if (selectedBlog) {
+    return (
+      <BlogDetail 
+        blogId={selectedBlog} 
+        onBack={() => setSelectedBlog(null)} 
+      />
+    );
+  }
+
+  // Add UI properties to blog posts for display
+  const blogPosts = BLOG_POSTS.map(post => ({
+    ...post,
+    icon: post.category === 'IoT Architecture' ? Building :
+          post.category === 'Urban IoT' ? Cpu :
+          post.category === 'Design Process' ? Lightbulb :
+          BookOpen,
+    color: post.category === 'IoT Architecture' ? 'from-blue-500 to-cyan-500' :
+           post.category === 'Urban IoT' ? 'from-green-500 to-emerald-500' :
+           post.category === 'Design Process' ? 'from-purple-500 to-pink-500' :
+           'from-orange-500 to-red-500'
+  }));
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -98,7 +78,8 @@ const Blog = () => {
               key={post.id}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              className="group"
+              className="group cursor-pointer"
+              onClick={() => setSelectedBlog(post.id)}
             >
               <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700">
                 {/* Header with gradient */}
@@ -155,10 +136,10 @@ const Blog = () => {
                       </div>
                       
                       {/* Read More */}
-                      <button className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors duration-300">
+                      <div className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors duration-300">
                         <span>Read full article</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                      </button>
+                      </div>
                     </div>
                   </div>
                 </div>
