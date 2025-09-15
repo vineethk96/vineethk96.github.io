@@ -1,78 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Camera, Code, Zap, Wrench, Lightbulb, Filter } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { BookOpen, Camera, Code, Zap, Wrench, Lightbulb, Filter, ArrowRight } from 'lucide-react';
+import { PROTOTYPES } from '../data/constants';
 
 const Lab = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-
-  const prototypes = [
-    {
-      id: 'anemometer-breadboard',
-      title: 'Anemometer Signal Conditioning',
-      category: 'hardware',
-      date: '2024-03',
-      description: 'Early breadboard prototype for ultrasonic wind sensor signal conditioning circuit. Testing amplification and filtering stages.',
-      image: '/api/placeholder/400/300',
-      tags: ['Breadboard', 'Signal Processing', 'Sensors', 'Analog'],
-      notes: 'Initial tests showed noise issues at high gain. Added low-pass filter at 1kHz cutoff.',
-      materials: ['Op-amps', 'Resistors', 'Capacitors', 'Ultrasonic sensors']
-    },
-    {
-      id: 'gesture-pipeline',
-      title: 'Gesture Recognition Pipeline',
-      category: 'software',
-      date: '2024-02',
-      description: 'Machine learning pipeline for processing flex sensor data into gesture classifications.',
-      image: '/api/placeholder/400/300',
-      tags: ['ML', 'Python', 'Data Processing', 'Classification'],
-      notes: 'Achieved 95% accuracy with SVM classifier. Real-time processing at 50Hz sample rate.',
-      materials: ['Flex sensors', 'Arduino', 'Python', 'Scikit-learn']
-    },
-    {
-      id: 'hotstone-mockup',
-      title: 'Hot Stone Interface Mockups',
-      category: 'design',
-      date: '2024-01',
-      description: 'Tactile interface explorations for temperature-based emotional communication device.',
-      image: '/api/placeholder/400/300',
-      tags: ['UI/UX', 'Tactile', 'Emotional Design', 'Prototyping'],
-      notes: 'Users preferred gradual temperature changes over sudden shifts. Optimal range: 25-35°C.',
-      materials: ['Peltier elements', '3D printed housing', 'Temperature sensors']
-    },
-    {
-      id: 'lumos-rotary',
-      title: 'Lumos Rotary Control Demo',
-      category: 'hardware',
-      date: '2023-12',
-      description: 'Magnetic rotary encoder with haptic feedback for intuitive lighting control.',
-      image: '/api/placeholder/400/300',
-      tags: ['Rotary Encoder', 'Haptics', 'Smart Home', 'UI'],
-      notes: 'Magnetometer-based sensing eliminates mechanical wear. Added vibration feedback.',
-      materials: ['Magnetometer', 'Vibration motor', 'ESP32', 'Custom PCB']
-    },
-    {
-      id: 'arduino-concepts',
-      title: 'Arduino Concept Builds',
-      category: 'hardware',
-      date: '2017-08',
-      description: 'Various Arduino-based prototypes from Joba Design internship exploring user interaction.',
-      image: '/api/placeholder/400/300',
-      tags: ['Arduino', 'Prototyping', 'User Testing', 'Sensors'],
-      notes: 'Rapid iteration cycles. Focus on user feedback and ergonomic considerations.',
-      materials: ['Arduino Uno', 'Various sensors', 'LEDs', 'Buttons']
-    },
-    {
-      id: 'network-dashboard',
-      title: 'Network Monitoring Dashboard',
-      category: 'software',
-      date: '2016-06',
-      description: 'Real-time network traffic visualization dashboard using ELK stack.',
-      image: '/api/placeholder/400/300',
-      tags: ['ELK Stack', 'Visualization', 'Networking', 'Dashboard'],
-      notes: 'Processed 10GB+ daily logs. Custom Kibana visualizations for traffic patterns.',
-      materials: ['Elasticsearch', 'Logstash', 'Kibana', 'Network routers']
-    }
-  ];
 
   const categories = [
     { id: 'all', name: 'All Prototypes', icon: BookOpen },
@@ -82,8 +15,8 @@ const Lab = () => {
   ];
 
   const filteredPrototypes = selectedCategory === 'all' 
-    ? prototypes 
-    : prototypes.filter(p => p.category === selectedCategory);
+    ? PROTOTYPES 
+    : PROTOTYPES.filter(p => p.category === selectedCategory);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -161,7 +94,8 @@ const Lab = () => {
               whileHover={{ y: -5 }}
               className="group"
             >
-              <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 relative">
+              <Link to={`/lab/${prototype.id}`} className="block">
+                <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 relative">
                 {/* Notebook paper effect */}
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-50/50 to-orange-50/50 dark:from-yellow-900/10 dark:to-orange-900/10 pointer-events-none"></div>
                 <div className="absolute top-0 left-8 w-0.5 h-full bg-red-200 dark:bg-red-800/50 pointer-events-none"></div>
@@ -225,7 +159,7 @@ const Lab = () => {
                   </div>
 
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {prototype.tags.map((tag) => (
                       <span
                         key={tag}
@@ -234,6 +168,17 @@ const Lab = () => {
                         {tag}
                       </span>
                     ))}
+                  </div>
+
+                  {/* View Details Button */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      Click to view details
+                    </span>
+                    <div className="flex items-center gap-1 text-primary-600 dark:text-primary-400 group-hover:text-primary-700 dark:group-hover:text-primary-300 transition-colors">
+                      <span className="text-sm font-medium">View Lab Notes</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
                 </div>
 
@@ -245,7 +190,8 @@ const Lab = () => {
                     ))}
                   </div>
                 </div>
-              </div>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>

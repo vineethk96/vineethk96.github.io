@@ -6,9 +6,9 @@ import { WORK_EXPERIENCE, EDUCATION } from '../data/constants';
 const Experience = () => {
   // Use centralized work experience data and map to the format expected by the component
   const experiences = WORK_EXPERIENCE.map(exp => ({
-    company: exp.company || exp.title,
-    position: exp.position || exp.subtitle,
-    period: exp.period || exp.year,
+    company: exp.company,
+    position: exp.position,
+    period: exp.year,
     location: exp.location,
     type: exp.type === 'work' ? 'Full-time' : exp.type === 'project' ? 'Academic Project' : 'Internship',
     description: exp.description,

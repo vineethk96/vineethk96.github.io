@@ -1,74 +1,38 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Award, Globe, Code, Zap, Users, BookOpen, Target } from 'lucide-react';
+import { GraduationCap, Award, Globe, Code, Zap, Users, Target } from 'lucide-react';
+import { EDUCATION, SKILLS, CERTIFICATIONS, PERSONAL_STORY } from '../data/constants';
 
 const About = () => {
-  const education = [
-    {
-      institution: 'University College London (UCL)',
-      degree: 'MSc Connected Environments',
-      period: '2024 – 2025',
-      location: 'London, UK',
-      description: 'Specialized in IoT systems, urban sensing, and connected product design. Focus on scalable architectures for smart city applications.',
-      highlights: [
-        'Urban IoT systems and smart city technologies',
-        'Connected product design and user experience',
-        'Scalable architecture for mass-market deployment',
-        'Research in turbulent urban environments'
-      ],
-      color: 'bg-blue-500'
-    },
-    {
-      institution: 'Virginia Tech',
-      degree: 'BSc Computer Engineering',
-      period: '2014 – 2019',
-      location: 'Blacksburg, VA',
-      description: 'Comprehensive foundation in computer systems, embedded programming, and digital design. Active in IEEE and robotics competitions.',
-      highlights: [
-        'Computer systems architecture and design',
-        'Embedded systems and microcontroller programming',
-        'Digital signal processing and communications',
-        'IEEE Southeastcon robotics competition leadership'
-      ],
-      color: 'bg-orange-500'
-    }
-  ];
+  // Map education data from constants to component format
+  const education = EDUCATION.map(edu => ({
+    institution: edu.title,
+    degree: edu.subtitle,
+    period: edu.year,
+    location: edu.location,
+    description: edu.description,
+    highlights: edu.highlights,
+    color: edu.color
+  }));
 
-  const skills = [
-    {
-      category: 'Embedded Systems',
-      icon: Zap,
-      skills: ['C/C++', 'FreeRTOS', 'ESP32/Arduino', 'PCB Design', 'Signal Processing'],
-      color: 'text-blue-500'
-    },
-    {
-      category: 'IoT & Cloud',
-      icon: Globe,
-      skills: ['MQTT', 'AWS/Cloud Services', 'REST APIs', 'Data Analytics', 'System Architecture'],
-      color: 'text-green-500'
-    },
-    {
-      category: 'Software Development',
-      icon: Code,
-      skills: ['Python', 'JavaScript/React', 'Flutter', 'Git', 'Agile/Scrum'],
-      color: 'text-purple-500'
-    },
-    {
-      category: 'Design & Prototyping',
-      icon: Target,
-      skills: ['Product Design', 'User Research', 'CAD/3D Modeling', 'Rapid Prototyping', 'UI/UX'],
-      color: 'text-pink-500'
-    }
-  ];
+  // Map skills data from constants to component format
+  const skills = Object.entries(SKILLS).map(([category, data]) => {
+    const IconComponent = {
+      'Zap': Zap,
+      'Globe': Globe,
+      'Code': Code,
+      'Target': Target
+    }[data.icon];
+    
+    return {
+      category,
+      icon: IconComponent,
+      skills: data.skills,
+      color: data.color
+    };
+  });
 
-  const certifications = [
-    {
-      name: 'Autodesk Inventor Professional',
-      issuer: 'Autodesk',
-      year: '2019',
-      description: 'Advanced 3D CAD design and mechanical engineering'
-    }
-  ];
+  const certifications = CERTIFICATIONS;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -106,9 +70,7 @@ const About = () => {
             About <span className="gradient-text">Me</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-            I'm an embedded systems engineer transitioning to IoT architecture and product design. 
-            My journey spans from low-level firmware to cloud-connected systems, with a passion for 
-            creating technology that scales from prototype to mass market.
+            {PERSONAL_STORY.introduction}
           </p>
         </motion.div>
 
@@ -120,22 +82,11 @@ const About = () => {
               <span>My Journey</span>
             </h2>
             <div className="prose prose-lg dark:prose-invert max-w-none">
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-                My path in technology began with a fascination for how things work at the most fundamental level. 
-                During my computer engineering studies at Virginia Tech, I dove deep into embedded systems, 
-                digital design, and the intricate dance between hardware and software.
-              </p>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-                Over the past five years, I've worked across various startups and established companies, 
-                building everything from UAV control systems to battery safety monitors. Each role has 
-                expanded my perspective from component-level optimization to system-level architecture.
-              </p>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Now, pursuing my MSc in Connected Environments at UCL, I'm focused on the bigger picture: 
-                how connected devices can create meaningful experiences for people and communities. I'm 
-                passionate about bridging the gap between technical capability and human need, designing 
-                IoT systems that are not just functional, but truly valuable at scale.
-              </p>
+              {PERSONAL_STORY.journey.map((paragraph, index) => (
+                <p key={index} className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                  {paragraph}
+                </p>
+              ))}
             </div>
           </div>
         </motion.div>
@@ -267,10 +218,7 @@ const About = () => {
               Looking Forward
             </h2>
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
-              I'm excited to join teams that are building the next generation of connected products. 
-              My goal is to work at the intersection of IoT systems, product design, and user experience, 
-              creating technology that seamlessly integrates into people's lives and scales to serve 
-              millions of users worldwide.
+              {PERSONAL_STORY.vision}
             </p>
           </div>
         </motion.div>
