@@ -1,107 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ExternalLink, Github, ArrowRight, Wind, Hand, Thermometer, MapPin, Lightbulb, BookOpen, Bot, Smartphone } from 'lucide-react';
+import { ExternalLink, Github, ArrowRight } from 'lucide-react';
+import { PROJECTS } from '../data/constants';
 
 const ProjectGrid = () => {
-  const projects = [
-    {
-      id: 'anemometer',
-      title: 'Smart Ultrasonic Anemometer',
-      description: 'IoT wind measurement system with real-time data processing and cloud analytics for urban sensing applications. Features custom PCB design and wireless connectivity.',
-      icon: Wind,
-      tags: ['IoT', 'Sensors', 'Cloud', 'Analytics', 'PCB Design'],
-      color: 'from-blue-500 to-cyan-500',
-      status: 'Completed',
-      year: '2024',
-      github: 'https://github.com/vineethk96/anemometer',
-      demo: null
-    },
-    {
-      id: 'gesture-recognizer',
-      title: 'Gesture Recognizer',
-      description: 'ML-powered gesture recognition using flex sensors and embedded processing for intuitive human-computer interaction. Real-time classification with 95% accuracy.',
-      icon: Hand,
-      tags: ['ML', 'Sensors', 'Embedded', 'HCI', 'Arduino'],
-      color: 'from-purple-500 to-pink-500',
-      status: 'Completed',
-      year: '2024',
-      github: 'https://github.com/vineethk96/gesture-recognizer',
-      demo: null
-    },
-    {
-      id: 'hot-stone',
-      title: 'Hot Stone IoT Device',
-      description: 'Tactile warmth-sharing device connecting people through temperature, exploring emotional IoT interactions and long-distance relationships.',
-      icon: Thermometer,
-      tags: ['IoT', 'Design', 'Emotional Tech', 'Prototyping', 'ESP32'],
-      color: 'from-orange-500 to-red-500',
-      status: 'Completed',
-      year: '2024',
-      github: 'https://github.com/vineethk96/hot-stone',
-      demo: null
-    },
-    {
-      id: 'traveler',
-      title: 'Traveler App',
-      description: 'Flutter-based travel companion with Supabase backend and Google Maps integration for seamless journey planning and expense tracking.',
-      icon: MapPin,
-      tags: ['Flutter', 'Supabase', 'Maps API', 'Mobile', 'Full-Stack'],
-      color: 'from-green-500 to-emerald-500',
-      status: 'Completed',
-      year: '2024',
-      github: 'https://github.com/vineethk96/traveler-app',
-      demo: 'https://traveler-demo.netlify.app'
-    },
-    {
-      id: 'lumos',
-      title: 'Lumos Lighting System',
-      description: 'MQTT-controlled smart lighting with rotary interfaces and magnetometer sensing for intuitive control. Features custom hardware and mobile app.',
-      icon: Lightbulb,
-      tags: ['MQTT', 'Smart Home', 'Sensors', 'UI', 'ESP32'],
-      color: 'from-yellow-500 to-orange-500',
-      status: 'Completed',
-      year: '2024',
-      github: 'https://github.com/vineethk96/lumos-lighting',
-      demo: null
-    },
-    {
-      id: 'dissertation',
-      title: 'Turbulent Spaces Dissertation',
-      description: 'Research on IoT systems for urban environments, exploring scalable architectures for smart city applications and citizen engagement.',
-      icon: BookOpen,
-      tags: ['Research', 'Urban IoT', 'Architecture', 'Scalability', 'Smart Cities'],
-      color: 'from-indigo-500 to-purple-500',
-      status: 'In Progress',
-      year: '2024-2025',
-      github: null,
-      demo: null
-    },
-    {
-      id: 'ieee-robot',
-      title: 'IEEE Autonomous Robot',
-      description: 'Autonomous robot designed for IEEE Southeastcon competition. Features computer vision, path planning, and embedded control systems.',
-      icon: Bot,
-      tags: ['Robotics', 'Computer Vision', 'Embedded', 'C++', 'Competition'],
-      color: 'from-red-500 to-pink-500',
-      status: 'Completed',
-      year: '2017-2018',
-      github: 'https://github.com/vineethk96/ieee-robot',
-      demo: null
-    },
-    {
-      id: 'vehicle-app',
-      title: 'Vehicle Browser App',
-      description: 'iOS application with AWS backend for vehicle browsing and management. Features secure authentication and real-time data synchronization.',
-      icon: Smartphone,
-      tags: ['iOS', 'AWS', 'Swift', 'REST API', 'Mobile'],
-      color: 'from-cyan-500 to-blue-500',
-      status: 'Completed',
-      year: '2018',
-      github: null,
-      demo: null
-    }
-  ];
+  const projects = PROJECTS;
 
   const containerVariants = {
     hidden: { opacity: 0 },

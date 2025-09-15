@@ -1,146 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, Calendar, MapPin, ExternalLink, Award, Users, Code, Zap } from 'lucide-react';
+import { Briefcase, Calendar, MapPin, ExternalLink, Award, Code } from 'lucide-react';
+import { WORK_EXPERIENCE, EDUCATION } from '../data/constants';
 
 const Experience = () => {
-  const experiences = [
-    {
-      company: 'Grenova',
-      position: 'Embedded Software Engineer',
-      period: 'Nov 2023 – Aug 2024',
-      location: 'Remote',
-      type: 'Full-time',
-      description: 'Led firmware development for TipNovus 2.0, a laboratory pipette tip washing system.',
-      achievements: [
-        'Co-developed firmware for TipNovus 2.0 laboratory equipment',
-        'Built dependency-managed CMake architecture spanning 30+ repositories',
-        'Developed drivers for temperature/humidity sensors, SD/MMC, and EEPROM',
-        'Implemented memory pool management and secure JSON storage systems',
-        'Authored comprehensive system diagnostics and command protocols'
-      ],
-      technologies: ['C/C++', 'CMake', 'FreeRTOS', 'ESP32', 'JSON', 'Embedded Systems'],
-      color: 'bg-green-500'
-    },
-    {
-      company: 'Iontra Inc.',
-      position: 'Embedded Software Engineer',
-      period: 'Nov 2022 – Nov 2023',
-      location: 'Remote',
-      type: 'Full-time',
-      description: 'Developed firmware for battery safety systems and automated testing infrastructure.',
-      achievements: [
-        'Automated firmware verification process for 2000+ circuit boards',
-        'Developed firmware for pouch cell safety metrics monitoring',
-        'Modularized RTOS architecture for cross-platform OS support',
-        'Onboarded new engineering hires and led architecture reviews',
-        'Contributed to pull request reviews and code quality standards'
-      ],
-      technologies: ['C/C++', 'RTOS', 'Battery Management', 'Automated Testing', 'Firmware'],
-      color: 'bg-blue-500'
-    },
-    {
-      company: 'Platform Aerospace',
-      position: 'Embedded Systems Engineer',
-      period: 'Feb 2021 – Sept 2023',
-      location: 'Remote',
-      type: 'Full-time',
-      description: 'Architected UAV control systems and embedded web servers for drone orchestration.',
-      achievements: [
-        'Rewrote UAV controller codebase achieving 50% memory reduction and 40% performance improvement',
-        'Built embedded web server for UAS orchestration on Teensy 4.1 platform',
-        'Led Hardware-in-the-Loop (HiL) simulation development for UAV testing',
-        'Established communication protocol documentation and code review processes',
-        'Implemented agile development workflows for embedded systems team'
-      ],
-      technologies: ['C/C++', 'Teensy', 'Web Servers', 'UAV Systems', 'HiL Testing', 'Agile'],
-      color: 'bg-purple-500'
-    },
-    {
-      company: 'Daimler Trucks North America',
-      position: 'Engineer I',
-      period: 'Jul 2019 – Feb 2021',
-      location: 'Portland, OR',
-      type: 'Full-time',
-      description: 'Developed automation tools and led process improvement initiatives.',
-      achievements: [
-        'Built Python + Alteryx automation tool for cross-team validation workflows',
-        'Proposed and led organizational transition from Waterfall to Agile methodology',
-        'Developed Skill Matrix framework for training and competency mapping',
-        'Streamlined validation processes reducing manual work by 60%',
-        'Facilitated cross-functional team collaboration and knowledge sharing'
-      ],
-      technologies: ['Python', 'Alteryx', 'Process Automation', 'Agile', 'Data Analysis'],
-      color: 'bg-red-500'
-    },
-    {
-      company: 'CapTech Consulting',
-      position: 'Software Engineering Intern',
-      period: 'May – Aug 2018',
-      location: 'Richmond, VA',
-      type: 'Internship',
-      description: 'Developed iOS application with AWS backend for vehicle management system.',
-      achievements: [
-        'Built iOS application with AWS backend for vehicle browsing and management',
-        'Implemented secure base-32 authentication system for employee access',
-        'Coordinated REST API refactor with backend development team',
-        'Delivered critical bug fixes within 24-hour demo deadlines',
-        'Collaborated with UX designers on mobile interface optimization'
-      ],
-      technologies: ['iOS', 'Swift', 'AWS', 'REST API', 'Mobile Development'],
-      color: 'bg-cyan-500'
-    },
-    {
-      company: 'GM IEEE Senior Design',
-      position: 'Lead Engineer',
-      period: 'Aug 2017 – May 2018',
-      location: 'Virginia Tech',
-      type: 'Academic Project',
-      description: 'Led autonomous robot development for IEEE Southeastcon competition.',
-      achievements: [
-        'Designed and built autonomous robot for IEEE Southeastcon competition',
-        'Led CAD design, embedded software development, and system testing',
-        'Implemented computer vision and path planning algorithms',
-        'Managed interdisciplinary team of 6 engineering students',
-        'Achieved top 10 finish in regional IEEE competition'
-      ],
-      technologies: ['C++', 'Computer Vision', 'Robotics', 'CAD', 'Embedded Systems'],
-      color: 'bg-orange-500'
-    },
-    {
-      company: 'Joba Design',
-      position: 'Engineering Intern',
-      period: 'Jun – Aug 2017',
-      location: 'Virginia Beach, VA',
-      type: 'Internship',
-      description: 'Bridged design and engineering through rapid prototyping and user research.',
-      achievements: [
-        'Bridged design and engineering teams through rapid prototyping',
-        'Built Arduino-based interactive devices for user experience testing',
-        'Conducted ergonomics research and usability studies',
-        'Developed proof-of-concept prototypes for client presentations',
-        'Collaborated with industrial designers on product development'
-      ],
-      technologies: ['Arduino', 'Prototyping', 'UX Research', 'Product Design', 'C++'],
-      color: 'bg-pink-500'
-    },
-    {
-      company: 'Communication Network Services',
-      position: 'Software Engineering Intern',
-      period: 'Feb – Sept 2016',
-      location: 'Virginia Beach, VA',
-      type: 'Internship',
-      description: 'Developed network monitoring dashboards and traffic analysis tools.',
-      achievements: [
-        'Built UI dashboard for real-time network log monitoring',
-        'Researched and implemented ELK stack for log aggregation',
-        'Created Kibana visualizations for network traffic analysis',
-        'Performed network router testing and performance optimization',
-        'Developed traffic heatmaps for network capacity planning'
-      ],
-      technologies: ['ELK Stack', 'Kibana', 'Network Monitoring', 'UI Development', 'Data Visualization'],
-      color: 'bg-indigo-500'
-    }
-  ];
+  // Use centralized work experience data and map to the format expected by the component
+  const experiences = WORK_EXPERIENCE.map(exp => ({
+    company: exp.company || exp.title,
+    position: exp.position || exp.subtitle,
+    period: exp.period || exp.year,
+    location: exp.location,
+    type: exp.type === 'work' ? 'Full-time' : exp.type === 'project' ? 'Academic Project' : 'Internship',
+    description: exp.description,
+    achievements: exp.achievements || [],
+    technologies: exp.technologies || [],
+    color: exp.color
+  }));
 
   const containerVariants = {
     hidden: { opacity: 0 },

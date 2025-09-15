@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Linkedin, Github, Send, MessageSquare, Calendar, ExternalLink } from 'lucide-react';
+import { Send, MessageSquare, Calendar, ExternalLink } from 'lucide-react';
+import { CONTACT_INFO, EXTERNAL_LINKS } from '../data/constants';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -23,36 +24,7 @@ const Contact = () => {
     console.log('Form submitted:', formData);
   };
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: 'Email',
-      value: 'vineeth.kirandumkara@ucl.ac.uk',
-      href: 'mailto:vineeth.kirandumkara@ucl.ac.uk',
-      color: 'text-blue-500'
-    },
-    {
-      icon: MapPin,
-      label: 'Location',
-      value: 'London, UK',
-      href: null,
-      color: 'text-green-500'
-    },
-    {
-      icon: Linkedin,
-      label: 'LinkedIn',
-      value: 'linkedin.com/in/vineethk96',
-      href: 'https://linkedin.com/in/vineethk96',
-      color: 'text-blue-600'
-    },
-    {
-      icon: Github,
-      label: 'GitHub',
-      value: 'github.com/vineethk96',
-      href: 'https://github.com/vineethk96',
-      color: 'text-gray-700 dark:text-gray-300'
-    }
-  ];
+  const contactInfo = CONTACT_INFO;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -139,7 +111,7 @@ const Contact = () => {
               <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <a
-                  href="https://calendly.com/vineethk96"
+                  href={EXTERNAL_LINKS.calendly}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-3 p-4 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors duration-300"
@@ -148,7 +120,7 @@ const Contact = () => {
                   <span className="font-medium">Schedule a Call</span>
                 </a>
                 <a
-                  href="/resume.pdf"
+                  href={EXTERNAL_LINKS.resume}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-3 p-4 bg-accent-50 dark:bg-accent-900/20 text-accent-700 dark:text-accent-300 rounded-lg hover:bg-accent-100 dark:hover:bg-accent-900/30 transition-colors duration-300"

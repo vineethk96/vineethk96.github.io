@@ -1,90 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Briefcase, Code, Zap } from 'lucide-react';
+import { TIMELINE_DATA } from '../data/constants';
 
 const TimelineSnapshot = () => {
-  const timelineData = [
-    {
-      year: '2014–2019',
-      title: 'Virginia Tech',
-      subtitle: 'BSc Computer Engineering',
-      icon: GraduationCap,
-      color: 'bg-blue-500',
-      type: 'education'
-    },
-    {
-      year: '2016',
-      title: 'Comm. Network Services',
-      subtitle: 'Intern (Networking/UI/ELK)',
-      icon: Code,
-      color: 'bg-green-500',
-      type: 'work'
-    },
-    {
-      year: '2017',
-      title: 'Joba Design',
-      subtitle: 'Intern (Design + Arduino prototyping)',
-      icon: Zap,
-      color: 'bg-purple-500',
-      type: 'work'
-    },
-    {
-      year: '2017–2018',
-      title: 'GM IEEE Senior Design',
-      subtitle: 'Autonomous Robot',
-      icon: Code,
-      color: 'bg-orange-500',
-      type: 'project'
-    },
-    {
-      year: '2018',
-      title: 'CapTech',
-      subtitle: 'Intern (iOS + AWS App Dev)',
-      icon: Code,
-      color: 'bg-cyan-500',
-      type: 'work'
-    },
-    {
-      year: '2019–2021',
-      title: 'Daimler Trucks',
-      subtitle: 'Engineer I',
-      icon: Briefcase,
-      color: 'bg-red-500',
-      type: 'work'
-    },
-    {
-      year: '2021–2023',
-      title: 'Platform Aerospace',
-      subtitle: 'Embedded Systems Engineer',
-      icon: Briefcase,
-      color: 'bg-indigo-500',
-      type: 'work'
-    },
-    {
-      year: '2022–2023',
-      title: 'Iontra Inc.',
-      subtitle: 'Embedded SW Engineer',
-      icon: Briefcase,
-      color: 'bg-pink-500',
-      type: 'work'
-    },
-    {
-      year: '2023–2024',
-      title: 'Grenova',
-      subtitle: 'Embedded SW Engineer',
-      icon: Briefcase,
-      color: 'bg-yellow-500',
-      type: 'work'
-    },
-    {
-      year: '2024–2025',
-      title: 'UCL',
-      subtitle: 'MSc Connected Environments',
-      icon: GraduationCap,
-      color: 'bg-emerald-500',
-      type: 'education'
-    }
-  ];
+  const timelineData = TIMELINE_DATA;
 
   const containerVariants = {
     hidden: { opacity: 0 },

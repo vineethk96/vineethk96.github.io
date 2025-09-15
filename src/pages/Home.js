@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Download, ArrowRight, Cpu, Cloud, Smartphone, Users } from 'lucide-react';
+import { ArrowRight, Cpu, Cloud, Smartphone, Users, Zap, Download } from 'lucide-react';
+import { SOCIAL_LINKS } from '../data/constants';
 import AnimatedSystemFlow from '../components/AnimatedSystemFlow';
 import TimelineSnapshot from '../components/TimelineSnapshot';
 import FeaturedProjects from '../components/FeaturedProjects';
@@ -112,7 +113,7 @@ const Home = () => {
               Contact Me
             </Link>
             <a
-              href="https://linkedin.com/in/vineethk96"
+              href={SOCIAL_LINKS.linkedin.url}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 border-2 border-accent-600 text-accent-600 hover:bg-accent-600 hover:text-white rounded-lg font-semibold transition-all duration-300 transform hover:-translate-y-1"
@@ -120,7 +121,7 @@ const Home = () => {
               LinkedIn
             </a>
             <a
-              href="https://github.com/vineethk96"
+              href={SOCIAL_LINKS.github.url}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 border-2 border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-600 hover:text-white rounded-lg font-semibold transition-all duration-300 transform hover:-translate-y-1"

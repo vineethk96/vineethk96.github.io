@@ -1,59 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ExternalLink, Github, ArrowRight, Wind, Hand, Thermometer, MapPin, Lightbulb, BookOpen } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { PROJECTS } from '../data/constants';
 
 const FeaturedProjects = () => {
-  const projects = [
-    {
-      title: 'Smart Ultrasonic Anemometer',
-      description: 'IoT wind measurement system with real-time data processing and cloud analytics for urban sensing applications.',
-      icon: Wind,
-      tags: ['IoT', 'Sensors', 'Cloud', 'Analytics'],
-      color: 'from-blue-500 to-cyan-500',
-      link: '/projects/anemometer'
-    },
-    {
-      title: 'Gesture Recognizer',
-      description: 'ML-powered gesture recognition using flex sensors and embedded processing for intuitive human-computer interaction.',
-      icon: Hand,
-      tags: ['ML', 'Sensors', 'Embedded', 'HCI'],
-      color: 'from-purple-500 to-pink-500',
-      link: '/projects/gesture-recognizer'
-    },
-    {
-      title: 'Hot Stone IoT Device',
-      description: 'Tactile warmth-sharing device connecting people through temperature, exploring emotional IoT interactions.',
-      icon: Thermometer,
-      tags: ['IoT', 'Design', 'Emotional Tech', 'Prototyping'],
-      color: 'from-orange-500 to-red-500',
-      link: '/projects/hot-stone'
-    },
-    {
-      title: 'Traveler App',
-      description: 'Flutter-based travel companion with Supabase backend and Google Maps integration for seamless journey planning.',
-      icon: MapPin,
-      tags: ['Flutter', 'Supabase', 'Maps API', 'Mobile'],
-      color: 'from-green-500 to-emerald-500',
-      link: '/projects/traveler'
-    },
-    {
-      title: 'Lumos Lighting System',
-      description: 'MQTT-controlled smart lighting with rotary interfaces and magnetometer sensing for intuitive control.',
-      icon: Lightbulb,
-      tags: ['MQTT', 'Smart Home', 'Sensors', 'UI'],
-      color: 'from-yellow-500 to-orange-500',
-      link: '/projects/lumos'
-    },
-    {
-      title: 'Turbulent Spaces Dissertation',
-      description: 'Research on IoT systems for urban environments, exploring scalable architectures for smart city applications.',
-      icon: BookOpen,
-      tags: ['Research', 'Urban IoT', 'Architecture', 'Scalability'],
-      color: 'from-indigo-500 to-purple-500',
-      link: '/projects/dissertation'
-    }
-  ];
+  // Get featured projects (first 6 from the main projects list)
+  const projects = PROJECTS.slice(0, 6).map(project => ({
+    title: project.title,
+    description: project.description,
+    icon: project.icon,
+    tags: project.tags.slice(0, 4), // Limit to 4 tags for featured display
+    color: project.color,
+    link: `/projects/${project.id}`
+  }));
 
   const containerVariants = {
     hidden: { opacity: 0 },
