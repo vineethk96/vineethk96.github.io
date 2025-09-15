@@ -404,7 +404,7 @@ export const TIMELINE_DATA = [
 // External Links
 export const EXTERNAL_LINKS = {
   calendly: 'https://calendly.com/vineethk96',
-  resume: '/resume.pdf'
+  resume: '/docs/vineethCV.pdf'
 };
 
 // Skills/Technologies (for future use)

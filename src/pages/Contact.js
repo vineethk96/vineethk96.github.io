@@ -121,6 +121,7 @@ const Contact = () => {
                 </a>
                 <a
                   href={EXTERNAL_LINKS.resume}
+                  download="Vineeth_Kirandumkara_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-3 p-4 bg-accent-50 dark:bg-accent-900/20 text-accent-700 dark:text-accent-300 rounded-lg hover:bg-accent-100 dark:hover:bg-accent-900/30 transition-colors duration-300"
