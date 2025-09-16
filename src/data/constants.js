@@ -265,6 +265,23 @@ export const PROJECTS = [
     year: '2024',
     github: 'https://github.com/vineethk96/anemometer',
     demo: null,
+    images: [
+      {
+        url: '/Dissertation/anemometer2D.jpg',
+        alt: '2D Anemometer',
+        caption: '2D Anemometer'
+      },
+      {
+        url: '/Dissertation/signalGenerationPLL.jpg',
+        alt: 'PLL TX Signal Generation',
+        caption: 'Breadboard testing TX signal using PLL'
+      },
+      {
+        url: '/Dissertation/systemAssembly.jpg',
+        alt: 'Anemometer Project Cover Image',
+        caption: 'Anemometer Prototype'
+      },
+    ],
     type: 'project',
     // SystemMap properties
     category: 'iot-sensor',
@@ -283,6 +300,38 @@ export const PROJECTS = [
     year: '2024',
     github: 'https://github.com/vineethk96/gesture-recognizer',
     demo: null,
+    images:[
+      {
+        url: '/Gesture_Recognizer/GestureRecog_Album.png',
+        alt: 'Gesture Recognizer Project Cover Image',
+        caption: 'ML Powered Gesture Recognition Prototype'
+      },
+      {
+        url: '/Gesture_Recognizer/paperMockup.jpg',
+        alt: 'Paper Mockup',
+        caption: 'Initial Paper Mockup for Glove Design'
+      },
+      {
+        url: '/Gesture_Recognizer/paperMockupIteration.jpg',
+        alt: 'Paper Mockup Iteration',
+        caption: 'Iterated Paper Mockup with Improved Fit'
+      },
+      {
+        url: '/Gesture_Recognizer/clothMockup.jpg',
+        alt: 'Cloth Prototype',
+        caption: 'Cloth Prototype with Improved Fit'
+      },
+      {
+        url: '/Gesture_Recognizer/fullyStitched.jpg',
+        alt: 'Fully Stitched Glove',
+        caption: 'Final Fully Stitched Glove with Flex Sensors'
+      },
+      {
+        url: '/Gesture_Recognizer/flexSensorPockets.jpg',
+        alt: 'Flex Sensor Pockets',
+        caption: 'Custom Pockets for Flex Sensors'
+      }
+    ],
     type: 'project',
     // SystemMap properties
     category: 'ml-embedded',

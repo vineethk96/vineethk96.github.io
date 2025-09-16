@@ -35,12 +35,12 @@ const ImageCarousel = ({ images, title }) => {
     <>
       {/* Main Carousel */}
       <div className="relative w-full">
-        {/* Main Image */}
-        <div className="relative h-96 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+        {/* Main Image Container - Now with flexible height */}
+        <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center min-h-[300px] max-h-[500px]">
           <img
             src={images[currentIndex].url}
             alt={images[currentIndex].alt || `${title} - Image ${currentIndex + 1}`}
-            className="w-full h-full object-cover cursor-pointer"
+            className="max-w-full max-h-full object-contain cursor-pointer" // Changed to object-contain
             onClick={() => openModal(currentIndex)}
           />
           
@@ -77,7 +77,7 @@ const ImageCarousel = ({ images, title }) => {
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all flex items-center justify-center bg-gray-100 dark:bg-gray-800 ${
                   index === currentIndex
                     ? 'border-blue-500 ring-2 ring-blue-200'
                     : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
@@ -86,7 +86,7 @@ const ImageCarousel = ({ images, title }) => {
                 <img
                   src={image.url}
                   alt={image.alt || `Thumbnail ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain" // Changed to object-contain for thumbnails too
                 />
               </button>
             ))}
