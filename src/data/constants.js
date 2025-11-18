@@ -258,12 +258,13 @@ export const PROJECTS = [
     id: 'anemometer',
     title: 'Dissertation: Wind Mapping',
     description: 'Dissertation research on IoT wind measurement systems for urban environments, exploring scalable architectures for smart city applications and citizen engagement.',
+    //detailedDescription: 'Longer description for the detail page',
     icon: Wind,
     tags: ['IoT', 'Sensors', 'Cloud', 'Analytics', 'PCB Design'],
     color: 'from-blue-500 to-cyan-500',
     status: 'Completed',
     year: '2024',
-    github: 'https://github.com/vineethk96/anemometer',
+    github: 'https://github.com/vineethk96/ultrasonic_anemometer',
     demo: null,
     images: [
       {
@@ -348,7 +349,7 @@ export const PROJECTS = [
     color: 'from-orange-500 to-red-500',
     status: 'Completed',
     year: '2024',
-    github: 'https://github.com/vineethk96/hot-stone',
+    github: 'https://github.com/ethmacc/CASA0021_GroupPrototypingPitch',
     demo: null,
     type: 'project',
     // SystemMap properties
@@ -366,8 +367,8 @@ export const PROJECTS = [
     color: 'from-green-500 to-emerald-500',
     status: 'Completed',
     year: '2024',
-    github: 'https://github.com/vineethk96/traveler-app',
-    demo: 'https://traveler-demo.netlify.app',  // TODO: Setup Demo Link
+    github: 'https://github.com/vineethk96/Traveler',
+    demo: null,//'https://traveler-demo.netlify.app',  // TODO: Setup Demo Link
     type: 'project',
     // SystemMap properties
     category: 'mobile-cloud',
@@ -384,7 +385,7 @@ export const PROJECTS = [
     color: 'from-yellow-500 to-orange-500',
     status: 'Completed',
     year: '2024',
-    github: 'https://github.com/vineethk96/lumos-lighting',
+    github: 'https://github.com/vineethk96/CASA0014_Lumos',
     demo: null,
     type: 'project',
     // SystemMap properties
@@ -403,7 +404,7 @@ export const PROJECTS = [
     color: 'from-red-500 to-pink-500',
     status: 'Completed',
     year: '2017-2018',
-    github: 'https://github.com/vineethk96/ieee-robot',
+    github: null,
     demo: null,
     type: 'project',
     // SystemMap properties
@@ -421,7 +422,7 @@ export const PROJECTS = [
     color: 'from-cyan-500 to-blue-500',
     status: 'Completed',
     year: '2018',
-    github: 'https://github.com/vineethk96/vehicle-app',
+    github: null,
     demo: null,
     type: 'project',
     // SystemMap properties
