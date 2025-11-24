@@ -19,6 +19,7 @@
 
 # production
 /build
+src/data/constants.js
 
 # misc
 .DS_Store
