@@ -234,6 +234,16 @@ export const CONTACT_INFO = [
     color: SOCIAL_LINKS.github.color
   }
 ];
+
+// Certifications
+export const CERTIFICATIONS = [
+  {
+    name: 'Autodesk Inventor Professional',
+    issuer: 'Autodesk',
+    year: '2019',
+    description: 'Advanced 3D CAD design and mechanical engineering'
+  }
+];
 `;
 }
 
