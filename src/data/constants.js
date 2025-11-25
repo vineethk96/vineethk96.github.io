@@ -784,7 +784,7 @@ export const TIMELINE_DATA = [
   ...WORK_EXPERIENCE
 ].sort((a, b) => {
   const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
-  return getStartYear(a) - getStartYear(b);
+  return getStartYear(b) - getStartYear(a);
 });
 
 export const CONTACT_INFO = [
