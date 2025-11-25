@@ -66,7 +66,7 @@ Edit `src/data/constants.js` and add a new project to the `PROJECTS` array:
   technologies: ['React', 'Node.js', 'MongoDB', 'AWS'],
   icon: Cpu, // Import from lucide-react
   color: 'from-blue-500 to-purple-600',
-  mapColor: '#3b82f6', // Color for SystemMap nodes
+  map_color: '#3b82f6', // Color for SystemMap nodes
   mapSize: 20, // Size for SystemMap nodes (15-25 recommended)
   github: 'https://github.com/username/repo',
   demo: 'https://demo-url.com',
@@ -212,7 +212,7 @@ The `ImageCarousel` component is automatically used in all detail pages. It supp
 ### Node Appearance
 
 Projects appear as nodes in the SystemMap if they have:
-- `mapColor`: Color of the node
+- `map_color`: Color of the node
 - `mapSize`: Size of the node (15-25 recommended)
 
 ### Relationships
@@ -371,7 +371,7 @@ The portfolio now uses proper routing with unique URLs for each page:
    - Verify image file names match exactly
 
 2. **SystemMap nodes not appearing:**
-   - Ensure project has both `mapColor` and `mapSize`
+   - Ensure project has both `map_color` and `mapSize`
    - Check that project `id` is unique
 
 3. **Routing issues:**

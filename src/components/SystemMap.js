@@ -12,18 +12,18 @@ const SystemMap = () => {
 
   // Generate graph data from centralized projects
   const graphData = {
-    nodes: PROJECTS.filter(project => project.title && project.mapColor).map(project => ({
+    nodes: PROJECTS.filter(project => project.title && project.map_color).map(project => ({
       id: project.id,
       name: project.title,
       category: project.category,
       description: project.description,
       technologies: project.technologies,
-      color: project.mapColor,
+      color: project.map_color,
       size: project.size
     })),
     links: SYSTEM_MAP_LINKS.filter(link => {
       // Only include links where both source and target nodes exist
-      const nodeIds = PROJECTS.filter(p => p.title && p.mapColor).map(p => p.id);
+      const nodeIds = PROJECTS.filter(p => p.title && p.map_color).map(p => p.id);
       return nodeIds.includes(link.source) && nodeIds.includes(link.target);
     })
   };

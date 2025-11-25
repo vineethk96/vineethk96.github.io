@@ -91,10 +91,10 @@ async function addProject() {
   
   // For SystemMap
   const includeInMap = await question('Include in SystemMap? (y/n): ');
-  let mapColor = '';
+  let map_color = '';
   let mapSize = '';
   if (includeInMap.toLowerCase() === 'y') {
-    mapColor = await question('Map node color (hex, e.g., #3b82f6): ');
+    map_color = await question('Map node color (hex, e.g., #3b82f6): ');
     mapSize = await question('Map node size (15-25): ') || '20';
   }
 
@@ -115,7 +115,7 @@ async function addProject() {
     technologies: technologies.split(',').map(tech => tech.trim()).filter(Boolean),
     icon,
     color,
-    ...(mapColor && { mapColor }),
+    ...(map_color && { map_color }),
     ...(mapSize && { mapSize: parseInt(mapSize) }),
     ...(github && { github }),
     ...(demo && { demo }),
@@ -317,7 +317,7 @@ async function main() {
     console.log('2. Test the new content in your development server');
     console.log('3. Commit and deploy your changes');
     
-    if (newItem.type === 'project' && newItem.data.mapColor) {
+    if (newItem.type === 'project' && newItem.data.map_color) {
       console.log('\n💡 Tip: You can add SystemMap connections by editing SYSTEM_MAP_LINKS in constants.js');
     }
   } else {

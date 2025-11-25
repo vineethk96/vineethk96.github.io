@@ -59,7 +59,7 @@ const simulation = d3.forceSimulation(graphData.nodes)
   title: 'Display Name',
   category: 'project-type',
   technologies: ['Tech1', 'Tech2'],
-  mapColor: '#hexcolor',  // Node color
+  map_color: '#hexcolor',  // Node color
   size: 8                 // Node radius
 }
 ```
@@ -135,7 +135,7 @@ function dragstarted(event, d) {
 
 **Links not appearing**
 - Ensure both source and target nodes exist in PROJECTS array
-- Verify nodes have required `mapColor` property
+- Verify nodes have required `map_color` property
 - Check link filtering logic in graph data generation
 
 **Performance issues**
@@ -158,7 +158,7 @@ simulation.on("tick", () => {
 ### Data Management
 - Keep project data in `constants.js`
 - Use consistent `id` naming (lowercase, hyphenated)
-- Ensure all connected projects have `mapColor` property
+- Ensure all connected projects have `map_color` property
 
 ### Performance
 - Limit to ~20 nodes for optimal performance

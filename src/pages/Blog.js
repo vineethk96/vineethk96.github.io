@@ -19,6 +19,7 @@ const Blog = () => {
            'from-orange-500 to-red-500'
   }));
 
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

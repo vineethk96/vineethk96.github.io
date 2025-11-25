@@ -296,7 +296,7 @@ npm install --save-dev webpack-bundle-analyzer
 **Problem**: SystemMap not rendering
 **Solution**:
 - Check browser console for errors
-- Verify all projects have required `mapColor` property
+- Verify all projects have required `map_color` property
 - Ensure D3.js dependencies are installed
 
 **Problem**: Styling not applying

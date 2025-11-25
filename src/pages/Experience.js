@@ -8,9 +8,11 @@ const Experience = () => {
   const experiences = WORK_EXPERIENCE.map(exp => ({
     company: exp.company,
     position: exp.position,
-    period: exp.year,
+    start_year: exp.start_year,
+    end_year: exp.end_year,
+    period: exp.start_year && exp.end_year ? `${exp.start_year} – ${exp.end_year}` : exp.year || 'Present',
     location: exp.location,
-    type: exp.type === 'work' ? 'Full-time' : exp.type === 'project' ? 'Academic Project' : 'Internship',
+    // type: exp.type === 'work' ? 'Full-time' : exp.type === 'project' ? 'Academic Project' : 'Internship',
     description: exp.description,
     achievements: exp.achievements || [],
     technologies: exp.technologies || [],
@@ -98,15 +100,6 @@ const Experience = () => {
                             <Calendar className="w-4 h-4" />
                             <span className="font-medium">{exp.period}</span>
                           </div>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            exp.type === 'Full-time' 
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                              : exp.type === 'Internship'
-                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                              : 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
-                          }`}>
-                            {exp.type}
-                          </span>
                         </div>
                       </div>
                     </div>
