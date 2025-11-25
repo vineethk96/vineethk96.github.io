@@ -12,13 +12,13 @@ const SystemMapD3 = () => {
 
   // Memoize graph data to prevent recreation on every render
   const graphData = useMemo(() => ({
-    nodes: PROJECTS.filter(project => project.title && project.mapColor).map(project => ({
+    nodes: PROJECTS.filter(project => project.title && project.map_color).map(project => ({
       id: project.id,
       name: project.title,
       category: project.category,
       description: project.description,
       technologies: project.technologies,
-      color: project.mapColor,
+      color: project.map_color,
       size: project.size
     })),
     links: SYSTEM_MAP_LINKS

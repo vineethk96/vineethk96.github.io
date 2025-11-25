@@ -99,7 +99,7 @@ Edit `src/data/constants.js` and add to the `PROJECTS` array:
   // SystemMap properties (optional)
   category: 'web-development',
   technologies: ['React', 'Node.js'],
-  mapColor: '#3b82f6',
+  map_color: '#3b82f6',
   size: 7
 }
 ```
@@ -230,7 +230,7 @@ This will:
 
 ### Common Issues
 - **Deployment fails**: Check GitHub Pages settings and branch configuration
-- **SystemMap not loading**: Verify project data has required `mapColor` and `size` properties
+- **SystemMap not loading**: Verify project data has required `map_color` and `size` properties
 - **Broken links**: Ensure all external URLs are valid and accessible
 
 ### Performance Optimization
