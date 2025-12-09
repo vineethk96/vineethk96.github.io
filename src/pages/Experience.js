@@ -15,7 +15,7 @@ const Experience = () => {
     // type: exp.type === 'work' ? 'Full-time' : exp.type === 'project' ? 'Academic Project' : 'Internship',
     description: exp.description,
     achievements: exp.achievements || [],
-    technologies: exp.technologies || [],
+    technologies: exp.tags || [],
     color: exp.color
   }));
 

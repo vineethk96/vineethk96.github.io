@@ -141,12 +141,6 @@ const AnimatedSystemFlow = () => {
               >
                 <ArrowRight className="w-6 h-6 text-gray-400 dark:text-gray-600" />
                 
-                {/* Animated data packet */}
-                <motion.div
-                  className="absolute top-1/2 left-0 w-2 h-2 bg-accent-500 rounded-full"
-                  variants={dataPacketVariants}
-                  style={{ transform: 'translateY(-50%)' }}
-                />
               </motion.div>
             )}
           </React.Fragment>

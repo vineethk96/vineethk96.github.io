@@ -40,7 +40,7 @@ const ImageCarousel = ({ images, title }) => {
           <img
             src={images[currentIndex].url}
             alt={images[currentIndex].alt || `${title} - Image ${currentIndex + 1}`}
-            className="w-full h-full object-cover cursor-pointer"
+            className="w-full h-full object-cover lg:object-contain cursor-pointer"
             onClick={() => openModal(currentIndex)}
           />
           

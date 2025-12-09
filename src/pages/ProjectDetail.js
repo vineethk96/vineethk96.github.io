@@ -4,11 +4,22 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink, Calendar, Tag } from 'lucide-react';
 import { PROJECTS } from '../data/constants';
 import ImageCarousel from '../components/ImageCarousel';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import DOMPurify from 'dompurify';
 
 const ProjectDetail = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const project = PROJECTS.find(p => p.id === projectId);
+
+  const createMarkup = (html) => {
+      return { 
+      __html: DOMPurify.sanitize(html, {
+        FORBID_ATTR: ['style', 'class'], // Remove inline styles and classes
+        FORBID_TAGS: ['style', 'link']    // Remove style tags
+      })
+    };
+  };
 
   if (!project) {
     return (
@@ -109,12 +120,11 @@ const ProjectDetail = () => {
 
           {/* Detailed Content */}
           <motion.div variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Project Details
-            </h2>
             <div className="prose dark:prose-invert max-w-none">
-              {project.detailedDescription ? (
-                <div dangerouslySetInnerHTML={{ __html: project.detailedDescription }} />
+              {project.detailed_description ? (
+                <div className="prose dark:prose-invert max-w-none">
+                  <div dangerouslySetInnerHTML={createMarkup(project.detailed_description)} />
+                </div>
               ) : (
                 <div className="space-y-4">
                   <p className="text-gray-700 dark:text-gray-300">

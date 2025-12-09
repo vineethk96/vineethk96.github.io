@@ -265,6 +265,29 @@ async function main() {
 
     console.log('\n📝 Generating constants.js...');
 
+    // Sort data by start year descending
+    projects.sort((a, b) => {
+      const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
+      return getStartYear(b) - getStartYear(a);
+    });
+    
+    workExperience.sort((a, b) => {
+      const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
+      return getStartYear(b) - getStartYear(a);
+    });
+
+    education.sort((a, b) => {
+      const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
+      return getStartYear(b) - getStartYear(a);
+    });
+
+    blogPosts.sort((a, b) => {
+      const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
+      return getStartYear(b) - getStartYear(a);
+    });
+
+    console.log(workExperience);
+
     // Generate constants.js content
     const content = generateConstantsFile(
       projects,
