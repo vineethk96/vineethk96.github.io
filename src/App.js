@@ -12,13 +12,17 @@ import BlogDetail from './pages/BlogDetail';
 import Contact from './pages/Contact';
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
-    const isDark = localStorage.getItem('darkMode') === 'true';
+    const savedMode = localStorage.getItem('darkMode');
+    const isDark = savedMode !== 'false'; // Defaults to true unless explicitly set to 'false'
+
     setDarkMode(isDark);
     if (isDark) {
       document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 
