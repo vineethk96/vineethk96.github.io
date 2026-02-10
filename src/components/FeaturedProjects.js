@@ -12,7 +12,13 @@ const FeaturedProjects = () => {
     icon: project.icon,
     tags: project.tags.slice(0, 4), // Limit to 4 tags for featured display
     color: project.color,
-    link: `/projects/${project.id}`
+    link: `/projects/${project.id}`,
+    featuredImage: project.images && project.images.length > 0
+      ? project.images[0].medium_url
+      : null,
+    imageAlt: project.images && project.images.length > 0
+      ? project.images[0].alt
+      : `${project.title} thumbnail`
   }));
 
   const containerVariants = {
@@ -53,27 +59,56 @@ const FeaturedProjects = () => {
           className="group"
         >
           <div className="relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700">
-            {/* Gradient header */}
-            <div className={`h-32 bg-gradient-to-br ${project.color} relative overflow-hidden`}>
-              <div className="absolute inset-0 bg-black/10"></div>
-              <div className="absolute top-4 left-4">
+            {/* Image or Gradient header */}
+            <div className="relative h-48 lg:h-56 overflow-hidden">
+              {project.featuredImage ? (
+                // Image version
+                <>
+                  <img
+                    src={project.featuredImage}
+                    alt={project.imageAlt}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to gradient on image load error
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                  />
+                  {/* Fallback gradient (hidden unless image fails) */}
+                  <div
+                    className={`hidden absolute inset-0 bg-gradient-to-br ${project.color}`}
+                  />
+                  {/* Dark overlay for images */}
+                  <div className="absolute inset-0 bg-black/30"></div>
+                </>
+              ) : (
+                // Gradient fallback (no images available)
+                <>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${project.color}`} />
+                  <div className="absolute inset-0 bg-black/10"></div>
+                  {/* Shimmer animation only on gradients */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                    animate={{
+                      x: [-100, 300],
+                      opacity: [0, 0.5, 0]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatDelay: 2,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </>
+              )}
+
+              {/* Icon - same for both versions */}
+              <div className="absolute top-4 left-4 z-10">
                 <div className="p-3 bg-white/20 backdrop-blur-sm rounded-lg">
                   <project.icon className="w-8 h-8 text-white" />
                 </div>
               </div>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                animate={{
-                  x: [-100, 300],
-                  opacity: [0, 0.5, 0]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  repeatDelay: 2,
-                  ease: "easeInOut"
-                }}
-              />
             </div>
 
             {/* Content */}

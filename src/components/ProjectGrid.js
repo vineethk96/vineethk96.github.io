@@ -5,7 +5,16 @@ import { ExternalLink, Github, ArrowRight } from 'lucide-react';
 import { PROJECTS } from '../data/constants';
 
 const ProjectGrid = () => {
-  const projects = PROJECTS;
+  // Map projects and extract featured image data
+  const projects = PROJECTS.map(project => ({
+    ...project,
+    featuredImage: project.images && project.images.length > 0
+      ? project.images[0].medium_url
+      : null,
+    imageAlt: project.images && project.images.length > 0
+      ? project.images[0].alt
+      : `${project.title} thumbnail`
+  }));
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -32,13 +41,13 @@ const ProjectGrid = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Completed':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+        return 'bg-green-500/90 text-white dark:bg-green-600/90';
       case 'In Progress':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+        return 'bg-yellow-500/90 text-gray-900 dark:bg-yellow-600/90 dark:text-white';
       case 'Planning':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+        return 'bg-blue-500/90 text-white dark:bg-blue-600/90';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+        return 'bg-gray-500/90 text-white dark:bg-gray-600/90';
     }
   };
 
@@ -57,35 +66,70 @@ const ProjectGrid = () => {
           className="group"
         >
           <div className="relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 h-full flex flex-col">
-            {/* Gradient header */}
-            <div className={`h-32 bg-gradient-to-br ${project.color} relative overflow-hidden`}>
-              <div className="absolute inset-0 bg-black/10"></div>
-              <div className="absolute top-4 left-4">
+            {/* Image or Gradient header */}
+            <div className="relative h-48 lg:h-56 overflow-hidden">
+              {project.featuredImage ? (
+                // Image version
+                <>
+                  <img
+                    src={project.featuredImage}
+                    alt={project.imageAlt}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to gradient on image load error
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                  />
+                  {/* Fallback gradient (hidden unless image fails) */}
+                  <div
+                    className={`hidden absolute inset-0 bg-gradient-to-br ${project.color}`}
+                  />
+                  {/* Dark overlay for images */}
+                  <div className="absolute inset-0 bg-black/30"></div>
+                </>
+              ) : (
+                // Gradient fallback (no images available)
+                <>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${project.color}`} />
+                  <div className="absolute inset-0 bg-black/10"></div>
+                  {/* Shimmer animation only on gradients */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                    animate={{
+                      x: [-100, 300],
+                      opacity: [0, 0.5, 0]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatDelay: 2,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </>
+              )}
+
+              {/* Icon - same for both versions */}
+              <div className="absolute top-4 left-4 z-10">
                 <div className="p-3 bg-white/20 backdrop-blur-sm rounded-lg">
                   <project.icon className="w-8 h-8 text-white" />
                 </div>
               </div>
-              <div className="absolute top-4 right-4">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}>
+
+              {/* Status badge - positioned over images with z-10 */}
+              <div className="absolute top-4 right-4 z-10">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${getStatusColor(project.status)}`}>
                   {project.status}
                 </span>
               </div>
-              <div className="absolute bottom-4 left-4">
-                <span className="text-white/80 text-sm font-medium">{project.year}</span>
+
+              {/* Year label - positioned over images with z-10 */}
+              <div className="absolute bottom-4 left-4 z-10">
+                <div className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg">
+                  <span className="text-white/90 text-sm font-medium">{project.year}</span>
+                </div>
               </div>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                animate={{
-                  x: [-100, 300],
-                  opacity: [0, 0.5, 0]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  repeatDelay: 2,
-                  ease: "easeInOut"
-                }}
-              />
             </div>
 
             {/* Content */}
