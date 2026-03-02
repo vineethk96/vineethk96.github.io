@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Moon, Sun, Menu, X, Zap } from 'lucide-react';
@@ -6,6 +6,14 @@ import { Moon, Sun, Menu, X, Zap } from 'lucide-react';
 const Navigation = ({ darkMode, toggleDarkMode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) setIsOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   const navItems = [
     { name: 'About', path: '/about' },
@@ -24,7 +32,7 @@ const Navigation = ({ darkMode, toggleDarkMode }) => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
             <div className="relative">
-              <Zap className="w-8 h-8 text-primary-600 group-hover:text-accent-500 transition-colors duration-300" />
+              <Zap className="w-8 h-8 text-primary-600 group-hover:text-accent-500 transition-colors duration-300" aria-hidden="true" />
               <motion.div
                 className="absolute inset-0 bg-primary-600/20 rounded-full"
                 animate={{ scale: [1, 1.2, 1] }}
@@ -67,9 +75,9 @@ const Navigation = ({ darkMode, toggleDarkMode }) => {
               aria-label="Toggle dark mode"
             >
               {darkMode ? (
-                <Sun className="w-5 h-5 text-yellow-500" />
+                <Sun className="w-5 h-5 text-yellow-500" aria-hidden="true" />
               ) : (
-                <Moon className="w-5 h-5 text-gray-600" />
+                <Moon className="w-5 h-5 text-gray-600" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -82,9 +90,9 @@ const Navigation = ({ darkMode, toggleDarkMode }) => {
               aria-label="Toggle dark mode"
             >
               {darkMode ? (
-                <Sun className="w-5 h-5 text-yellow-500" />
+                <Sun className="w-5 h-5 text-yellow-500" aria-hidden="true" />
               ) : (
-                <Moon className="w-5 h-5 text-gray-600" />
+                <Moon className="w-5 h-5 text-gray-600" aria-hidden="true" />
               )}
             </button>
             <button

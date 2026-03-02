@@ -4,12 +4,6 @@ require('dotenv').config({ path: '.env.local' });
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔍 Debug: Environment Variables');
-console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? '✅ Loaded' : '❌ Missing');
-console.log('SUPABASE_AUTH:', process.env.SUPABASE_AUTH ? '✅ Loaded' : '❌ Missing');
-console.log('SUPABASE_APIKEY:', process.env.SUPABASE_APIKEY ? '✅ Loaded' : '❌ Missing');
-console.log('');
-
 // Configuration (now loaded from .env.local)
 const SUPABASE_PROJECT_URL = process.env.SUPABASE_URL || 'https://xxxxxxxxxxxxx.supabase.co';
 const SUPABASE_AUTH = process.env.SUPABASE_AUTH;
@@ -18,10 +12,6 @@ const SUPABASE_APIKEY = process.env.SUPABASE_APIKEY;
 // Validate environment variables
 if (!SUPABASE_AUTH || !SUPABASE_APIKEY) {
   console.error('❌ Error: SUPABASE_AUTH and SUPABASE_APIKEY environment variables are required');
-  console.error('Missing:', {
-    SUPABASE_AUTH: SUPABASE_AUTH ? '✅' : '❌',
-    SUPABASE_APIKEY: SUPABASE_APIKEY ? '✅' : '❌'
-  });
   process.exit(1);
 }
 
@@ -35,31 +25,50 @@ const ENDPOINTS = {
 };
 
 /**
- * Fetch data from Supabase Edge Function
+ * Shared sort comparator: descending by start year.
+ * Handles start_year integer property or year string like "2020–2022".
  */
-async function fetchFromSupabase(endpoint, name) {
-  console.log(`📡 Fetching ${name}...`);
-  
-  try {
-    const response = await fetch(endpoint, {
-      headers: {
-        'Authorization': SUPABASE_AUTH,
-        'apikey': SUPABASE_APIKEY,
-        'Content-Type': 'application/json'
+const byStartYearDesc = (a, b) => {
+  const getYear = (item) =>
+    item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
+  return getYear(b) - getYear(a);
+};
+
+/**
+ * Fetch data from a Supabase Edge Function with retry and timeout.
+ */
+async function fetchFromSupabase(endpoint, name, retries = 3) {
+  const headers = {
+    'Authorization': SUPABASE_AUTH,
+    'apikey': SUPABASE_APIKEY,
+    'Content-Type': 'application/json'
+  };
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      console.log(`📡 Fetching ${name}${attempt > 1 ? ` (attempt ${attempt})` : ''}...`);
+      const response = await fetch(endpoint, {
+        headers,
+        signal: AbortSignal.timeout(10_000)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${response.statusText}\n${errorText}`);
       }
-    });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP ${response.status}: ${response.statusText}\n${errorText}`);
+      const data = await response.json();
+      console.log(`✅ Fetched ${data.length || 0} ${name}`);
+      return data;
+    } catch (error) {
+      if (attempt === retries) {
+        console.error(`❌ Error fetching ${name} after ${retries} attempts:`, error.message);
+        throw error;
+      }
+      const delay = 1000 * 2 ** (attempt - 1); // exponential backoff: 1s, 2s
+      console.warn(`⚠️  Attempt ${attempt} failed for ${name}, retrying in ${delay}ms...`);
+      await new Promise(r => setTimeout(r, delay));
     }
-
-    const data = await response.json();
-    console.log(`✅ Fetched ${data.length || 0} ${name}`);
-    return data;
-  } catch (error) {
-    console.error(`❌ Error fetching ${name}:`, error.message);
-    throw error;
   }
 }
 
@@ -68,12 +77,9 @@ async function fetchFromSupabase(endpoint, name) {
  */
 function generateIconImports(data) {
   const icons = new Set();
-  
-  // Extract unique icon names from all data
   data.forEach(item => {
     if (item.icon) icons.add(item.icon);
   });
-  
   return Array.from(icons).sort();
 }
 
@@ -81,20 +87,73 @@ function generateIconImports(data) {
  * Generate constants.js file content
  */
 function generateConstantsFile(projects, workExperience, education, blogPosts, systemMapLinks) {
-  // Collect all unique icons
-  const allIcons = generateIconImports([
-    ...projects,
-    ...workExperience,
-    ...education
-  ]);
-
+  const allIcons = generateIconImports([...projects, ...workExperience, ...education]);
   const timestamp = new Date().toISOString();
+
+  // Hardcoded personal data
+  const PERSONAL_INFO = {
+    name: 'Vineeth Kirandumkara',
+    email: 'vineethkirandumkara+portfolio@gmail.com',
+    location: 'London, UK',
+    tagline: 'IoT Systems Engineer & Connected Product Designer',
+    bio: 'Passionate about creating intelligent, connected systems that bridge the physical and digital worlds.',
+    expectedGraduation: 'Summer 2025'
+  };
+
+  const SOCIAL_LINKS = {
+    linkedin: {
+      url: 'https://www.linkedin.com/in/vineeth-kirandumkara-3b322924',
+      displayUrl: 'linkedin.com/in/vineeth-kirandumkara',
+      icon: 'Linkedin',
+      label: 'LinkedIn',
+      color: 'text-blue-600'
+    },
+    github: {
+      url: 'https://github.com/vineethk96',
+      displayUrl: 'github.com/vineethk96',
+      icon: 'Github',
+      label: 'GitHub',
+      color: 'text-gray-700 dark:text-gray-300'
+    }
+  };
+
+  // Derive CONTACT_INFO from PERSONAL_INFO and SOCIAL_LINKS
+  const CONTACT_INFO = [
+    {
+      icon: 'Mail',
+      label: 'Email',
+      value: PERSONAL_INFO.email,
+      href: `mailto:${PERSONAL_INFO.email}`,
+      color: 'text-blue-500'
+    },
+    {
+      icon: 'MapPin',
+      label: 'Location',
+      value: PERSONAL_INFO.location,
+      href: null,
+      color: 'text-green-500'
+    },
+    {
+      icon: SOCIAL_LINKS.linkedin.icon,
+      label: SOCIAL_LINKS.linkedin.label,
+      value: SOCIAL_LINKS.linkedin.displayUrl,
+      href: SOCIAL_LINKS.linkedin.url,
+      color: SOCIAL_LINKS.linkedin.color
+    },
+    {
+      icon: SOCIAL_LINKS.github.icon,
+      label: SOCIAL_LINKS.github.label,
+      value: SOCIAL_LINKS.github.displayUrl,
+      href: SOCIAL_LINKS.github.url,
+      color: SOCIAL_LINKS.github.color
+    }
+  ];
 
   return `/**
  * AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
  * Generated: ${timestamp}
  * Source: Supabase Edge Functions
- * 
+ *
  * This file is automatically generated by scripts/fetch-data.js
  * Run 'npm run fetch-data' to regenerate
  */
@@ -105,31 +164,9 @@ import { ${allIcons.join(', ')} } from 'lucide-react';
 // PERSONAL INFORMATION (Hardcoded - rarely changes)
 // ============================================
 
-export const PERSONAL_INFO = {
-  name: 'Vineeth Kirandumkara',
-  email: 'vineethkirandumkara+portfolio@gmail.com',
-  location: 'London, UK',
-  tagline: 'IoT Systems Engineer & Connected Product Designer',
-  bio: 'Passionate about creating intelligent, connected systems that bridge the physical and digital worlds.',
-  expectedGraduation: 'Summer 2025'
-};
+export const PERSONAL_INFO = ${JSON.stringify(PERSONAL_INFO, null, 2)};
 
-export const SOCIAL_LINKS = {
-  linkedin: {
-    url: 'https://www.linkedin.com/in/vineeth-kirandumkara-3b322924',
-    displayUrl: 'linkedin.com/in/vineeth-kirandumkara',
-    icon: 'Linkedin',
-    label: 'LinkedIn',
-    color: 'text-blue-600'
-  },
-  github: {
-    url: 'https://github.com/vineethk96',
-    displayUrl: 'github.com/vineethk96',
-    icon: 'Github',
-    label: 'GitHub',
-    color: 'text-gray-700 dark:text-gray-300'
-  }
-};
+export const SOCIAL_LINKS = ${JSON.stringify(SOCIAL_LINKS, null, 2)};
 
 export const EXTERNAL_LINKS = {
   calendly: 'https://calendly.com/vineethk96',
@@ -174,19 +211,19 @@ export const SKILLS = {
 // ============================================
 
 export const PROJECTS = ${JSON.stringify(projects.map(p => ({
-  ...p,
-  icon: p.icon // Will be replaced with actual component reference
-})), null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
+    ...p,
+    icon: p.icon
+  })), null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
 
 export const WORK_EXPERIENCE = ${JSON.stringify(workExperience.map(w => ({
-  ...w,
-  icon: w.icon
-})), null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
+    ...w,
+    icon: w.icon
+  })), null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
 
 export const EDUCATION = ${JSON.stringify(education.map(e => ({
-  ...e,
-  icon: e.icon
-})), null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
+    ...e,
+    icon: e.icon
+  })), null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
 
 export const BLOG_POSTS = ${JSON.stringify(blogPosts, null, 2)};
 
@@ -204,36 +241,7 @@ export const TIMELINE_DATA = [
   return getStartYear(b) - getStartYear(a);
 });
 
-export const CONTACT_INFO = [
-  {
-    icon: 'Mail',
-    label: 'Email',
-    value: PERSONAL_INFO.email,
-    href: \`mailto:\${PERSONAL_INFO.email}\`,
-    color: 'text-blue-500'
-  },
-  {
-    icon: 'MapPin',
-    label: 'Location',
-    value: PERSONAL_INFO.location,
-    href: null,
-    color: 'text-green-500'
-  },
-  {
-    icon: 'Linkedin',
-    label: SOCIAL_LINKS.linkedin.label,
-    value: SOCIAL_LINKS.linkedin.displayUrl,
-    href: SOCIAL_LINKS.linkedin.url,
-    color: SOCIAL_LINKS.linkedin.color
-  },
-  {
-    icon: 'Github',
-    label: SOCIAL_LINKS.github.label,
-    value: SOCIAL_LINKS.github.displayUrl,
-    href: SOCIAL_LINKS.github.url,
-    color: SOCIAL_LINKS.github.color
-  }
-];
+export const CONTACT_INFO = ${JSON.stringify(CONTACT_INFO, null, 2)};
 
 // Certifications
 export const CERTIFICATIONS = [
@@ -265,30 +273,12 @@ async function main() {
 
     console.log('\n📝 Generating constants.js...');
 
-    // Sort data by start year descending
-    projects.sort((a, b) => {
-      const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
-      return getStartYear(b) - getStartYear(a);
-    });
-    
-    workExperience.sort((a, b) => {
-      const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
-      return getStartYear(b) - getStartYear(a);
-    });
+    // Sort all data by start year descending
+    projects.sort(byStartYearDesc);
+    workExperience.sort(byStartYearDesc);
+    education.sort(byStartYearDesc);
+    blogPosts.sort(byStartYearDesc);
 
-    education.sort((a, b) => {
-      const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
-      return getStartYear(b) - getStartYear(a);
-    });
-
-    blogPosts.sort((a, b) => {
-      const getStartYear = (item) => item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
-      return getStartYear(b) - getStartYear(a);
-    });
-
-    console.log(workExperience);
-
-    // Generate constants.js content
     const content = generateConstantsFile(
       projects,
       workExperience,
@@ -297,7 +287,6 @@ async function main() {
       systemMapLinks
     );
 
-    // Write to file
     const outputPath = path.join(__dirname, '..', 'src', 'data', 'constants.js');
     fs.writeFileSync(outputPath, content, 'utf8');
 

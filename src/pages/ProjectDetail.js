@@ -4,7 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink, Calendar, Tag } from 'lucide-react';
 import { PROJECTS } from '../data/constants';
 import ImageCarousel from '../components/ImageCarousel';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import DOMPurify from 'dompurify';
 
 const ProjectDetail = () => {
