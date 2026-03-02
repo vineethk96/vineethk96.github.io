@@ -5,7 +5,7 @@ import SystemMap from '../components/SystemMapD3';
 import ProjectGrid from '../components/ProjectGrid';
 
 const Projects = () => {
-  const [viewMode, setViewMode] = useState('map'); // 'map' or 'grid'
+  const [viewMode, setViewMode] = useState('grid'); // 'map' or 'grid'
 
   const containerVariants = {
     hidden: { opacity: 0 },

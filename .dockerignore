@@ -1,0 +1,14 @@
+node_modules/
+build/
+.git/
+
+# Auto-generated at build time — never bake into image
+src/data/constants.js
+
+# Loaded at runtime via env_file, not baked into image
+.env.local
+.env
+
+# Misc
+.DS_Store
+*.log
