@@ -22,6 +22,7 @@ services:
       - ./sanity_cms:/app                           # Live source sync from host
       - sanity_node_modules:/app/node_modules       # Isolated named volume (separate from website)
       - ~/.claude:/root/.claude                     # Reuse host Claude auth, memory, and settings
+      - ~/.config/sanity:/root/.config/sanity         # Reuse host Sanity auth token (rw so CLI can refresh token)
     env_file:
       - path: ./sanity_cms/.env.local               # Auth tokens (optional — only if file exists)
         required: false

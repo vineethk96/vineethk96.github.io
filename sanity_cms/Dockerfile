@@ -26,6 +26,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+ENV CI=true
+ENV SANITY_TELEMETRY_DISABLED=1
+
 EXPOSE 3333
 
 # Sanity hot-reload requires polling inside Docker (inotify doesn't work over bind mounts)
