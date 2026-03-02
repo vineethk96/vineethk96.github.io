@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
 import { PROJECTS, SYSTEM_MAP_LINKS } from '../data/constants';
+import { getRelationshipColor } from '../utils/systemMap';
 
 const SystemMapD3 = () => {
   const navigate = useNavigate();
@@ -85,18 +86,7 @@ const SystemMapD3 = () => {
       .selectAll("line")
       .data(graphData.links)
       .join("line")
-      .attr("stroke", d => {
-        const relationshipColors = {
-          'research-application': '#6366f1',
-          'iot-platform': '#10b981',
-          'embedded-evolution': '#f59e0b',
-          'sensor-system': '#8b5cf6',
-          'mobile-app': '#06b6d4',
-          'cloud-architecture': '#10b981',
-          'systems-thinking': '#ef4444'
-        };
-        return relationshipColors[d.relationship] || '#64748b';
-      })
+      .attr("stroke", d => getRelationshipColor(d.relationship))
       .attr("stroke-width", 2)
       .attr("stroke-dasharray", "8,4")
       .attr("opacity", 0.7)
@@ -192,6 +182,8 @@ const SystemMapD3 = () => {
           width={dimensions.width}
           height={dimensions.height}
           className="w-full h-full"
+          role="img"
+          aria-label="Interactive project relationship map. Click nodes to explore projects."
         />
       </div>
 

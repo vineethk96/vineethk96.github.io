@@ -25,6 +25,9 @@ npm run deploy
 
 # Run tests
 npm test
+
+# Interactively delete a project or blog post from constants.js
+node scripts/delete-content.js
 ```
 
 ## Critical Architecture Patterns
@@ -39,9 +42,13 @@ npm test
 3. `scripts/fetch-data.js` fetches from these endpoints and generates `src/data/constants.js`
 4. The `prebuild` hook automatically runs `npm run fetch-data` before building
 
+**Two-tier content model**:
+- **Dynamic data** (projects, work experience, education, blog posts, system map links): managed in Supabase, fetched at build time
+- **Hardcoded data** (PERSONAL_INFO, PERSONAL_STORY, SKILLS, CERTIFICATIONS, SOCIAL_LINKS, EXTERNAL_LINKS, CONTACT_INFO): defined directly in `scripts/fetch-data.js` in the `generateConstantsFile` function — edit that file, then run `npm run fetch-data`
+
 **When updating content**:
-- Update data in Supabase database
-- Run `npm run fetch-data` to regenerate constants.js
+- For Supabase-managed data: update in Supabase, then run `npm run fetch-data`
+- For hardcoded personal data: edit `scripts/fetch-data.js` directly, then run `npm run fetch-data`
 - Never manually edit constants.js - changes will be overwritten
 
 **Environment Variables Required** (`.env.local`):
@@ -118,9 +125,12 @@ The SystemMap is a D3.js force-directed graph that visualizes relationships betw
 
 - **Tailwind CSS** for utility-based styling
 - **Dark mode** via `dark:` prefixes, controlled by localStorage and document class
-- Custom Tailwind config in `tailwind.config.js`
+- Dark mode **defaults to `true`** (dark) — `useState(true)` in `App.js`; only switches to light if localStorage has `'false'`
 - Dark mode class toggled on `<html>` element via `document.documentElement.classList`
-- Blueprint background pattern in dark mode (`.blueprint-bg` class)
+- Blueprint background pattern in dark mode (`.blueprint-bg` class in `src/index.css`)
+- Custom Tailwind color tokens: `primary` (blues) and `accent` (greens) — defined in `tailwind.config.js`
+- Custom fonts: `font-mono` → JetBrains Mono, `font-sans` → Inter
+- `@tailwindcss/typography` plugin enabled — use `prose` classes for blog post body rendering
 
 ### Image Management
 
@@ -128,6 +138,12 @@ The SystemMap is a D3.js force-directed graph that visualizes relationships betw
 - Images served at multiple sizes: `original/`, `large/`, `medium/`, `thumbnail/`
 - Image paths stored in Supabase and exposed via constants.js
 - Project images array structure: `{ url, alt, caption, original_url, medium_url, thumbnail_url }`
+
+### Blog Post Rendering
+
+- Blog post HTML content is sanitized with **DOMPurify** before rendering
+- Code blocks inside blog posts use **react-syntax-highlighter**
+- Body content styled with Tailwind's `prose` classes (from `@tailwindcss/typography`)
 
 ## Adding New Content
 

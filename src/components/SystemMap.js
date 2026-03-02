@@ -3,6 +3,7 @@ import { ForceGraph2D } from 'react-force-graph';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { PROJECTS, SYSTEM_MAP_LINKS } from '../data/constants';
+import { getRelationshipColor } from '../utils/systemMap';
 
 const SystemMap = () => {
   const navigate = useNavigate();
@@ -78,18 +79,7 @@ const SystemMap = () => {
     const start = link.source;
     const end = link.target;
     
-    // Calculate link color based on relationship
-    const relationshipColors = {
-      'research-application': '#6366f1',
-      'iot-platform': '#10b981',
-      'embedded-evolution': '#f59e0b',
-      'sensor-system': '#8b5cf6',
-      'mobile-app': '#06b6d4',
-      'cloud-architecture': '#10b981',
-      'systems-thinking': '#ef4444'
-    };
-    
-    ctx.strokeStyle = relationshipColors[link.relationship] || '#64748b';
+    ctx.strokeStyle = getRelationshipColor(link.relationship);
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
     
@@ -157,18 +147,7 @@ const SystemMap = () => {
             node.y = Math.max(minY, Math.min(maxY, node.y));
           }}
           linkWidth={link => 2}
-          linkColor={link => {
-            const relationshipColors = {
-              'research-application': '#6366f1',
-              'iot-platform': '#10b981',
-              'embedded-evolution': '#f59e0b',
-              'sensor-progression': '#8b5cf6',
-              'mobile-evolution': '#06b6d4',
-              'cloud-architecture': '#10b981',
-              'systems-thinking': '#ef4444'
-            };
-            return relationshipColors[link.relationship] || '#64748b';
-          }}
+          linkColor={link => getRelationshipColor(link.relationship)}
           linkLineDash={[5, 5]}
           linkDirectionalParticles={0}
           enableNodeDrag={true}

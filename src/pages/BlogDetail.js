@@ -5,6 +5,20 @@ import { ArrowLeft, Calendar, Tag, Clock, User } from 'lucide-react';
 import { BLOG_POSTS } from '../data/constants';
 import ImageCarousel from '../components/ImageCarousel';
 
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
 const BlogDetail = () => {
   const { blogId } = useParams();
   const navigate = useNavigate();
@@ -27,20 +41,6 @@ const BlogDetail = () => {
       </div>
     );
   }
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, staggerChildren: 0.1 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
 
   return (
     <motion.div
