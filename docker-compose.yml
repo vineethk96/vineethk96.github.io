@@ -1,0 +1,17 @@
+services:
+  portfolio-dev:
+    build: .
+    container_name: portfolio-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app                          # Live source sync from host
+      - node_modules:/app/node_modules  # Named volume keeps container's built-in node_modules
+      - ~/.claude:/root/.claude         # Reuse host Claude auth, memory, and settings
+    env_file:
+      - .env.local                      # Supabase credentials (not baked into image)
+    stdin_open: true
+    tty: true
+
+volumes:
+  node_modules:
