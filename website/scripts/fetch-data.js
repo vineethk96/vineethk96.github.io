@@ -3,23 +3,33 @@ require('dotenv').config({ path: '.env.local' });
 
 const fs = require('fs');
 const path = require('path');
+const { createClient } = require('@sanity/client');
 
-// Configuration (now loaded from .env.local)
+// Configuration (loaded from .env.local or environment)
 const SUPABASE_PROJECT_URL = process.env.SUPABASE_URL || 'https://xxxxxxxxxxxxx.supabase.co';
 const SUPABASE_AUTH = process.env.SUPABASE_AUTH;
 const SUPABASE_APIKEY = process.env.SUPABASE_APIKEY;
+const SANITY_TOKEN = process.env.SANITY_TOKEN;
 
 // Validate environment variables
-if (!SUPABASE_AUTH || !SUPABASE_APIKEY) {
-  console.error('❌ Error: SUPABASE_AUTH and SUPABASE_APIKEY environment variables are required');
+if (!SUPABASE_AUTH || !SUPABASE_APIKEY || !SANITY_TOKEN) {
+  console.error('❌ Error: SUPABASE_AUTH, SUPABASE_APIKEY, and SANITY_TOKEN environment variables are required');
   process.exit(1);
 }
+
+// Sanity client (token auth required — CDN does not support token auth for private datasets)
+const sanityClient = createClient({
+  projectId: 'jwneocyf',
+  dataset: 'production',
+  apiVersion: '2024-01-01',
+  useCdn: false,
+  token: SANITY_TOKEN,
+});
 
 // Edge Function endpoints
 const ENDPOINTS = {
   projects: `${SUPABASE_PROJECT_URL}/functions/v1/get-projects`,
   workExperience: `${SUPABASE_PROJECT_URL}/functions/v1/get-work-experience`,
-  education: `${SUPABASE_PROJECT_URL}/functions/v1/get-education`,
   blogPosts: `${SUPABASE_PROJECT_URL}/functions/v1/get-blog-posts`,
   systemMapLinks: `${SUPABASE_PROJECT_URL}/functions/v1/get-system-map-links`
 };
@@ -70,6 +80,30 @@ async function fetchFromSupabase(endpoint, name, retries = 3) {
       await new Promise(r => setTimeout(r, delay));
     }
   }
+}
+
+/**
+ * Fetch education records from Sanity CMS via GROQ.
+ * Field names are remapped inline to match the existing snake_case shape.
+ */
+async function fetchEducation() {
+  console.log('📡 Fetching education (Sanity)...');
+  const query = `*[_type == "education"] | order(startYear desc) {
+    "id": slug.current,
+    title,
+    subtitle,
+    "start_year": startYear,
+    "end_year": endYear,
+    status,
+    description,
+    location,
+    icon,
+    color,
+    highlights
+  }`;
+  const data = await sanityClient.fetch(query);
+  console.log(`✅ Fetched ${data.length || 0} education`);
+  return data;
 }
 
 /**
@@ -262,11 +296,11 @@ async function main() {
   console.log('🚀 Starting data fetch from Supabase...\n');
 
   try {
-    // Fetch all data in parallel
+    // Fetch all data in parallel (education now from Sanity, rest from Supabase)
     const [projects, workExperience, education, blogPosts, systemMapLinks] = await Promise.all([
       fetchFromSupabase(ENDPOINTS.projects, 'projects'),
       fetchFromSupabase(ENDPOINTS.workExperience, 'work experience'),
-      fetchFromSupabase(ENDPOINTS.education, 'education'),
+      fetchEducation(),
       fetchFromSupabase(ENDPOINTS.blogPosts, 'blog posts'),
       fetchFromSupabase(ENDPOINTS.systemMapLinks, 'system map links')
     ]);
