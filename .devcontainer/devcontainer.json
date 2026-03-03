@@ -27,8 +27,8 @@
 	// Uncomment the next line if you want start specific services in your Docker Compose config.
 	"runServices": ["portfolio-dev", "sanity-studio"],
 
-	// Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-	// "shutdownAction": "none",
+	// Stop compose services when VS Code disconnects, preventing stale containers on next open.
+	"shutdownAction": "stopCompose",
 
 	// Uncomment the next line to run commands after the container is created.
 	// "postCreateCommand": "cat /etc/os-release",
