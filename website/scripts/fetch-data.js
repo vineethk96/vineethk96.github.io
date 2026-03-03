@@ -28,8 +28,6 @@ const sanityClient = createClient({
 
 // Edge Function endpoints
 const ENDPOINTS = {
-  projects: `${SUPABASE_PROJECT_URL}/functions/v1/get-projects`,
-  workExperience: `${SUPABASE_PROJECT_URL}/functions/v1/get-work-experience`,
   blogPosts: `${SUPABASE_PROJECT_URL}/functions/v1/get-blog-posts`,
   systemMapLinks: `${SUPABASE_PROJECT_URL}/functions/v1/get-system-map-links`
 };
@@ -83,6 +81,32 @@ async function fetchFromSupabase(endpoint, name, retries = 3) {
 }
 
 /**
+ * Fetch work experience records from Sanity CMS via GROQ.
+ * Field names are remapped to match the existing snake_case shape.
+ * `highlights` is restored to `achievements` for frontend compatibility.
+ */
+async function fetchWorkExperience() {
+  console.log('📡 Fetching work experience (Sanity)...');
+  const query = `*[_type == "workExperience"] | order(startYear desc) {
+    "id": slug.current,
+    company,
+    position,
+    "start_year": startYear,
+    "end_year": endYear,
+    status,
+    description,
+    location,
+    icon,
+    color,
+    tags,
+    "achievements": highlights
+  }`;
+  const data = await sanityClient.fetch(query);
+  console.log(`✅ Fetched ${data.length || 0} work experience`);
+  return data;
+}
+
+/**
  * Fetch education records from Sanity CMS via GROQ.
  * Field names are remapped inline to match the existing snake_case shape.
  */
@@ -104,6 +128,71 @@ async function fetchEducation() {
   const data = await sanityClient.fetch(query);
   console.log(`✅ Fetched ${data.length || 0} education`);
   return data;
+}
+
+/**
+ * Fetch project records from Sanity CMS via GROQ.
+ * Fields are remapped to the snake_case shape the React frontend expects.
+ * detailedDescription (Portable Text) is converted to HTML via
+ * @portabletext/to-html (ESM-only, loaded with dynamic import).
+ * year is reconstructed from startYear / endYear integers.
+ */
+async function fetchProjects() {
+  console.log('📡 Fetching projects (Sanity)...');
+
+  const query = `*[_type == "project"] | order(startYear desc) {
+    "id": slug.current,
+    title,
+    description,
+    icon,
+    tags,
+    color,
+    status,
+    "start_year": startYear,
+    "end_year": endYear,
+    github,
+    demo,
+    "map_color": mapColor,
+    size,
+    detailedDescription,
+    images[] {
+      url,
+      alt,
+      caption,
+      original_url,
+      medium_url,
+      thumbnail_url
+    }
+  }`;
+
+  const rawProjects = await sanityClient.fetch(query);
+
+  // ESM-only package: dynamic import required inside CommonJS async function
+  const { toHTML } = await import('@portabletext/to-html');
+
+  const projects = rawProjects.map(project => {
+    // Reconstruct display year string using en-dash (matches byStartYearDesc split on '–')
+    const year = project.end_year
+      ? `${project.start_year}\u2013${project.end_year}`
+      : String(project.start_year);
+
+    // Convert Portable Text blocks to HTML; null when field is absent
+    const detailed_description = project.detailedDescription
+      ? toHTML(project.detailedDescription)
+      : null;
+
+    const { detailedDescription: _pt, ...rest } = project;
+
+    return {
+      ...rest,
+      year,
+      detailed_description,
+      images: project.images ?? [],
+    };
+  });
+
+  console.log(`✅ Fetched ${projects.length || 0} projects`);
+  return projects;
 }
 
 /**
@@ -293,13 +382,13 @@ export const CERTIFICATIONS = [
  * Main execution
  */
 async function main() {
-  console.log('🚀 Starting data fetch from Supabase...\n');
+  console.log('🚀 Starting data fetch...\n');
 
   try {
-    // Fetch all data in parallel (education now from Sanity, rest from Supabase)
+    // Fetch all data in parallel (education + work experience from Sanity, rest from Supabase)
     const [projects, workExperience, education, blogPosts, systemMapLinks] = await Promise.all([
-      fetchFromSupabase(ENDPOINTS.projects, 'projects'),
-      fetchFromSupabase(ENDPOINTS.workExperience, 'work experience'),
+      fetchProjects(),
+      fetchWorkExperience(),
       fetchEducation(),
       fetchFromSupabase(ENDPOINTS.blogPosts, 'blog posts'),
       fetchFromSupabase(ENDPOINTS.systemMapLinks, 'system map links')
