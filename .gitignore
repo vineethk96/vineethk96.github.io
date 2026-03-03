@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/website/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,15 +12,15 @@
 !.yarn/versions
 
 # testing
-/coverage
+/website/coverage
 
 # next.js
 /.next/
 /out/
 
 # production
-/build
-src/data/constants.js
+/website/build
+website/src/data/constants.js
 
 # misc
 .DS_Store
@@ -32,7 +33,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+website/.env*
 
 # vercel
 .vercel
@@ -40,3 +41,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# sanity cms
+/sanity_cms/node_modules
+/sanity_cms/.sanity
+sanity_cms/.env*
