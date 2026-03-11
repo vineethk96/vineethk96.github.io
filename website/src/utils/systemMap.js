@@ -8,6 +8,7 @@ export const RELATIONSHIP_COLORS = {
   'embedded-evolution': '#f59e0b',
   'sensor-system': '#8b5cf6',
   'mobile-app': '#06b6d4',
+  'rest-api': '#f97316',
   'cloud-architecture': '#10b981',
   'systems-thinking': '#ef4444'
 };

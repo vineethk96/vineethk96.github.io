@@ -1,4 +1,6 @@
-import { defineField, defineType } from 'sanity'
+import { defineField, defineType, defineArrayMember } from 'sanity'
+import { ProjectLinkInput } from '../components/ProjectLinkInput'
+import { BacklinksInput } from '../components/BacklinksInput'
 
 export const projectType = defineType({
   name: 'project',
@@ -59,7 +61,17 @@ export const projectType = defineType({
       name: 'detailedDescription',
       title: 'Detailed Description',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [
+        { type: 'block' },
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
+            defineField({ name: 'caption', title: 'Caption', type: 'string' }),
+          ],
+        },
+      ],
     }),
     defineField({
       name: 'images',
@@ -67,20 +79,77 @@ export const projectType = defineType({
       type: 'array',
       of: [
         {
-          type: 'object',
-          name: 'projectImage',
-          title: 'Image',
+          type: 'image',
+          options: { hotspot: true },
           fields: [
-            defineField({ name: 'url', title: 'Large URL', type: 'url' }),
             defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
             defineField({ name: 'caption', title: 'Caption', type: 'string' }),
-            defineField({ name: 'original_url', title: 'Original URL', type: 'url' }),
-            defineField({ name: 'medium_url', title: 'Medium URL', type: 'url' }),
-            defineField({ name: 'thumbnail_url', title: 'Thumbnail URL', type: 'url' }),
           ],
-          preview: { select: { title: 'alt', subtitle: 'caption' } },
         },
       ],
+    }),
+    defineField({
+      name: 'projectLinks',
+      title: 'Project Links',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'projectLink',
+          title: 'Link',
+          fields: [
+            defineField({
+              name: 'target',
+              title: 'Target Project',
+              type: 'reference',
+              to: [{ type: 'project' }],
+              validation: Rule => Rule.required(),
+            }),
+            defineField({
+              name: 'relationship',
+              title: 'Relationship',
+              type: 'string',
+              options: {
+                list: [
+                  { value: 'research-application', title: 'Research Application' },
+                  { value: 'iot-platform', title: 'IoT Platform' },
+                  { value: 'embedded-evolution', title: 'Embedded Evolution' },
+                  { value: 'sensor-system', title: 'Sensor System' },
+                  { value: 'mobile-app', title: 'Mobile App' },
+                  { value: 'rest-api', title: 'REST API' },
+                  { value: 'cloud-architecture', title: 'Cloud Architecture' },
+                  { value: 'systems-thinking', title: 'Systems Thinking' },
+                ],
+              },
+              validation: Rule => Rule.required(),
+            }),
+          ],
+          components: {
+            input: ProjectLinkInput,
+          },
+          preview: {
+            select: {
+              relationship: 'relationship',
+              targetTitle: 'target.title',
+            },
+            prepare({ relationship, targetTitle }) {
+              return {
+                title: targetTitle ?? '(no target)',
+                subtitle: relationship ?? '(no relationship)',
+              }
+            },
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'linkedBy',
+      title: 'Linked By',
+      type: 'string',
+      readOnly: true,
+      components: {
+        input: BacklinksInput,
+      },
     }),
   ],
   orderings: [

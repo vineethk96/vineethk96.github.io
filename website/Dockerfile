@@ -1,4 +1,4 @@
-FROM node:20-bookworm
+FROM node:20-bookworm-slim
 
 # System packages: git for version ops, curl for health checks,
 # python3 + make + g++ for node-gyp native builds
@@ -10,13 +10,8 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Install global tools: Claude CLI and Playwright MCP server
-RUN npm install -g \
-    @anthropic-ai/claude-code \
-    @playwright/mcp
-
-# Install Playwright Chromium browser + system deps for headless operation
-RUN npx playwright install --with-deps chromium
+# Install global tools: Claude CLI for interactive dev sessions
+RUN npm install -g @anthropic-ai/claude-code
 
 WORKDIR /app
 
@@ -27,9 +22,5 @@ COPY package*.json ./
 RUN npm ci
 
 EXPOSE 3000
-
-# CRA hot-reload requires polling inside Docker (inotify doesn't work over bind mounts)
-ENV CHOKIDAR_USEPOLLING=true
-ENV WATCHPACK_POLLING=true
 
 CMD ["npm", "start"]

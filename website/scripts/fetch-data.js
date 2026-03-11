@@ -4,6 +4,7 @@ require('dotenv').config({ path: '.env.local' });
 const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@sanity/client');
+const imageUrlBuilder = require('@sanity/image-url');
 
 // Configuration (loaded from .env.local or environment)
 const SUPABASE_PROJECT_URL = process.env.SUPABASE_URL || 'https://xxxxxxxxxxxxx.supabase.co';
@@ -17,6 +18,7 @@ if (!SUPABASE_AUTH || !SUPABASE_APIKEY || !SANITY_TOKEN) {
   process.exit(1);
 }
 
+
 // Sanity client (token auth required — CDN does not support token auth for private datasets)
 const sanityClient = createClient({
   projectId: 'jwneocyf',
@@ -26,10 +28,13 @@ const sanityClient = createClient({
   token: SANITY_TOKEN,
 });
 
+// Image URL builder for Sanity CDN transforms
+const builder = imageUrlBuilder(sanityClient);
+const urlFor = (source) => builder.image(source);
+
 // Edge Function endpoints
 const ENDPOINTS = {
   blogPosts: `${SUPABASE_PROJECT_URL}/functions/v1/get-blog-posts`,
-  systemMapLinks: `${SUPABASE_PROJECT_URL}/functions/v1/get-system-map-links`
 };
 
 /**
@@ -154,14 +159,14 @@ async function fetchProjects() {
     demo,
     "map_color": mapColor,
     size,
-    detailedDescription,
+    detailedDescription[] {
+      ...,
+      asset
+    },
     images[] {
-      url,
       alt,
       caption,
-      original_url,
-      medium_url,
-      thumbnail_url
+      asset
     }
   }`;
 
@@ -178,8 +183,37 @@ async function fetchProjects() {
 
     // Convert Portable Text blocks to HTML; null when field is absent
     const detailed_description = project.detailedDescription
-      ? toHTML(project.detailedDescription)
+      ? toHTML(project.detailedDescription, {
+          components: {
+            types: {
+              image: ({ value }) => {
+                if (!value?.asset?._ref) return '';
+                const src = urlFor(value.asset).width(800).auto('format').quality(85).url();
+                const alt = value.alt ?? '';
+                const caption = value.caption ?? '';
+                if (caption) {
+                  return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
+                }
+                return `<img src="${src}" alt="${alt}" />`;
+              },
+            },
+          },
+        })
       : null;
+
+    // Build all image size variants from Sanity CDN URL params — keeps output shape
+    // identical to the old S3 schema so no React component changes are needed.
+    const images = (project.images ?? []).map(img => {
+      if (!img?.asset?._ref) return null;
+      return {
+        alt: img.alt ?? '',
+        caption: img.caption ?? '',
+        original_url: urlFor(img.asset).url(),
+        url: urlFor(img.asset).width(1200).auto('format').quality(90).url(),
+        medium_url: urlFor(img.asset).width(600).auto('format').quality(85).url(),
+        thumbnail_url: urlFor(img.asset).width(300).auto('format').quality(75).url(),
+      };
+    }).filter(Boolean);
 
     const { detailedDescription: _pt, ...rest } = project;
 
@@ -187,12 +221,42 @@ async function fetchProjects() {
       ...rest,
       year,
       detailed_description,
-      images: project.images ?? [],
+      images,
     };
   });
 
   console.log(`✅ Fetched ${projects.length || 0} projects`);
   return projects;
+}
+
+/**
+ * Fetch system map links from Sanity CMS via GROQ.
+ * Reads projectLinks arrays embedded on each project document and flattens
+ * them into the { source, target, relationship } shape consumed by the React components.
+ */
+async function fetchSystemMapLinks() {
+  console.log('📡 Fetching system map links (Sanity)...');
+  const query = `*[_type == "project" && count(projectLinks) > 0] {
+    "id": slug.current,
+    "links": projectLinks[] {
+      "target": target->slug.current,
+      relationship
+    }
+  }`;
+  const rawData = await sanityClient.fetch(query);
+
+  const links = rawData.flatMap(project =>
+    (project.links ?? [])
+      .filter(link => link.target && link.relationship)
+      .map(link => ({
+        source: project.id,
+        target: link.target,
+        relationship: link.relationship,
+      }))
+  );
+
+  console.log(`✅ Fetched ${links.length} system map links`);
+  return links;
 }
 
 /**
@@ -385,13 +449,13 @@ async function main() {
   console.log('🚀 Starting data fetch...\n');
 
   try {
-    // Fetch all data in parallel (education + work experience from Sanity, rest from Supabase)
+    // Fetch all data in parallel (education + work experience + projects + system map links from Sanity, blog posts from Supabase)
     const [projects, workExperience, education, blogPosts, systemMapLinks] = await Promise.all([
       fetchProjects(),
       fetchWorkExperience(),
       fetchEducation(),
       fetchFromSupabase(ENDPOINTS.blogPosts, 'blog posts'),
-      fetchFromSupabase(ENDPOINTS.systemMapLinks, 'system map links')
+      fetchSystemMapLinks(),
     ]);
 
     console.log('\n📝 Generating constants.js...');
