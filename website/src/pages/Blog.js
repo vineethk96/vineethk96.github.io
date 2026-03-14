@@ -1,25 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, ArrowRight, BookOpen, Lightbulb, Cpu, Building } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, BookOpen } from 'lucide-react';
 import { BLOG_POSTS } from '../data/constants';
 
 const Blog = () => {
-
-  // Add UI properties to blog posts for display
-  const blogPosts = BLOG_POSTS.map(post => ({
-    ...post,
-    icon: post.category === 'IoT Architecture' ? Building :
-          post.category === 'Urban IoT' ? Cpu :
-          post.category === 'Design Process' ? Lightbulb :
-          BookOpen,
-    color: post.category === 'IoT Architecture' ? 'from-blue-500 to-cyan-500' :
-           post.category === 'Urban IoT' ? 'from-green-500 to-emerald-500' :
-           post.category === 'Design Process' ? 'from-purple-500 to-pink-500' :
-           'from-orange-500 to-red-500'
-  }));
-
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -56,14 +41,14 @@ const Blog = () => {
             Blog & <span className="gradient-text">Notes</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Thoughts on connected systems, IoT architecture, and the intersection of technology and design. 
+            Thoughts on connected systems, IoT architecture, and the intersection of technology and design.
             Exploring how we can build better connected products for the mass market.
           </p>
         </motion.div>
 
         {/* Blog Posts */}
         <motion.div className="space-y-8" variants={containerVariants}>
-          {blogPosts.map((post) => (
+          {BLOG_POSTS.map((post) => (
             <motion.article
               key={post.id}
               variants={itemVariants}
@@ -72,47 +57,52 @@ const Blog = () => {
             >
               <Link to={`/blog/${post.id}`} className="block">
               <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700">
-                {/* Header with gradient */}
-                <div className={`h-2 bg-gradient-to-r ${post.color}`}></div>
-                
+                {/* Gradient accent bar */}
+                <div className="h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+
                 <div className="p-8">
                   <div className="flex items-start space-x-6">
-                    {/* Icon */}
-                    <div className={`p-4 rounded-xl bg-gradient-to-br ${post.color} text-white flex-shrink-0`}>
-                      <post.icon className="w-8 h-8" />
-                    </div>
-                    
+                    {/* Cover image or icon */}
+                    {post.cover_image?.thumbnail_url ? (
+                      <img
+                        src={post.cover_image.thumbnail_url}
+                        alt={post.cover_image.alt || post.title}
+                        className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white flex-shrink-0">
+                        <BookOpen className="w-8 h-8" />
+                      </div>
+                    )}
+
                     {/* Content */}
                     <div className="flex-1">
                       {/* Meta */}
                       <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                        <span className="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full font-medium">
-                          {post.category}
-                        </span>
                         <div className="flex items-center space-x-1">
                           <Calendar className="w-4 h-4" />
-                          <span>{new Date(post.date).toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
+                          <span>{new Date(post.publish_date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
                           })}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Clock className="w-4 h-4" />
-                          <span>{post.readTime}</span>
+                          <span>{post.read_time} min read</span>
                         </div>
                       </div>
-                      
+
                       {/* Title */}
                       <h2 className="text-2xl font-bold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
                         {post.title}
                       </h2>
-                      
+
                       {/* Excerpt */}
                       <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
                         {post.excerpt}
                       </p>
-                      
+
                       {/* Tags */}
                       <div className="flex flex-wrap gap-2 mb-6">
                         {post.tags.map((tag) => (
@@ -124,7 +114,7 @@ const Blog = () => {
                           </span>
                         ))}
                       </div>
-                      
+
                       {/* Read More */}
                       <div className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors duration-300">
                         <span>Read full article</span>
@@ -146,7 +136,7 @@ const Blog = () => {
               More Articles Coming Soon
             </h2>
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto mb-6">
-              I'm constantly exploring new ideas in IoT systems, connected product design, and urban technology. 
+              I'm constantly exploring new ideas in IoT systems, connected product design, and urban technology.
               Subscribe to get notified when new articles are published.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

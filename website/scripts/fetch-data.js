@@ -3,26 +3,31 @@ require('dotenv').config({ path: '.env.local' });
 
 const fs = require('fs');
 const path = require('path');
+const { createClient } = require('@sanity/client');
+const imageUrlBuilder = require('@sanity/image-url');
 
-// Configuration (now loaded from .env.local)
-const SUPABASE_PROJECT_URL = process.env.SUPABASE_URL || 'https://xxxxxxxxxxxxx.supabase.co';
-const SUPABASE_AUTH = process.env.SUPABASE_AUTH;
-const SUPABASE_APIKEY = process.env.SUPABASE_APIKEY;
+// Configuration (loaded from .env.local or environment)
+const SANITY_TOKEN = process.env.SANITY_TOKEN;
 
 // Validate environment variables
-if (!SUPABASE_AUTH || !SUPABASE_APIKEY) {
-  console.error('❌ Error: SUPABASE_AUTH and SUPABASE_APIKEY environment variables are required');
+if (!SANITY_TOKEN) {
+  console.error('❌ Error: SANITY_TOKEN environment variable is required');
   process.exit(1);
 }
 
-// Edge Function endpoints
-const ENDPOINTS = {
-  projects: `${SUPABASE_PROJECT_URL}/functions/v1/get-projects`,
-  workExperience: `${SUPABASE_PROJECT_URL}/functions/v1/get-work-experience`,
-  education: `${SUPABASE_PROJECT_URL}/functions/v1/get-education`,
-  blogPosts: `${SUPABASE_PROJECT_URL}/functions/v1/get-blog-posts`,
-  systemMapLinks: `${SUPABASE_PROJECT_URL}/functions/v1/get-system-map-links`
-};
+
+// Sanity client (token auth required — CDN does not support token auth for private datasets)
+const sanityClient = createClient({
+  projectId: 'jwneocyf',
+  dataset: 'production',
+  apiVersion: '2024-01-01',
+  useCdn: false,
+  token: SANITY_TOKEN,
+});
+
+// Image URL builder for Sanity CDN transforms
+const builder = imageUrlBuilder(sanityClient);
+const urlFor = (source) => builder.image(source);
 
 /**
  * Shared sort comparator: descending by start year.
@@ -35,41 +40,271 @@ const byStartYearDesc = (a, b) => {
 };
 
 /**
- * Fetch data from a Supabase Edge Function with retry and timeout.
+ * Fetch work experience records from Sanity CMS via GROQ.
+ * Field names are remapped to match the existing snake_case shape.
+ * `highlights` is restored to `achievements` for frontend compatibility.
  */
-async function fetchFromSupabase(endpoint, name, retries = 3) {
-  const headers = {
-    'Authorization': SUPABASE_AUTH,
-    'apikey': SUPABASE_APIKEY,
-    'Content-Type': 'application/json'
-  };
+async function fetchWorkExperience() {
+  console.log('📡 Fetching work experience (Sanity)...');
+  const query = `*[_type == "workExperience"] | order(startYear desc) {
+    "id": slug.current,
+    company,
+    position,
+    "start_year": startYear,
+    "end_year": endYear,
+    status,
+    description,
+    location,
+    icon,
+    color,
+    tags,
+    "achievements": highlights
+  }`;
+  const data = await sanityClient.fetch(query);
+  console.log(`✅ Fetched ${data.length || 0} work experience`);
+  return data;
+}
 
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      console.log(`📡 Fetching ${name}${attempt > 1 ? ` (attempt ${attempt})` : ''}...`);
-      const response = await fetch(endpoint, {
-        headers,
-        signal: AbortSignal.timeout(10_000)
-      });
+/**
+ * Fetch education records from Sanity CMS via GROQ.
+ * Field names are remapped inline to match the existing snake_case shape.
+ */
+async function fetchEducation() {
+  console.log('📡 Fetching education (Sanity)...');
+  const query = `*[_type == "education"] | order(startYear desc) {
+    "id": slug.current,
+    title,
+    subtitle,
+    "start_year": startYear,
+    "end_year": endYear,
+    status,
+    description,
+    location,
+    icon,
+    color,
+    highlights
+  }`;
+  const data = await sanityClient.fetch(query);
+  console.log(`✅ Fetched ${data.length || 0} education`);
+  return data;
+}
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${response.statusText}\n${errorText}`);
-      }
+/**
+ * Fetch project records from Sanity CMS via GROQ.
+ * Fields are remapped to the snake_case shape the React frontend expects.
+ * detailedDescription (Portable Text) is converted to HTML via
+ * @portabletext/to-html (ESM-only, loaded with dynamic import).
+ * year is reconstructed from startYear / endYear integers.
+ */
+async function fetchProjects() {
+  console.log('📡 Fetching projects (Sanity)...');
 
-      const data = await response.json();
-      console.log(`✅ Fetched ${data.length || 0} ${name}`);
-      return data;
-    } catch (error) {
-      if (attempt === retries) {
-        console.error(`❌ Error fetching ${name} after ${retries} attempts:`, error.message);
-        throw error;
-      }
-      const delay = 1000 * 2 ** (attempt - 1); // exponential backoff: 1s, 2s
-      console.warn(`⚠️  Attempt ${attempt} failed for ${name}, retrying in ${delay}ms...`);
-      await new Promise(r => setTimeout(r, delay));
+  const query = `*[_type == "project"] | order(startYear desc) {
+    "id": slug.current,
+    title,
+    description,
+    icon,
+    tags,
+    color,
+    status,
+    "start_year": startYear,
+    "end_year": endYear,
+    github,
+    demo,
+    "map_color": mapColor,
+    size,
+    detailedDescription[] {
+      ...,
+      asset
+    },
+    images[] {
+      alt,
+      caption,
+      asset
     }
-  }
+  }`;
+
+  const rawProjects = await sanityClient.fetch(query);
+
+  // ESM-only package: dynamic import required inside CommonJS async function
+  const { toHTML } = await import('@portabletext/to-html');
+
+  const projects = rawProjects.map(project => {
+    // Reconstruct display year string using en-dash (matches byStartYearDesc split on '–')
+    const year = project.end_year
+      ? `${project.start_year}\u2013${project.end_year}`
+      : String(project.start_year);
+
+    // Convert Portable Text blocks to HTML; null when field is absent
+    const detailed_description = project.detailedDescription
+      ? toHTML(project.detailedDescription, {
+          components: {
+            types: {
+              image: ({ value }) => {
+                if (!value?.asset?._ref) return '';
+                const src = urlFor(value.asset).width(800).auto('format').quality(85).url();
+                const alt = value.alt ?? '';
+                const caption = value.caption ?? '';
+                if (caption) {
+                  return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
+                }
+                return `<img src="${src}" alt="${alt}" />`;
+              },
+            },
+          },
+        })
+      : null;
+
+    // Build all image size variants from Sanity CDN URL params — keeps output shape
+    // identical to the old S3 schema so no React component changes are needed.
+    const images = (project.images ?? []).map(img => {
+      if (!img?.asset?._ref) return null;
+      return {
+        alt: img.alt ?? '',
+        caption: img.caption ?? '',
+        original_url: urlFor(img.asset).url(),
+        url: urlFor(img.asset).width(1200).auto('format').quality(90).url(),
+        medium_url: urlFor(img.asset).width(600).auto('format').quality(85).url(),
+        thumbnail_url: urlFor(img.asset).width(300).auto('format').quality(75).url(),
+      };
+    }).filter(Boolean);
+
+    const { detailedDescription: _pt, ...rest } = project;
+
+    return {
+      ...rest,
+      year,
+      detailed_description,
+      images,
+    };
+  });
+
+  console.log(`✅ Fetched ${projects.length || 0} projects`);
+  return projects;
+}
+
+/**
+ * Fetch system map links from Sanity CMS via GROQ.
+ * Reads projectLinks arrays embedded on each project document and flattens
+ * them into the { source, target, relationship } shape consumed by the React components.
+ */
+async function fetchSystemMapLinks() {
+  console.log('📡 Fetching system map links (Sanity)...');
+  const query = `*[_type == "project" && count(projectLinks) > 0] {
+    "id": slug.current,
+    "links": projectLinks[] {
+      "target": target->slug.current,
+      relationship
+    }
+  }`;
+  const rawData = await sanityClient.fetch(query);
+
+  const links = rawData.flatMap(project =>
+    (project.links ?? [])
+      .filter(link => link.target && link.relationship)
+      .map(link => ({
+        source: project.id,
+        target: link.target,
+        relationship: link.relationship,
+      }))
+  );
+
+  console.log(`✅ Fetched ${links.length} system map links`);
+  return links;
+}
+
+/**
+ * Fetch blog posts from Sanity CMS via GROQ.
+ * Converts Portable Text body to HTML with custom renderers for images,
+ * code blocks, and callout boxes. Auto-calculates read time from body text.
+ */
+async function fetchBlogPosts() {
+  console.log('📡 Fetching blog posts (Sanity)...');
+
+  const query = `*[_type == "blogPost"] | order(publishedAt desc) {
+    "id": slug.current,
+    title,
+    "publish_date": publishedAt,
+    published,
+    excerpt,
+    tags,
+    "coverImage": coverImage { alt, caption, asset },
+    "body": body[] { ..., asset },
+    "related_projects": relatedProjects[]->slug.current
+  }`;
+
+  const rawPosts = await sanityClient.fetch(query);
+
+  const { toHTML } = await import('@portabletext/to-html');
+
+  const CALLOUT_EMOJIS = { insight: '💡', warning: '⚠️', tip: '✅', info: 'ℹ️' };
+
+  const posts = rawPosts.map(rawPost => {
+    const cover_image = rawPost.coverImage?.asset?._ref ? {
+      url: urlFor(rawPost.coverImage.asset).width(1200).auto('format').quality(90).url(),
+      thumbnail_url: urlFor(rawPost.coverImage.asset).width(600).auto('format').quality(85).url(),
+      alt: rawPost.coverImage.alt ?? '',
+    } : null;
+
+    const wordCount = (rawPost.body ?? [])
+      .filter(block => block._type === 'block')
+      .flatMap(block => block.children ?? [])
+      .map(span => span.text ?? '')
+      .join(' ')
+      .split(/\s+/)
+      .filter(Boolean)
+      .length;
+    const read_time = Math.ceil(wordCount / 200) || 1;
+
+    const content = rawPost.body
+      ? toHTML(rawPost.body, {
+          components: {
+            types: {
+              image: ({ value }) => {
+                if (!value?.asset?._ref) return '';
+                const src = urlFor(value.asset).width(800).auto('format').quality(85).url();
+                const alt = value.alt ?? '';
+                const caption = value.caption ?? '';
+                if (caption) {
+                  return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
+                }
+                return `<figure><img src="${src}" alt="${alt}" /></figure>`;
+              },
+              codeBlock: ({ value }) => {
+                const language = value.language ?? 'other';
+                const escaped = (value.code ?? '')
+                  .replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;');
+                return `<pre class="code-block language-${language}"><code>${escaped}</code></pre>`;
+              },
+              callout: ({ value }) => {
+                const variant = value.variant ?? 'info';
+                const emoji = CALLOUT_EMOJIS[variant] ?? 'ℹ️';
+                const body = value.content ?? '';
+                return `<div class="callout callout-${variant}"><span class="callout-icon">${emoji}</span><div class="callout-body">${body}</div></div>`;
+              },
+            },
+          },
+        })
+      : '';
+
+    return {
+      id: rawPost.id,
+      title: rawPost.title,
+      publish_date: rawPost.publish_date,
+      published: rawPost.published,
+      excerpt: rawPost.excerpt ?? '',
+      tags: rawPost.tags ?? [],
+      cover_image,
+      content,
+      read_time,
+      related_projects: rawPost.related_projects ?? [],
+    };
+  });
+
+  console.log(`✅ Fetched ${posts.length} blog posts`);
+  return posts;
 }
 
 /**
@@ -152,7 +387,7 @@ function generateConstantsFile(projects, workExperience, education, blogPosts, s
   return `/**
  * AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
  * Generated: ${timestamp}
- * Source: Supabase Edge Functions
+ * Source: Sanity CMS
  *
  * This file is automatically generated by scripts/fetch-data.js
  * Run 'npm run fetch-data' to regenerate
@@ -222,6 +457,7 @@ export const WORK_EXPERIENCE = ${JSON.stringify(workExperience.map(w => ({
 
 export const EDUCATION = ${JSON.stringify(education.map(e => ({
     ...e,
+    highlights: e.highlights ?? [],
     icon: e.icon
   })), null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
 
@@ -259,25 +495,24 @@ export const CERTIFICATIONS = [
  * Main execution
  */
 async function main() {
-  console.log('🚀 Starting data fetch from Supabase...\n');
+  console.log('🚀 Starting data fetch...\n');
 
   try {
-    // Fetch all data in parallel
+    // Fetch all data in parallel from Sanity
     const [projects, workExperience, education, blogPosts, systemMapLinks] = await Promise.all([
-      fetchFromSupabase(ENDPOINTS.projects, 'projects'),
-      fetchFromSupabase(ENDPOINTS.workExperience, 'work experience'),
-      fetchFromSupabase(ENDPOINTS.education, 'education'),
-      fetchFromSupabase(ENDPOINTS.blogPosts, 'blog posts'),
-      fetchFromSupabase(ENDPOINTS.systemMapLinks, 'system map links')
+      fetchProjects(),
+      fetchWorkExperience(),
+      fetchEducation(),
+      fetchBlogPosts(),
+      fetchSystemMapLinks(),
     ]);
 
     console.log('\n📝 Generating constants.js...');
 
-    // Sort all data by start year descending
+    // Sort all data by start year descending (blog posts are pre-sorted by publishedAt in GROQ)
     projects.sort(byStartYearDesc);
     workExperience.sort(byStartYearDesc);
     education.sort(byStartYearDesc);
-    blogPosts.sort(byStartYearDesc);
 
     const content = generateConstantsFile(
       projects,

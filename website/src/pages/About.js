@@ -125,6 +125,7 @@ const About = () => {
                     <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
                       {edu.description}
                     </p>
+                    {edu.highlights?.length > 0 && (
                     <div>
                       <h4 className="font-semibold mb-2">Key Areas:</h4>
                       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -138,6 +139,7 @@ const About = () => {
                         ))}
                       </ul>
                     </div>
+                    )}
                   </div>
                 </div>
               </motion.div>
