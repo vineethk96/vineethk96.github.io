@@ -12,12 +12,15 @@ import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import Contact from './pages/Contact';
 import { useDarkMode } from './hooks/useDarkMode';
+import PageviewTracker from './components/analytics/PageviewTracker';
+import CookieConsent from './components/analytics/CookieConsent';
 
 function App() {
   const [darkMode, toggleDarkMode] = useDarkMode();
 
   return (
     <Router>
+      <PageviewTracker />
       <div className={`min-h-screen transition-colors duration-300 ${
         darkMode
           ? 'bg-gray-900 text-white blueprint-bg'
@@ -39,6 +42,7 @@ function App() {
             </Routes>
           </AnimatePresence>
         </ErrorBoundary>
+        <CookieConsent />
       </div>
     </Router>
   );

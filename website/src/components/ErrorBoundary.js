@@ -1,4 +1,5 @@
 import React from 'react';
+import posthog from 'posthog-js';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, info) {
     console.error('ErrorBoundary caught:', error, info.componentStack);
+    posthog.captureException(error, { extra: { componentStack: info.componentStack } });
   }
 
   render() {
