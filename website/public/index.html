@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script>
+      // Restore URL from GitHub Pages SPA redirect
+      (function () {
+        var p = window.location.search.slice(1)
+          .split('&')
+          .reduce(function (q, kv) {
+            var parts = kv.split('=');
+            q[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+            return q;
+          }, {});
+        if (p['p']) {
+          window.history.replaceState(
+            null, null,
+            p['p'] + (p['h'] ? p['h'] : '') +
+            window.location.search.replace(/[?&]p=[^&]*/, '').replace(/[?&]h=[^&]*/, '').replace(/^&/, '?')
+          );
+        }
+      })();
+    </script>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
