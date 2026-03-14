@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Tag, Clock, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Link as LinkIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import { BLOG_POSTS } from '../data/constants';
-import ImageCarousel from '../components/ImageCarousel';
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -18,6 +19,13 @@ const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 }
 };
+
+const createMarkup = (html) => ({
+  __html: DOMPurify.sanitize(html, {
+    FORBID_ATTR: ['style', 'onerror', 'onclick', 'onload'],
+    FORBID_TAGS: ['style', 'link', 'script'],
+  })
+});
 
 const BlogDetail = () => {
   const { blogId } = useParams();
@@ -59,28 +67,31 @@ const BlogDetail = () => {
         Back to Blog
       </motion.button>
 
+      {/* Cover Image Hero */}
+      {blog.cover_image?.url && (
+        <motion.div variants={itemVariants} className="mb-8 rounded-xl overflow-hidden">
+          <img
+            src={blog.cover_image.url}
+            alt={blog.cover_image.alt || blog.title}
+            className="w-full max-h-96 object-cover"
+          />
+        </motion.div>
+      )}
+
       {/* Header */}
       <motion.div variants={itemVariants} className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
           {blog.title}
         </h1>
-        
+
         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
           <div className="flex items-center gap-1">
-            <User size={16} />
-            {blog.author || 'Vineeth Kirandumkara'}
-          </div>
-          <div className="flex items-center gap-1">
             <Calendar size={16} />
-            {blog.date}
+            {blog.publish_date}
           </div>
           <div className="flex items-center gap-1">
             <Clock size={16} />
-            {blog.readTime || '5 min read'}
-          </div>
-          <div className="flex items-center gap-1">
-            <Tag size={16} />
-            {blog.category}
+            {blog.read_time} min read
           </div>
         </div>
 
@@ -93,84 +104,15 @@ const BlogDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-8">
-          {/* Featured Image or Carousel */}
-          <motion.div variants={itemVariants}>
-            <ImageCarousel 
-              images={blog.images || [
-                {
-                  url: '/api/placeholder/800/400',
-                  alt: `${blog.title} - Featured Image`,
-                  caption: 'Blog post featured image'
-                }
-              ]} 
-              title={blog.title} 
-            />
-          </motion.div>
-
           {/* Blog Content */}
           <motion.div variants={itemVariants}>
             <div className="prose dark:prose-invert max-w-none">
               {blog.content ? (
-                <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+                <div dangerouslySetInnerHTML={createMarkup(blog.content)} />
               ) : (
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Introduction
-                  </h2>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {blog.description || blog.excerpt}
-                  </p>
-
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Key Insights
-                  </h2>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    This blog post explores important concepts in {blog.category.toLowerCase()} 
-                    and provides practical insights for developers and technologists.
-                  </p>
-
-                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 border-l-4 border-blue-400">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                      💡 Key Takeaway
-                    </h3>
-                    <p className="text-gray-700 dark:text-gray-300">
-                      Understanding these concepts is crucial for building modern, scalable applications 
-                      that meet today's performance and user experience standards.
-                    </p>
-                  </div>
-
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Implementation Details
-                  </h2>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    The practical implementation involves careful consideration of architecture patterns, 
-                    performance optimization, and user experience design principles.
-                  </p>
-
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                      Code Example
-                    </h3>
-                    <pre className="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">
-                      <code>{`// Example implementation
-const example = {
-  technology: "${blog.tags?.[0] || 'React'}",
-  implementation: "Modern best practices",
-  performance: "Optimized for scale"
-};
-
-console.log("Building with:", example);`}</code>
-                    </pre>
-                  </div>
-
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Conclusion
-                  </h2>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    These insights provide a foundation for continued learning and development 
-                    in the rapidly evolving technology landscape.
-                  </p>
-                </div>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {blog.excerpt}
+                </p>
               )}
             </div>
           </motion.div>
@@ -182,7 +124,7 @@ console.log("Building with:", example);`}</code>
                 Enjoyed this post?
               </h3>
               <p className="mb-4">
-                Connect with me to discuss more about {blog.category.toLowerCase()} and technology.
+                Connect with me to discuss more about IoT and connected systems.
               </p>
               <div className="flex gap-4">
                 <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
@@ -199,7 +141,7 @@ console.log("Building with:", example);`}</code>
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Tags */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
           >
@@ -219,7 +161,7 @@ console.log("Building with:", example);`}</code>
           </motion.div>
 
           {/* Article Info */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
           >
@@ -230,53 +172,50 @@ console.log("Building with:", example);`}</code>
               <div>
                 <span className="font-medium text-gray-900 dark:text-white">Published:</span>
                 <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {blog.date}
-                </span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-900 dark:text-white">Category:</span>
-                <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {blog.category}
+                  {blog.publish_date}
                 </span>
               </div>
               <div>
                 <span className="font-medium text-gray-900 dark:text-white">Read Time:</span>
                 <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {blog.readTime || '5 min read'}
+                  {blog.read_time} min read
                 </span>
               </div>
               <div>
                 <span className="font-medium text-gray-900 dark:text-white">Author:</span>
                 <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {blog.author || 'Vineeth Kirandumkara'}
+                  Vineeth Kirandumkara
                 </span>
               </div>
             </div>
           </motion.div>
 
-          {/* Related Topics */}
-          <motion.div 
-            variants={itemVariants}
-            className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Related Topics
-            </h3>
-            <div className="space-y-2">
-              {['Web Development', 'React', 'JavaScript', 'UI/UX Design', 'Performance'].map((topic, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition-colors"
-                >
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  {topic}
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          {/* Related Projects */}
+          {blog.related_projects?.length > 0 && (
+            <motion.div
+              variants={itemVariants}
+              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
+            >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Related Projects
+              </h3>
+              <div className="space-y-2">
+                {blog.related_projects.map((projectId) => (
+                  <Link
+                    key={projectId}
+                    to={`/projects/${projectId}`}
+                    className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                  >
+                    <LinkIcon size={14} />
+                    {projectId}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
           {/* Newsletter Signup */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg p-6"
           >

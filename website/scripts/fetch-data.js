@@ -7,14 +7,11 @@ const { createClient } = require('@sanity/client');
 const imageUrlBuilder = require('@sanity/image-url');
 
 // Configuration (loaded from .env.local or environment)
-const SUPABASE_PROJECT_URL = process.env.SUPABASE_URL || 'https://xxxxxxxxxxxxx.supabase.co';
-const SUPABASE_AUTH = process.env.SUPABASE_AUTH;
-const SUPABASE_APIKEY = process.env.SUPABASE_APIKEY;
 const SANITY_TOKEN = process.env.SANITY_TOKEN;
 
 // Validate environment variables
-if (!SUPABASE_AUTH || !SUPABASE_APIKEY || !SANITY_TOKEN) {
-  console.error('❌ Error: SUPABASE_AUTH, SUPABASE_APIKEY, and SANITY_TOKEN environment variables are required');
+if (!SANITY_TOKEN) {
+  console.error('❌ Error: SANITY_TOKEN environment variable is required');
   process.exit(1);
 }
 
@@ -32,11 +29,6 @@ const sanityClient = createClient({
 const builder = imageUrlBuilder(sanityClient);
 const urlFor = (source) => builder.image(source);
 
-// Edge Function endpoints
-const ENDPOINTS = {
-  blogPosts: `${SUPABASE_PROJECT_URL}/functions/v1/get-blog-posts`,
-};
-
 /**
  * Shared sort comparator: descending by start year.
  * Handles start_year integer property or year string like "2020–2022".
@@ -46,44 +38,6 @@ const byStartYearDesc = (a, b) => {
     item.start_year || parseInt(item.year?.split('–')[0] || item.year?.split('-')[0] || 0);
   return getYear(b) - getYear(a);
 };
-
-/**
- * Fetch data from a Supabase Edge Function with retry and timeout.
- */
-async function fetchFromSupabase(endpoint, name, retries = 3) {
-  const headers = {
-    'Authorization': SUPABASE_AUTH,
-    'apikey': SUPABASE_APIKEY,
-    'Content-Type': 'application/json'
-  };
-
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      console.log(`📡 Fetching ${name}${attempt > 1 ? ` (attempt ${attempt})` : ''}...`);
-      const response = await fetch(endpoint, {
-        headers,
-        signal: AbortSignal.timeout(10_000)
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${response.statusText}\n${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log(`✅ Fetched ${data.length || 0} ${name}`);
-      return data;
-    } catch (error) {
-      if (attempt === retries) {
-        console.error(`❌ Error fetching ${name} after ${retries} attempts:`, error.message);
-        throw error;
-      }
-      const delay = 1000 * 2 ** (attempt - 1); // exponential backoff: 1s, 2s
-      console.warn(`⚠️  Attempt ${attempt} failed for ${name}, retrying in ${delay}ms...`);
-      await new Promise(r => setTimeout(r, delay));
-    }
-  }
-}
 
 /**
  * Fetch work experience records from Sanity CMS via GROQ.
@@ -260,6 +214,100 @@ async function fetchSystemMapLinks() {
 }
 
 /**
+ * Fetch blog posts from Sanity CMS via GROQ.
+ * Converts Portable Text body to HTML with custom renderers for images,
+ * code blocks, and callout boxes. Auto-calculates read time from body text.
+ */
+async function fetchBlogPosts() {
+  console.log('📡 Fetching blog posts (Sanity)...');
+
+  const query = `*[_type == "blogPost"] | order(publishedAt desc) {
+    "id": slug.current,
+    title,
+    "publish_date": publishedAt,
+    published,
+    excerpt,
+    tags,
+    "coverImage": coverImage { alt, caption, asset },
+    "body": body[] { ..., asset },
+    "related_projects": relatedProjects[]->slug.current
+  }`;
+
+  const rawPosts = await sanityClient.fetch(query);
+
+  const { toHTML } = await import('@portabletext/to-html');
+
+  const CALLOUT_EMOJIS = { insight: '💡', warning: '⚠️', tip: '✅', info: 'ℹ️' };
+
+  const posts = rawPosts.map(rawPost => {
+    const cover_image = rawPost.coverImage?.asset?._ref ? {
+      url: urlFor(rawPost.coverImage.asset).width(1200).auto('format').quality(90).url(),
+      thumbnail_url: urlFor(rawPost.coverImage.asset).width(600).auto('format').quality(85).url(),
+      alt: rawPost.coverImage.alt ?? '',
+    } : null;
+
+    const wordCount = (rawPost.body ?? [])
+      .filter(block => block._type === 'block')
+      .flatMap(block => block.children ?? [])
+      .map(span => span.text ?? '')
+      .join(' ')
+      .split(/\s+/)
+      .filter(Boolean)
+      .length;
+    const read_time = Math.ceil(wordCount / 200) || 1;
+
+    const content = rawPost.body
+      ? toHTML(rawPost.body, {
+          components: {
+            types: {
+              image: ({ value }) => {
+                if (!value?.asset?._ref) return '';
+                const src = urlFor(value.asset).width(800).auto('format').quality(85).url();
+                const alt = value.alt ?? '';
+                const caption = value.caption ?? '';
+                if (caption) {
+                  return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
+                }
+                return `<figure><img src="${src}" alt="${alt}" /></figure>`;
+              },
+              codeBlock: ({ value }) => {
+                const language = value.language ?? 'other';
+                const escaped = (value.code ?? '')
+                  .replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;');
+                return `<pre class="code-block language-${language}"><code>${escaped}</code></pre>`;
+              },
+              callout: ({ value }) => {
+                const variant = value.variant ?? 'info';
+                const emoji = CALLOUT_EMOJIS[variant] ?? 'ℹ️';
+                const body = value.content ?? '';
+                return `<div class="callout callout-${variant}"><span class="callout-icon">${emoji}</span><div class="callout-body">${body}</div></div>`;
+              },
+            },
+          },
+        })
+      : '';
+
+    return {
+      id: rawPost.id,
+      title: rawPost.title,
+      publish_date: rawPost.publish_date,
+      published: rawPost.published,
+      excerpt: rawPost.excerpt ?? '',
+      tags: rawPost.tags ?? [],
+      cover_image,
+      content,
+      read_time,
+      related_projects: rawPost.related_projects ?? [],
+    };
+  });
+
+  console.log(`✅ Fetched ${posts.length} blog posts`);
+  return posts;
+}
+
+/**
  * Convert icon strings to import statements
  */
 function generateIconImports(data) {
@@ -339,7 +387,7 @@ function generateConstantsFile(projects, workExperience, education, blogPosts, s
   return `/**
  * AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
  * Generated: ${timestamp}
- * Source: Supabase Edge Functions
+ * Source: Sanity CMS
  *
  * This file is automatically generated by scripts/fetch-data.js
  * Run 'npm run fetch-data' to regenerate
@@ -409,6 +457,7 @@ export const WORK_EXPERIENCE = ${JSON.stringify(workExperience.map(w => ({
 
 export const EDUCATION = ${JSON.stringify(education.map(e => ({
     ...e,
+    highlights: e.highlights ?? [],
     icon: e.icon
   })), null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
 
@@ -449,22 +498,21 @@ async function main() {
   console.log('🚀 Starting data fetch...\n');
 
   try {
-    // Fetch all data in parallel (education + work experience + projects + system map links from Sanity, blog posts from Supabase)
+    // Fetch all data in parallel from Sanity
     const [projects, workExperience, education, blogPosts, systemMapLinks] = await Promise.all([
       fetchProjects(),
       fetchWorkExperience(),
       fetchEducation(),
-      fetchFromSupabase(ENDPOINTS.blogPosts, 'blog posts'),
+      fetchBlogPosts(),
       fetchSystemMapLinks(),
     ]);
 
     console.log('\n📝 Generating constants.js...');
 
-    // Sort all data by start year descending
+    // Sort all data by start year descending (blog posts are pre-sorted by publishedAt in GROQ)
     projects.sort(byStartYearDesc);
     workExperience.sort(byStartYearDesc);
     education.sort(byStartYearDesc);
-    blogPosts.sort(byStartYearDesc);
 
     const content = generateConstantsFile(
       projects,
