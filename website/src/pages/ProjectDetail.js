@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink, Calendar, Tag } from 'lucide-react';
 import { PROJECTS } from '../data/constants';
 import ImageCarousel from '../components/ImageCarousel';
 import DOMPurify from 'dompurify';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const ProjectDetail = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
+  const { track } = useAnalytics();
   const project = PROJECTS.find(p => p.id === projectId);
 
   const createMarkup = (html) => {
@@ -19,6 +21,12 @@ const ProjectDetail = () => {
       })
     };
   };
+
+  useEffect(() => {
+    if (!project) {
+      track('project_not_found', { project_id: projectId });
+    }
+  }, [project, projectId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!project) {
     return (
@@ -95,15 +103,16 @@ const ProjectDetail = () => {
         <div className="lg:col-span-2 space-y-8">
           {/* Image Carousel */}
           <motion.div variants={itemVariants}>
-            <ImageCarousel 
+            <ImageCarousel
               images={project.images || [
                 {
                   url: '/api/placeholder/800/400',
                   alt: `${project.title} - Main Image`,
                   caption: 'Project overview'
                 }
-              ]} 
-              title={project.title} 
+              ]}
+              title={project.title}
+              projectId={project.id}
             />
           </motion.div>
 
@@ -182,6 +191,7 @@ const ProjectDetail = () => {
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => track('external_link_clicked', { type: 'github', project_id: project.id, project_title: project.title })}
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                 >
                   <Github size={20} />
@@ -193,6 +203,7 @@ const ProjectDetail = () => {
                   href={project.demo}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => track('external_link_clicked', { type: 'demo', project_id: project.id, project_title: project.title })}
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                 >
                   <ExternalLink size={20} />

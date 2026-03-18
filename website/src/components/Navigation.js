@@ -2,10 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Moon, Sun, Menu, X, Zap } from 'lucide-react';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const Navigation = ({ darkMode, toggleDarkMode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { track } = useAnalytics();
+
+  const handleDarkModeToggle = () => {
+    toggleDarkMode();
+    track('dark_mode_toggled', { mode: darkMode ? 'light' : 'dark' });
+  };
+
+  const handleMobileMenuToggle = () => {
+    const next = !isOpen;
+    setIsOpen(next);
+    track('mobile_menu_toggled', { action: next ? 'open' : 'close' });
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -70,7 +83,7 @@ const Navigation = ({ darkMode, toggleDarkMode }) => {
             
             {/* Dark Mode Toggle */}
             <button
-              onClick={toggleDarkMode}
+              onClick={handleDarkModeToggle}
               className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               aria-label="Toggle dark mode"
             >
@@ -85,7 +98,7 @@ const Navigation = ({ darkMode, toggleDarkMode }) => {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
             <button
-              onClick={toggleDarkMode}
+              onClick={handleDarkModeToggle}
               className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               aria-label="Toggle dark mode"
             >
@@ -96,7 +109,7 @@ const Navigation = ({ darkMode, toggleDarkMode }) => {
               )}
             </button>
             <button
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={handleMobileMenuToggle}
               className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               aria-label="Toggle menu"
             >

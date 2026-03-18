@@ -6,6 +6,7 @@ import { SOCIAL_LINKS } from '../data/constants';
 import AnimatedSystemFlow from '../components/AnimatedSystemFlow';
 import TimelineSnapshot from '../components/TimelineSnapshot';
 import FeaturedProjects from '../components/FeaturedProjects';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -25,6 +26,8 @@ const itemVariants = {
 };
 
 const Home = () => {
+  const { track } = useAnalytics();
+
   return (
     <motion.div
       className="pt-16"
@@ -61,6 +64,7 @@ const Home = () => {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track('external_link_clicked', { type: 'resume', page: 'home' })}
               className="group px-8 py-4 border-2 border-primary-600 text-primary-600 dark:text-primary-400 hover:bg-primary-600 hover:text-white rounded-lg font-semibold transition-all duration-300 flex items-center space-x-2 transform hover:-translate-y-1"
             >
               <Download className="w-5 h-5" />
@@ -111,6 +115,7 @@ const Home = () => {
               href={SOCIAL_LINKS.linkedin.url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track('external_link_clicked', { type: 'linkedin', page: 'home' })}
               className="px-8 py-4 border-2 border-accent-600 text-accent-600 hover:bg-accent-600 hover:text-white rounded-lg font-semibold transition-all duration-300 transform hover:-translate-y-1"
             >
               LinkedIn
@@ -119,6 +124,7 @@ const Home = () => {
               href={SOCIAL_LINKS.github.url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track('external_link_clicked', { type: 'github', page: 'home' })}
               className="px-8 py-4 border-2 border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-600 hover:text-white rounded-lg font-semibold transition-all duration-300 transform hover:-translate-y-1"
             >
               GitHub

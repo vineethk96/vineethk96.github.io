@@ -214,6 +214,29 @@ async function fetchSystemMapLinks() {
 }
 
 /**
+ * Fetch personal info singleton from Sanity CMS via GROQ.
+ * Uses fixed documentId 'personalInfo' — only one document can exist.
+ * GROQ aliases `items` back to `skills` for each skill category.
+ */
+async function fetchPersonalInfo() {
+  console.log('📡 Fetching personal info (Sanity)...');
+  const query = `*[_type == "personalInfo" && _id == "personalInfo"][0] {
+    name, email, location, tagline, bio, expectedGraduation,
+    socialLinks[] { key, url, displayUrl, icon, label, color },
+    calendlyUrl,
+    "resumeUrl": resume.asset->url,
+    introduction,
+    journey,
+    vision,
+    skills[] { category, icon, "skills": items, color },
+    certifications[] { name, issuer, year, description }
+  }`;
+  const data = await sanityClient.fetch(query);
+  console.log('✅ Fetched personal info');
+  return data;
+}
+
+/**
  * Fetch blog posts from Sanity CMS via GROQ.
  * Converts Portable Text body to HTML with custom renderers for images,
  * code blocks, and callout boxes. Auto-calculates read time from body text.
@@ -321,68 +344,74 @@ function generateIconImports(data) {
 /**
  * Generate constants.js file content
  */
-function generateConstantsFile(projects, workExperience, education, blogPosts, systemMapLinks) {
-  const allIcons = generateIconImports([...projects, ...workExperience, ...education]);
+function generateConstantsFile(projects, workExperience, education, blogPosts, systemMapLinks, personalInfo) {
+  const info = personalInfo || {};
   const timestamp = new Date().toISOString();
 
-  // Hardcoded personal data
-  const PERSONAL_INFO = {
-    name: 'Vineeth Kirandumkara',
-    email: 'vineethkirandumkara+portfolio@gmail.com',
-    location: 'London, UK',
-    tagline: 'IoT Systems Engineer & Connected Product Designer',
-    bio: 'Passionate about creating intelligent, connected systems that bridge the physical and digital worlds.',
-    expectedGraduation: 'Summer 2025'
-  };
+  // Reconstruct keyed SOCIAL_LINKS object from Sanity array
+  const SOCIAL_LINKS = {};
+  (info.socialLinks || []).forEach(link => {
+    SOCIAL_LINKS[link.key.toLowerCase()] = {
+      url: link.url,
+      displayUrl: link.displayUrl,
+      icon: link.icon,
+      label: link.label,
+      color: link.color,
+    };
+  });
 
-  const SOCIAL_LINKS = {
-    linkedin: {
-      url: 'https://www.linkedin.com/in/vineeth-kirandumkara-3b322924',
-      displayUrl: 'linkedin.com/in/vineeth-kirandumkara',
-      icon: 'Linkedin',
-      label: 'LinkedIn',
-      color: 'text-blue-600'
-    },
-    github: {
-      url: 'https://github.com/vineethk96',
-      displayUrl: 'github.com/vineethk96',
-      icon: 'Github',
-      label: 'GitHub',
-      color: 'text-gray-700 dark:text-gray-300'
-    }
+  // Reconstruct keyed SKILLS object from Sanity array
+  const SKILLS = {};
+  (info.skills || []).forEach(cat => {
+    SKILLS[cat.category] = {icon: cat.icon, skills: cat.skills, color: cat.color};
+  });
+
+  const PERSONAL_INFO = {
+    name: info.name || '',
+    email: info.email || '',
+    location: info.location || '',
+    tagline: info.tagline || '',
+    bio: info.bio || '',
+    expectedGraduation: info.expectedGraduation || '',
   };
 
   // Derive CONTACT_INFO from PERSONAL_INFO and SOCIAL_LINKS
+  const linkedinLink = SOCIAL_LINKS.linkedin || {};
+  const githubLink = SOCIAL_LINKS.github || {};
   const CONTACT_INFO = [
     {
       icon: 'Mail',
       label: 'Email',
       value: PERSONAL_INFO.email,
       href: `mailto:${PERSONAL_INFO.email}`,
-      color: 'text-blue-500'
+      color: 'text-blue-500',
     },
     {
       icon: 'MapPin',
       label: 'Location',
       value: PERSONAL_INFO.location,
       href: null,
-      color: 'text-green-500'
+      color: 'text-green-500',
     },
-    {
-      icon: SOCIAL_LINKS.linkedin.icon,
-      label: SOCIAL_LINKS.linkedin.label,
-      value: SOCIAL_LINKS.linkedin.displayUrl,
-      href: SOCIAL_LINKS.linkedin.url,
-      color: SOCIAL_LINKS.linkedin.color
-    },
-    {
-      icon: SOCIAL_LINKS.github.icon,
-      label: SOCIAL_LINKS.github.label,
-      value: SOCIAL_LINKS.github.displayUrl,
-      href: SOCIAL_LINKS.github.url,
-      color: SOCIAL_LINKS.github.color
-    }
+    ...(linkedinLink.url ? [{
+      icon: linkedinLink.icon,
+      label: linkedinLink.label,
+      value: linkedinLink.displayUrl,
+      href: linkedinLink.url,
+      color: linkedinLink.color,
+    }] : []),
+    ...(githubLink.url ? [{
+      icon: githubLink.icon,
+      label: githubLink.label,
+      value: githubLink.displayUrl,
+      href: githubLink.url,
+      color: githubLink.color,
+    }] : []),
   ];
+
+  const baseIcons = generateIconImports([...projects, ...workExperience, ...education]);
+  const contactIcons = CONTACT_INFO.map(item => item.icon).filter(Boolean);
+  const uniqueIcons = [...new Set([...baseIcons, ...contactIcons])].sort();
 
   return `/**
  * AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
@@ -393,10 +422,10 @@ function generateConstantsFile(projects, workExperience, education, blogPosts, s
  * Run 'npm run fetch-data' to regenerate
  */
 
-import { ${allIcons.join(', ')} } from 'lucide-react';
+import { ${uniqueIcons.join(', ')} } from 'lucide-react';
 
 // ============================================
-// PERSONAL INFORMATION (Hardcoded - rarely changes)
+// PERSONAL INFORMATION (from Sanity CMS)
 // ============================================
 
 export const PERSONAL_INFO = ${JSON.stringify(PERSONAL_INFO, null, 2)};
@@ -404,46 +433,20 @@ export const PERSONAL_INFO = ${JSON.stringify(PERSONAL_INFO, null, 2)};
 export const SOCIAL_LINKS = ${JSON.stringify(SOCIAL_LINKS, null, 2)};
 
 export const EXTERNAL_LINKS = {
-  calendly: 'https://calendly.com/vineethk96',
-  resume: '/vineethCV.pdf'
+  calendly: ${JSON.stringify(info.calendlyUrl || '')},
+  resume: ${JSON.stringify(info.resumeUrl || '')}
 };
 
 export const PERSONAL_STORY = {
-  introduction: "I’m an embedded systems engineer and creative technologist who builds connected products that bridge rigorous hardware and software with thoughtful, human-centered experiences.",
-  journey: [
-    "My path into this space began in high school, where joining the robotics team let me explore how things work at a fundamental level. From designing robot components in Autodesk Inventor to programming in LabVIEW, I discovered how much I enjoyed developing mechatronic systems that solve complex, tangible challenges. That curiosity led me to pursue a Bachelor’s in Computer Engineering at Virginia Tech, where I deepened my understanding of embedded systems and electronics and was first exposed to product development and design principles that emphasized user experience alongside technical craft.",
-    "Discovering the Industrial Design program at Virginia Tech opened my eyes to how interaction, form, and usability shape the way people relate to technology. That blend of design thinking and embedded engineering eventually led me to the Connected Environments MSc at University College London’s Bartlett School of Architecture (UCL), where I could formally explore the intersection of the Internet of Things (IoT), AI, product prototyping, and deployment. By the time I joined the program, I had already spent around five years working at startups and engineering teams, leading tasks such as refactoring the entire codebase for a world-record‑breaking UAV (Vanilla Unmanned) to cut memory usage by 50% and improve processing speed by 40%, and creating automated PCB test suites that ran on thousands of boards in manufacturing. During the MSc, I worked on projects like Lumos (an interactive light wall I designed and built end to end, from CAD and wiring to firmware and testing) and Hot Stone, (where I owned the electronics, firmware, networking, and testing for a modernist sculptural piece that lets people share the warmth of holding a loved one’s hand from afar).",
-    "The program culminated in a Distinction-grade dissertation that used low-cost ultrasonic anemometers to quantify the urban canyon effect. I designed and prototyped the sensing system to measure wind through dense urban corridors, showing how affordable sensors can help map where small-scale turbines could be placed for more effective, democratized clean energy generation. That project brought together my interests in embedded systems, environmental sensing, urban environments, and using connected devices to tackle real-world sustainability challenges. It also reinforced my belief that powerful tools don’t need to be expensive to make a meaningful impact.",
-    "Across my career and side projects, my skill set has become both broad and deep: from Python automation scripts that aggregate data across thousands of sources, to embedded drivers and firmware for medical and industrial devices, to IoT prototypes that connect people across distance and mobile apps that support everyday experiences like planning a trip. What ties these efforts together is a consistent focus on thoughtful system architecture, robust implementation, and the quality of the interaction people have with the final product. My strongest contributions are in IoT, product prototyping, architecting reliable connected systems end to end, and shaping interactions that make complex technology feel intuitive and human. With all of this under my belt, I’m now focused on the bigger picture: how connected devices can create meaningful experiences for people and their communities, whether in healthcare, urban environments, sustainability, or the everyday spaces where we live and work."
-  ],
-  vision: "I'm excited to join teams that are building the next generation of connected products. My goal is to work at the intersection of IoT systems, product design, and user experience, creating technology that seamlessly integrates into people's lives and scales to serve millions of users worldwide."
+  introduction: ${JSON.stringify(info.introduction || '')},
+  journey: ${JSON.stringify(info.journey || [], null, 2)},
+  vision: ${JSON.stringify(info.vision || '')}
 };
 
-export const SKILLS = {
-  'Embedded Systems': {
-    icon: 'Zap',
-    skills: ['C/C++', 'FreeRTOS', 'ESP32/Arduino', 'PCB Design', 'Signal Processing'],
-    color: 'text-blue-500'
-  },
-  'IoT & Cloud': {
-    icon: 'Globe',
-    skills: ['MQTT', 'AWS/Cloud Services', 'REST APIs', 'Data Analytics', 'System Architecture'],
-    color: 'text-green-500'
-  },
-  'Software Development': {
-    icon: 'Code',
-    skills: ['Python', 'JavaScript/React', 'Flutter', 'Git', 'Agile/Scrum'],
-    color: 'text-purple-500'
-  },
-  'Design & Prototyping': {
-    icon: 'Target',
-    skills: ['Product Design', 'User Research', 'CAD/3D Modeling', 'Rapid Prototyping', 'UI/UX'],
-    color: 'text-pink-500'
-  }
-};
+export const SKILLS = ${JSON.stringify(SKILLS, null, 2)};
 
 // ============================================
-// DYNAMIC DATA (Fetched from Supabase)
+// DYNAMIC DATA (Fetched from Sanity CMS)
 // ============================================
 
 export const PROJECTS = ${JSON.stringify(projects.map(p => ({
@@ -478,17 +481,9 @@ export const TIMELINE_DATA = [
   return getStartYear(b) - getStartYear(a);
 });
 
-export const CONTACT_INFO = ${JSON.stringify(CONTACT_INFO, null, 2)};
+export const CONTACT_INFO = ${JSON.stringify(CONTACT_INFO, null, 2).replace(/"icon":\s*"(\w+)"/g, 'icon: $1')};
 
-// Certifications
-export const CERTIFICATIONS = [
-  {
-    name: 'Autodesk Inventor Professional',
-    issuer: 'Autodesk',
-    year: '2019',
-    description: 'Advanced 3D CAD design and mechanical engineering'
-  }
-];
+export const CERTIFICATIONS = ${JSON.stringify(info.certifications || [], null, 2)};
 `;
 }
 
@@ -500,12 +495,13 @@ async function main() {
 
   try {
     // Fetch all data in parallel from Sanity
-    const [projects, workExperience, education, blogPosts, systemMapLinks] = await Promise.all([
+    const [projects, workExperience, education, blogPosts, systemMapLinks, personalInfo] = await Promise.all([
       fetchProjects(),
       fetchWorkExperience(),
       fetchEducation(),
       fetchBlogPosts(),
       fetchSystemMapLinks(),
+      fetchPersonalInfo(),
     ]);
 
     console.log('\n📝 Generating constants.js...');
@@ -520,7 +516,8 @@ async function main() {
       workExperience,
       education,
       blogPosts,
-      systemMapLinks
+      systemMapLinks,
+      personalInfo
     );
 
     const outputPath = path.join(__dirname, '..', 'src', 'data', 'constants.js');
@@ -533,6 +530,7 @@ async function main() {
     console.log(`   - Education: ${education.length}`);
     console.log(`   - Blog Posts: ${blogPosts.length}`);
     console.log(`   - System Map Links: ${systemMapLinks.length}`);
+    console.log(`   - Personal Info: ${personalInfo ? 'loaded' : 'missing'}`);
     console.log('\n✨ Done!\n');
 
   } catch (error) {

@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
 import { PROJECTS, SYSTEM_MAP_LINKS } from '../data/constants';
 import { getRelationshipColor } from '../utils/systemMap';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const SystemMapD3 = () => {
   const navigate = useNavigate();
+  const { track } = useAnalytics();
   const svgRef = useRef();
   const [selectedNode, setSelectedNode] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
@@ -27,9 +29,9 @@ const SystemMapD3 = () => {
 
   const handleNodeClick = useCallback((node) => {
     setSelectedNode(node);
-    // Navigate to project detail page
+    track('system_map_node_clicked', { project_id: node.id, project_title: node.name });
     navigate(`/projects/${node.id}`);
-  }, [navigate]);
+  }, [navigate, track]);
 
   const handleBackgroundClick = useCallback(() => {
     setSelectedNode(null);

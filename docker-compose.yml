@@ -4,6 +4,8 @@ services:
     container_name: portfolio-dev
     ports:
       - "3000:3000"
+    environment:
+      - HOST=0.0.0.0
     volumes:
       - ./website:/app                              # Live source sync from host
       - node_modules:/app/node_modules              # Named volume keeps container's built-in node_modules
