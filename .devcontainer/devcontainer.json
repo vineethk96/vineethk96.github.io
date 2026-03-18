@@ -30,8 +30,9 @@
 	// Stop compose services when VS Code disconnects, preventing stale containers on next open.
 	"shutdownAction": "stopCompose",
 
-	// Uncomment the next line to run commands after the container is created.
-	// "postCreateCommand": "cat /etc/os-release",
+	// Runs after container creation to install website deps into the node_modules named volume.
+	// This ensures @craco/craco and all devDependencies are present even after a volume wipe.
+	"postCreateCommand": "npm --prefix /app ci",
 
 	// Configure tool-specific properties.
 	// "customizations": {},

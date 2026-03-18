@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Award, Globe, Code, Zap, Users, Target } from 'lucide-react';
+import { GraduationCap, Award, Globe, Code, Zap, Users, Target, Cloud, Brain } from 'lucide-react';
 import { EDUCATION, SKILLS, CERTIFICATIONS, PERSONAL_STORY } from '../data/constants';
 
 const About = () => {
@@ -21,7 +21,9 @@ const About = () => {
       'Zap': Zap,
       'Globe': Globe,
       'Code': Code,
-      'Target': Target
+      'Target': Target,
+      'Cloud': Cloud,
+      'Brain': Brain
     }[data.icon];
     
     return {

@@ -11,6 +11,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
 import { useDarkMode } from './hooks/useDarkMode';
 import PageviewTracker from './components/analytics/PageviewTracker';
 import CookieConsent from './components/analytics/CookieConsent';
@@ -39,6 +40,7 @@ function App() {
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:blogId" element={<BlogDetail />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </AnimatePresence>
         </ErrorBoundary>

@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Grid, Network } from 'lucide-react';
 import SystemMap from '../components/SystemMapD3';
 import ProjectGrid from '../components/ProjectGrid';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const Projects = () => {
+  const { track } = useAnalytics();
   const [viewMode, setViewMode] = useState('grid'); // 'map' or 'grid'
 
   const containerVariants = {
@@ -52,7 +54,7 @@ const Projects = () => {
         <motion.div variants={itemVariants} className="flex justify-center mb-12">
           <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 flex items-center space-x-1">
             <button
-              onClick={() => setViewMode('map')}
+              onClick={() => { setViewMode('map'); track('project_view_mode_changed', { mode: 'map' }); }}
               className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-300 ${
                 viewMode === 'map'
                   ? 'bg-primary-600 text-white shadow-md'
@@ -63,7 +65,7 @@ const Projects = () => {
               <span className="font-medium">System Map</span>
             </button>
             <button
-              onClick={() => setViewMode('grid')}
+              onClick={() => { setViewMode('grid'); track('project_view_mode_changed', { mode: 'grid' }); }}
               className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-300 ${
                 viewMode === 'grid'
                   ? 'bg-primary-600 text-white shadow-md'

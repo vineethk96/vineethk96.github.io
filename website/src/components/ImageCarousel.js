@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { useAnalytics } from '../hooks/useAnalytics';
 
-const ImageCarousel = ({ images, title }) => {
+const ImageCarousel = ({ images, title, projectId }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { track } = useAnalytics();
 
   const nextImage = () => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -17,6 +19,7 @@ const ImageCarousel = ({ images, title }) => {
   const openModal = (index) => {
     setCurrentIndex(index);
     setIsModalOpen(true);
+    track('project_image_fullscreen_opened', { project_id: projectId });
   };
 
   const closeModal = () => {

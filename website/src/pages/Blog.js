@@ -3,8 +3,11 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, ArrowRight, BookOpen } from 'lucide-react';
 import { BLOG_POSTS } from '../data/constants';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const Blog = () => {
+  const { track } = useAnalytics();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -145,7 +148,10 @@ const Blog = () => {
                 placeholder="Enter your email"
                 className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
               />
-              <button className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors duration-300">
+              <button
+                onClick={() => track('unimplemented_feature_clicked', { feature: 'blog_subscribe', page: 'blog_listing' })}
+                className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors duration-300"
+              >
                 Subscribe
               </button>
             </div>

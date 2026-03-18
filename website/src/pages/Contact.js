@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, MessageSquare, Calendar, ExternalLink } from 'lucide-react';
 import { CONTACT_INFO, EXTERNAL_LINKS } from '../data/constants';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const Contact = () => {
+  const { track } = useAnalytics();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,7 +22,7 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
+    track('contact_form_submitted', { subject: formData.subject });
     console.log('Form submitted:', formData);
   };
 
@@ -114,6 +116,7 @@ const Contact = () => {
                   href={EXTERNAL_LINKS.calendly}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => track('external_link_clicked', { type: 'calendly' })}
                   className="flex items-center space-x-3 p-4 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors duration-300"
                 >
                   <Calendar className="w-5 h-5" />
@@ -124,6 +127,7 @@ const Contact = () => {
                   download="Vineeth_Kirandumkara_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => track('external_link_clicked', { type: 'resume' })}
                   className="flex items-center space-x-3 p-4 bg-accent-50 dark:bg-accent-900/20 text-accent-700 dark:text-accent-300 rounded-lg hover:bg-accent-100 dark:hover:bg-accent-900/30 transition-colors duration-300"
                 >
                   <ExternalLink className="w-5 h-5" />

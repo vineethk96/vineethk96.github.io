@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { BLOG_POSTS } from '../data/constants';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -30,7 +31,14 @@ const createMarkup = (html) => ({
 const BlogDetail = () => {
   const { blogId } = useParams();
   const navigate = useNavigate();
+  const { track } = useAnalytics();
   const blog = BLOG_POSTS.find(b => b.id === blogId);
+
+  useEffect(() => {
+    if (!blog) {
+      track('blog_not_found', { blog_id: blogId });
+    }
+  }, [blog, blogId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!blog) {
     return (
@@ -127,10 +135,16 @@ const BlogDetail = () => {
                 Connect with me to discuss more about IoT and connected systems.
               </p>
               <div className="flex gap-4">
-                <button className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+                <button
+                  onClick={() => track('unimplemented_feature_clicked', { feature: 'share_article', blog_id: blog.id })}
+                  className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                >
                   Share Article
                 </button>
-                <button className="border border-white px-4 py-2 rounded-lg font-medium hover:bg-white hover:text-blue-600 transition-colors">
+                <button
+                  onClick={() => track('unimplemented_feature_clicked', { feature: 'follow_author' })}
+                  className="border border-white px-4 py-2 rounded-lg font-medium hover:bg-white hover:text-blue-600 transition-colors"
+                >
                   Follow for More
                 </button>
               </div>
@@ -225,7 +239,10 @@ const BlogDetail = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Get notified when new articles are published.
             </p>
-            <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+            <button
+              onClick={() => track('unimplemented_feature_clicked', { feature: 'newsletter_subscribe' })}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+            >
               Subscribe
             </button>
           </motion.div>
