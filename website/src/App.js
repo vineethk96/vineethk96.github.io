@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navigation';
@@ -12,22 +12,19 @@ import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
-import { useDarkMode } from './hooks/useDarkMode';
 import PageviewTracker from './components/analytics/PageviewTracker';
 import CookieConsent from './components/analytics/CookieConsent';
 
 function App() {
-  const [darkMode, toggleDarkMode] = useDarkMode();
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
 
   return (
     <Router>
       <PageviewTracker />
-      <div className={`min-h-screen transition-colors duration-300 ${
-        darkMode
-          ? 'bg-gray-900 text-white blueprint-bg'
-          : 'bg-white text-gray-900'
-      }`}>
-        <Navigation darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <div className="min-h-screen transition-colors duration-300 bg-[#0a0f1e] text-white blueprint-bg">
+        <Navigation />
 
         <ErrorBoundary>
           <AnimatePresence mode="wait">
