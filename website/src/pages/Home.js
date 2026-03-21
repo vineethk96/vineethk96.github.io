@@ -111,21 +111,18 @@ const Home = () => {
                   />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 translate-y-[-2px] bg-lego-navy text-white text-[9px] font-black tracking-widest px-3 py-1.5 rounded-b-xl text-center z-10">
-                  UNIT_VK96
+                  SYSTEM_ARCHITECT_01
                 </div>
               </div>
 
               {/* Hero text */}
               <div className="flex-1 space-y-5">
                 <div>
-                  <p className="font-mono text-xs tracking-widest text-primary-600 uppercase mb-2">
-                    OP_01 / EMBEDDED SYSTEMS
-                  </p>
-                  <p className={`font-mono text-sm leading-relaxed transition-colors duration-500 ${
+                  <p className={`font-sans italic font-bold text-2xl sm:text-3xl leading-snug transition-colors duration-500 ${
                     isActive ? 'text-lego-navy' : 'text-lego-navy/50'
                   }`}>
                     {isActive
-                      ? 'Systems online. Designing connected hardware and IoT architectures ready for mass market deployment.'
+                      ? '"Building technology that makes the world marginally better."'
                       : 'Standby mode active. Awaiting system initialization to display full profile.'}
                   </p>
                 </div>
