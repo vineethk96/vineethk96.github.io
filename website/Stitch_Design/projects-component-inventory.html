@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Projects: Component Inventory | TECH_ARCHIVE_v1.0</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "secondary": "#795900",
+                "on-tertiary-fixed-variant": "#7e2c09",
+                "surface-container-high": "#eae8e3",
+                "surface-container-low": "#f5f3ee",
+                "surface-tint": "#4e5f7e",
+                "primary": "#031632",
+                "on-tertiary-fixed": "#380d00",
+                "on-background": "#1b1c19",
+                "surface-container-highest": "#e4e2dd",
+                "outline": "#75777e",
+                "secondary-fixed": "#ffdfa0",
+                "on-surface-variant": "#44474d",
+                "tertiary": "#310a00",
+                "secondary-container": "#ffbf00",
+                "on-primary": "#ffffff",
+                "primary-fixed-dim": "#b6c7eb",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "background": "#fbf9f4",
+                "on-primary-fixed-variant": "#374765",
+                "on-primary-fixed": "#081b38",
+                "inverse-primary": "#b6c7eb",
+                "tertiary-fixed": "#ffdbcf",
+                "on-tertiary": "#ffffff",
+                "on-error-container": "#93000a",
+                "on-surface": "#1b1c19",
+                "inverse-surface": "#30312e",
+                "surface-dim": "#dbdad5",
+                "outline-variant": "#c5c6ce",
+                "surface-bright": "#fbf9f4",
+                "tertiary-fixed-dim": "#ffb59b",
+                "primary-container": "#1a2b48",
+                "error-container": "#ffdad6",
+                "surface-variant": "#e4e2dd",
+                "primary-fixed": "#d7e2ff",
+                "on-tertiary-container": "#df754d",
+                "on-secondary-container": "#6d5000",
+                "tertiary-container": "#531700",
+                "surface": "#fbf9f4",
+                "error": "#ba1a1a",
+                "on-primary-container": "#8293b5",
+                "on-secondary-fixed": "#261a00",
+                "on-error": "#ffffff",
+                "secondary-fixed-dim": "#fbbc00",
+                "inverse-on-surface": "#f2f1ec",
+                "surface-container": "#f0eee9",
+                "on-secondary-fixed-variant": "#5c4300"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Space Grotesk"],
+                "label": ["Plus Jakarta Sans"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .blueprint-grid {
+            background-image: 
+                linear-gradient(to right, rgba(3, 22, 50, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(3, 22, 50, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f5f3ee;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #031632;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body custom-scrollbar min-h-screen flex flex-col">
+<!-- Top Navigation Bar (Consistent with SCREEN_78) -->
+<header class="w-full fixed top-0 z-50 px-6 py-4">
+<nav class="flex justify-between items-center max-w-7xl mx-auto bg-white rounded-full border-[3px] border-[#031632] p-2 shadow-[4px_4px_0px_0px_rgba(3,22,50,1)] transition-transform hover:translate-y-[-2px]">
+<div class="flex items-center gap-4 pl-4">
+<span class="text-xl font-black tracking-tighter text-[#031632]">SYS_ARCH_V2.0</span>
+</div>
+<div class="hidden md:flex items-center gap-1 font-headline">
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">HERO</a>
+<a class="text-[#031632] border-2 border-[#031632] bg-[#ffbf00] rounded-full px-4 py-1 font-bold tracking-tight uppercase text-xs" href="#">PROJECTS</a>
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">SKILLS</a>
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">EXPERIENCE</a>
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">ABOUT</a>
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">CONTACT</a>
+</div>
+<div class="flex items-center gap-2 pr-2">
+<button class="material-symbols-outlined p-2 text-[#031632] hover:bg-[#f0eee9] rounded-full transition-all">sensors</button>
+<button class="bg-[#031632] text-white px-6 py-2 rounded-full font-black uppercase text-[10px] tracking-widest shadow-[4px_4px_0px_0px_rgba(3,22,50,1)] active:translate-y-1 active:shadow-none transition-all">DOWNLOAD_CV</button>
+</div>
+</nav>
+</header>
+<main class="flex-grow pt-32 pb-24 relative overflow-hidden">
+<!-- Blueprint Grid Background Layer (Consistent with SCREEN_78) -->
+<div class="fixed inset-0 blueprint-grid pointer-events-none -z-10"></div>
+<div class="container mx-auto px-8 relative z-10">
+<!-- Page Header -->
+<div class="mb-20 flex flex-col items-start gap-4">
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 text-[10px] font-black tracking-[0.2em] uppercase rounded-none border-2 border-primary">
+                COMPONENT_INVENTORY_V1.0
+            </div>
+<h1 class="text-5xl md:text-7xl font-black text-primary tracking-[-0.04em] leading-[0.9] font-headline uppercase">
+                Selected <br/><span class="text-outline opacity-40 italic">Systems</span>
+</h1>
+<p class="text-on-surface-variant max-w-xl text-lg font-medium leading-tight mt-4 font-body">
+                An archival look at modular hardware assemblies and high-reliability software architectures built for industrial and aerospace applications.
+            </p>
+</div>
+<!-- Project Grid: Aligned to match the visual weight of Experience timeline modules -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
+<!-- Card 01: UAV Telemetry Module -->
+<div class="group bg-surface-container-low border-2 border-primary p-8 rounded-DEFAULT relative shadow-[8px_8px_0px_0px_#031632] hover:translate-x-1 hover:-translate-y-1 transition-all duration-300 flex flex-col">
+<div class="absolute top-4 right-4 flex gap-1 opacity-40">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+</div>
+<div class="aspect-video bg-surface-container-highest overflow-hidden border-2 border-primary mb-6">
+<img alt="UAV Telemetry Module" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgpAAttmi3WMbTo4F1AshqUuxN8v9lKZwsJEUCZKNgx4qeDlFvyFqXp4m73SEvQUC226CrNXDEWFiwqUMNOhHvn79fX6sNzPoKhxG1eTfLrmuvojbnWnUmVqnAxl_kwv9DEpPQFLKMj77u0DN3Vh4sDeWLQGb9VdqV-Po2FKF0HUxUyKAtyJJEX-enmu7bk9yftHwqZ4XeK5aNQxDiWhUk4JUXQR_fkUUI9V_INMZmJRY5wpVjJh4VyrCGeNL6ysUSv1xt4tYjmMc"/>
+</div>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-1">
+<span class="text-secondary font-black text-[10px] tracking-[0.2em] uppercase">SER_NO_4492</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">2022</span>
+</div>
+<h3 class="text-xl font-black text-primary font-headline tracking-[-0.02em] uppercase">UAV Telemetry Module</h3>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed flex-grow">
+                    RTOS-based telemetry for high-reliability aerospace control units. Integrated sensor fusion at 1kHz.
+                </p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">C++</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">RTOS</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">ARM</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">CANBUS</span>
+</div>
+</div>
+<!-- Card 02: Medical Diagnostic Instrument -->
+<div class="group bg-surface-container-low border-2 border-primary p-8 rounded-DEFAULT relative shadow-[8px_8px_0px_0px_#031632] hover:translate-x-1 hover:-translate-y-1 transition-all duration-300 flex flex-col">
+<div class="absolute top-4 right-4 flex gap-1 opacity-40">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+</div>
+<div class="aspect-video bg-surface-container-highest overflow-hidden border-2 border-primary mb-6">
+<img alt="Medical Diagnostic" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1zFeO2XJbIBfXwv8itq7imkGSoLvMBLrY7J8ki4hKeJ02Y-TvdQkveWZg5C5AZS7YNWDTEiiaZOsUPrL-qqW5hQMX-7kB9IEi7kHz4gPtyk8cb7KIupnaGGSD-fScveNj6HUhxBwd6DobKFoe5bMiADFpdm47t3dV684LmuSND0ZQrJ-WvRd_q1yzQTXaJX73oWcej0TWOpSEmULmdzlM5FxFhS6DIA-ETMb2nNK3LdxVgOlmIOZqL9rQgFGQuHW8ATt37qr8Zfs"/>
+</div>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-1">
+<span class="text-secondary font-black text-[10px] tracking-[0.2em] uppercase">SER_NO_9011</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">2023</span>
+</div>
+<h3 class="text-xl font-black text-primary font-headline tracking-[-0.02em] uppercase">Medical Diagnostic Instrument</h3>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed flex-grow">
+                    Embedded visual analysis engine for rapid point-of-care testing. Low-latency signal processing.
+                </p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">PYTHON</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">FPGA</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">CUDA</span>
+</div>
+</div>
+<!-- SLOT_EMPTY 01 -->
+<div class="flex flex-col items-center justify-center bg-surface-container-low border-2 border-dashed border-outline-variant rounded-DEFAULT min-h-[400px] opacity-60">
+<span class="material-symbols-outlined text-4xl text-outline-variant mb-4">settings_input_component</span>
+<span class="text-[10px] font-black text-outline-variant tracking-[0.2em] uppercase">SLOT_EMPTY_03</span>
+</div>
+<!-- Card 03: EV Charging Infrastructure -->
+<div class="group bg-surface-container-low border-2 border-primary p-8 rounded-DEFAULT relative shadow-[8px_8px_0px_0px_#031632] hover:translate-x-1 hover:-translate-y-1 transition-all duration-300 flex flex-col">
+<div class="absolute top-4 right-4 flex gap-1 opacity-40">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+</div>
+<div class="aspect-video bg-surface-container-highest overflow-hidden border-2 border-primary mb-6">
+<img alt="EV Charging" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDC9jGKUHteC2A9i8KpaDhez2Il5KpE5eM9Dm-SDDL9eK3Dwn1nAucV9eld9uwS0FCeLXoPNASk4_5QKReWl5Z2oKONroou1aQQ8k4kj8XHMtFm8ilu4ajHZDzbGVy6NSAGiTyRl9O-uq7URLoj3NThArvyoW_zjtzr52oq2fVBuOd_eDQDERCwIJcbRZKU4OPVVJ419Zx3Y1jISvPchDQrqSiLa_IPhCdNJw5a3cjMzaD_HEfqxW65tKpVVPAJNlbPRZ-u2AT6Wus"/>
+</div>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-1">
+<span class="text-secondary font-black text-[10px] tracking-[0.2em] uppercase">SER_NO_2210</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">2021</span>
+</div>
+<h3 class="text-xl font-black text-primary font-headline tracking-[-0.02em] uppercase">EV Charging Infrastructure</h3>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed flex-grow">
+                    Distributed power management system for ultra-fast charging networks. OCPP 2.0.1 compliant.
+                </p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">RUST</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">MQTT</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">LINUX</span>
+</div>
+</div>
+<!-- Card 04: Automated QC Vision -->
+<div class="group bg-surface-container-low border-2 border-primary p-8 rounded-DEFAULT relative shadow-[8px_8px_0px_0px_#031632] hover:translate-x-1 hover:-translate-y-1 transition-all duration-300 flex flex-col">
+<div class="absolute top-4 right-4 flex gap-1 opacity-40">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+</div>
+<div class="aspect-video bg-surface-container-highest overflow-hidden border-2 border-primary mb-6">
+<img alt="QC Vision" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzObb5GD1uwAv7JCHRJykW5M1TrKrxd7jnnrytlNt6C4or3vlAwy4Z4J62WJY60YXEOlVwYDqrv3_hMbat_Ii5KwVyqLSzBz_clMxYaK-5ZIFWTN4_4qe0rdVLVjKUyQyBBIXo53sWlugEES3--VgIlzHrioZw13usCZANXdnazZz7LZHhyTp0fEUbox0grXIvQ1Eu02gjEDjMdjZXDOJpRo9HMfJwhI-XgzSL2VDsBV48ZpZRvYWX0FAIKbTzZN-Obcp-Dl4jEgI"/>
+</div>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-1">
+<span class="text-secondary font-black text-[10px] tracking-[0.2em] uppercase">SER_NO_7731</span>
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">2024</span>
+</div>
+<h3 class="text-xl font-black text-primary font-headline tracking-[-0.02em] uppercase">Automated QC Vision</h3>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed flex-grow">
+                    Computer vision pipeline for sub-millimeter defect detection in semiconductor manufacturing.
+                </p>
+<div class="flex flex-wrap gap-2 mt-auto">
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">OPENCV</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">C++</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">TENSORFLOW</span>
+</div>
+</div>
+<!-- INITIATE NEW MODULE placeholder -->
+<div class="flex flex-col items-center justify-center bg-surface-container-low border-2 border-dashed border-outline-variant rounded-DEFAULT min-h-[400px] hover:bg-surface-container-highest transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-outline-variant mb-4 group-hover:text-primary transition-colors">add_circle</span>
+<span class="text-[10px] font-black text-outline-variant tracking-[0.2em] uppercase group-hover:text-primary transition-colors">INITIATE_NEW_MODULE</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Consistent with SCREEN_78) -->
+<footer class="w-full py-16 px-8 border-t-[6px] border-[#031632] bg-white mt-auto relative z-10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 font-headline">
+<div class="flex flex-col items-center md:items-start gap-3">
+<span class="font-black text-[#031632] uppercase tracking-tighter text-2xl">CORE_SYSTEM_LOGS</span>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold tracking-widest uppercase text-[#031632]/50">© 2024 CORE_SYSTEMS</span>
+<span class="text-[#031632]/20">|</span>
+<span class="text-[10px] font-bold tracking-widest uppercase text-[#031632]/50">BUILD_V2.0.4</span>
+</div>
+</div>
+<div class="flex gap-12">
+<a class="text-[11px] font-black tracking-widest uppercase text-[#031632] hover:text-[#310a00] transition-colors underline decoration-2 decoration-[#ffbf00]" href="#">GITHUB</a>
+<a class="text-[11px] font-black tracking-widest uppercase text-[#031632] hover:text-[#310a00] transition-colors underline decoration-2 decoration-[#ffbf00]" href="#">LINKEDIN</a>
+<a class="text-[11px] font-black tracking-widest uppercase text-[#031632] hover:text-[#310a00] transition-colors underline decoration-2 decoration-[#ffbf00]" href="#">TERMINAL</a>
+</div>
+<div class="flex items-center gap-4 bg-[#f0eee9] px-6 py-3 rounded-full border-2 border-[#031632]">
+<div class="w-3 h-3 bg-[#ffbf00] rounded-full shadow-[inset_0_2px_4px_0_rgba(255,255,255,0.3)] animate-pulse"></div>
+<span class="text-[11px] font-black tracking-[0.2em] uppercase text-[#031632]">SYSTEM_NOMINAL</span>
+</div>
+</div>
+</footer>
+</body></html>

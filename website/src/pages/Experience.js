@@ -1,170 +1,209 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, Calendar, MapPin, ExternalLink, Award, Code } from 'lucide-react';
-import { WORK_EXPERIENCE, EDUCATION } from '../data/constants';
+import { MapPin } from 'lucide-react';
+import { WORK_EXPERIENCE } from '../data/constants';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, delay: i * 0.1, ease: 'easeOut' },
+  }),
+};
+
+const DeploymentLogCard = ({ exp, index, isLeft }) => (
+  <motion.div
+    variants={fadeUp}
+    custom={index}
+    className={`relative flex ${isLeft ? 'flex-row' : 'flex-row-reverse'} gap-0`}
+  >
+    {/* Content Card */}
+    <div className={`w-[calc(50%-24px)] ${isLeft ? 'mr-12' : 'ml-12'}`}>
+      <motion.div
+        className="technic-module p-5 cursor-default"
+        whileHover={{ x: isLeft ? -2 : 2, y: -2 }}
+        transition={{ duration: 0.15 }}
+      >
+        {/* Card Header */}
+        <div className="flex flex-col gap-1 mb-3">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-heading font-bold text-primary text-lg leading-tight">
+              {exp.position}
+            </h3>
+            <span className="font-mono text-xs text-primary/40 uppercase tracking-wider whitespace-nowrap flex-shrink-0">
+              {exp.start_year}–{exp.end_year || 'Now'}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-xs text-accent uppercase tracking-wider font-bold">
+              {exp.company}
+            </span>
+            {exp.location && (
+              <span className="flex items-center gap-1 font-mono text-xs text-primary/40 uppercase tracking-wider">
+                <MapPin className="w-3 h-3" aria-hidden="true" />
+                {exp.location}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Description */}
+        <p className="font-body text-sm text-primary/60 leading-relaxed mb-4">
+          {exp.description}
+        </p>
+
+        {/* Achievements */}
+        {exp.achievements?.length > 0 && (
+          <div className="mb-4">
+            <div className="section-label mb-2">Key Deployments</div>
+            <ul className="space-y-1.5">
+              {exp.achievements.map((item, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0 mt-1.5" aria-hidden="true" />
+                  <span className="font-body text-xs text-primary/60 leading-relaxed">
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Tech Tags */}
+        {exp.technologies?.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {exp.technologies.map((tech) => (
+              <span key={tech} className="tag-pill">{tech}</span>
+            ))}
+          </div>
+        )}
+      </motion.div>
+    </div>
+
+    {/* Timeline Node (centered) */}
+    <div className="absolute left-1/2 -translate-x-1/2 top-5 flex flex-col items-center z-10">
+      <div className="w-5 h-5 border-2 border-primary bg-background flex items-center justify-center">
+        <div className="w-2 h-2 bg-accent" />
+      </div>
+    </div>
+  </motion.div>
+);
 
 const Experience = () => {
-  // Use centralized work experience data and map to the format expected by the component
-  const experiences = WORK_EXPERIENCE.map(exp => ({
+  const experiences = (WORK_EXPERIENCE || []).map(exp => ({
     company: exp.company,
     position: exp.position,
     start_year: exp.start_year,
     end_year: exp.end_year,
-    period: exp.start_year && exp.end_year ? `${exp.start_year} – ${exp.end_year}` : exp.year || 'Present',
     location: exp.location,
-    // type: exp.type === 'work' ? 'Full-time' : exp.type === 'project' ? 'Academic Project' : 'Internship',
     description: exp.description,
     achievements: exp.achievements || [],
     technologies: exp.tags || [],
-    color: exp.color
   }));
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
 
   return (
     <motion.div
-      className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 min-h-screen"
-      variants={containerVariants}
+      className="pt-28 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen"
       initial="hidden"
       animate="visible"
     >
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <motion.div variants={itemVariants} className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-6">
-            Work <span className="gradient-text">Experience</span>
+      <div className="max-w-5xl mx-auto">
+
+        {/* Page Header */}
+        <motion.div variants={fadeUp} custom={0} className="mb-10">
+          <div className="section-label">Career Module</div>
+          <h1 className="font-heading font-bold text-4xl sm:text-5xl text-primary">
+            Service Record
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            My journey from embedded systems to IoT architecture, building scalable solutions 
-            across startups and established companies.
-          </p>
         </motion.div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-500 via-accent-500 to-primary-500"></div>
-          
-          <motion.div className="space-y-12" variants={containerVariants}>
-            {experiences.map((exp, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="relative"
-              >
-                {/* Timeline dot */}
-                <div className={`absolute left-8 w-4 h-4 rounded-full ${exp.color} border-4 border-white dark:border-gray-900 transform -translate-x-1/2 z-10`}></div>
-                
-                {/* Content card */}
-                <div className="ml-20">
-                  <motion.div
-                    className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300"
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    {/* Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6">
-                      <div className="flex-1">
-                        <h3 className="text-2xl font-bold mb-2">{exp.position}</h3>
-                        <div className="flex items-center space-x-4 text-gray-600 dark:text-gray-300 mb-2">
-                          <div className="flex items-center space-x-2">
-                            <Briefcase className="w-4 h-4" />
-                            <span className="font-semibold">{exp.company}</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <MapPin className="w-4 h-4" />
-                            <span>{exp.location}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-4 text-sm">
-                          <div className="flex items-center space-x-2 text-primary-600 dark:text-primary-400">
-                            <Calendar className="w-4 h-4" />
-                            <span className="font-medium">{exp.period}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+        {/* Desktop Timeline */}
+        <div className="hidden md:block relative">
+          {/* Vertical service trace */}
+          <div
+            className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-0.5 bg-primary/20"
+            aria-hidden="true"
+          />
+          <div className="space-y-8">
+            {experiences.map((exp, i) => (
+              <DeploymentLogCard
+                key={i}
+                exp={exp}
+                index={i + 1}
+                isLeft={i % 2 === 0}
+              />
+            ))}
+          </div>
+        </div>
 
-                    {/* Description */}
-                    <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                      {exp.description}
-                    </p>
+        {/* Mobile Timeline — single column */}
+        <div className="md:hidden relative">
+          {/* Left service trace */}
+          <div
+            className="absolute left-4 top-0 bottom-0 w-0.5 bg-primary/20"
+            aria-hidden="true"
+          />
+          <div className="space-y-6 ml-10">
+            {experiences.map((exp, i) => (
+              <motion.div key={i} variants={fadeUp} custom={i + 1} className="relative">
+                {/* Node */}
+                <div
+                  className="absolute -left-[2.125rem] top-4 w-5 h-5 border-2 border-primary bg-background flex items-center justify-center"
+                  aria-hidden="true"
+                >
+                  <div className="w-2 h-2 bg-accent" />
+                </div>
 
-                    {/* Achievements */}
-                    <div className="mb-6">
-                      <h4 className="font-semibold mb-3 flex items-center space-x-2">
-                        <Award className="w-4 h-4 text-accent-500" />
-                        <span>Key Achievements</span>
-                      </h4>
-                      <ul className="space-y-2">
-                        {exp.achievements.map((achievement, i) => (
-                          <li key={i} className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-accent-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <span className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                              {achievement}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
+                <div className="technic-module p-5">
+                  <div className="flex flex-col gap-1 mb-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-heading font-bold text-primary text-base leading-tight">
+                        {exp.position}
+                      </h3>
+                      <span className="font-mono text-xs text-primary/40 uppercase tracking-wider whitespace-nowrap flex-shrink-0">
+                        {exp.start_year}–{exp.end_year || 'Now'}
+                      </span>
                     </div>
+                    <span className="font-mono text-xs text-accent uppercase tracking-wider font-bold">
+                      {exp.company}
+                    </span>
+                    {exp.location && (
+                      <span className="flex items-center gap-1 font-mono text-xs text-primary/40 uppercase tracking-wider">
+                        <MapPin className="w-3 h-3" aria-hidden="true" />
+                        {exp.location}
+                      </span>
+                    )}
+                  </div>
 
-                    {/* Technologies */}
-                    <div>
-                      <h4 className="font-semibold mb-3 flex items-center space-x-2">
-                        <Code className="w-4 h-4 text-primary-500" />
-                        <span>Technologies</span>
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {exp.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full font-medium"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
+                  <p className="font-body text-sm text-primary/60 leading-relaxed mb-3">
+                    {exp.description}
+                  </p>
+
+                  {exp.achievements?.length > 0 && (
+                    <ul className="space-y-1.5 mb-3">
+                      {exp.achievements.map((item, j) => (
+                        <li key={j} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0 mt-1.5" aria-hidden="true" />
+                          <span className="font-body text-xs text-primary/60 leading-relaxed">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {exp.technologies?.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {exp.technologies.map((tech) => (
+                        <span key={tech} className="tag-pill">{tech}</span>
+                      ))}
                     </div>
-                  </motion.div>
+                  )}
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
-        {/* Summary */}
-        <motion.div variants={itemVariants} className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-900/20 dark:to-accent-900/20 rounded-xl p-8">
-            <h2 className="text-2xl font-bold mb-4">
-              Career Progression Summary
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
-              From network monitoring dashboards to autonomous UAV systems, my career has been defined by 
-              building increasingly complex embedded and IoT solutions. Each role has expanded my perspective 
-              from component-level optimization to system-level architecture, preparing me for the next phase 
-              of designing mass-market connected products.
-            </p>
-          </div>
-        </motion.div>
       </div>
     </motion.div>
   );

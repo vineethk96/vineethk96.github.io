@@ -7,32 +7,27 @@ import DOMPurify from 'dompurify';
 import { BLOG_POSTS } from '../data/constants';
 import { useAnalytics } from '../hooks/useAnalytics';
 
-const containerVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, staggerChildren: 0.1 }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
-
 const createMarkup = (html) => ({
   __html: DOMPurify.sanitize(html, {
     FORBID_ATTR: ['style', 'onerror', 'onclick', 'onload'],
     FORBID_TAGS: ['style', 'link', 'script'],
-  })
+  }),
 });
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, delay: i * 0.08, ease: 'easeOut' },
+  }),
+};
 
 const BlogDetail = () => {
   const { blogId } = useParams();
   const navigate = useNavigate();
   const { track } = useAnalytics();
-  const blog = BLOG_POSTS.find(b => b.id === blogId);
+  const blog = (BLOG_POSTS || []).find(b => b.id === blogId);
 
   useEffect(() => {
     if (!blog) {
@@ -42,16 +37,18 @@ const BlogDetail = () => {
 
   if (!blog) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Blog Post Not Found
+      <div className="pt-28 pb-24 px-4 min-h-screen flex items-center justify-center">
+        <div className="technic-module p-8 text-center max-w-sm">
+          <div className="section-label mb-2">Error 404</div>
+          <h1 className="font-heading font-bold text-primary text-2xl mb-4">
+            Article Not Found
           </h1>
           <button
             onClick={() => navigate('/blog')}
-            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary/60 hover:text-primary transition-colors duration-200 mx-auto"
           >
-            ← Back to Blog
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+            Return to Blog
           </button>
         </div>
       </div>
@@ -60,193 +57,131 @@ const BlogDetail = () => {
 
   return (
     <motion.div
-      variants={containerVariants}
+      className="pt-28 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen"
       initial="hidden"
       animate="visible"
-      className="container mx-auto px-4 py-8"
     >
-      {/* Back Button */}
-      <motion.button
-        variants={itemVariants}
-        onClick={() => navigate('/blog')}
-        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mb-6 transition-colors"
-      >
-        <ArrowLeft size={20} />
-        Back to Blog
-      </motion.button>
+      <div className="max-w-5xl mx-auto">
 
-      {/* Cover Image Hero */}
-      {blog.cover_image?.url && (
-        <motion.div variants={itemVariants} className="mb-8 rounded-xl overflow-hidden">
-          <img
-            src={blog.cover_image.url}
-            alt={blog.cover_image.alt || blog.title}
-            className="w-full max-h-96 object-cover"
-          />
+        {/* Back */}
+        <motion.button
+          variants={fadeUp}
+          custom={0}
+          onClick={() => navigate('/blog')}
+          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary/50 hover:text-primary transition-colors duration-200 mb-8"
+        >
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+          Field Notes
+        </motion.button>
+
+        {/* Cover Image */}
+        {blog.cover_image?.url && (
+          <motion.div
+            variants={fadeUp}
+            custom={1}
+            className="technic-module overflow-hidden mb-6"
+          >
+            <img
+              src={blog.cover_image.url}
+              alt={blog.cover_image.alt || blog.title}
+              className="w-full max-h-80 object-cover"
+            />
+          </motion.div>
+        )}
+
+        {/* Header */}
+        <motion.div variants={fadeUp} custom={2} className="mb-6">
+          <div className="section-label">Field Note</div>
+          <h1 className="font-heading font-bold text-3xl sm:text-4xl text-primary leading-tight mb-3">
+            {blog.title}
+          </h1>
+          <div className="flex flex-wrap items-center gap-4 mb-3">
+            <div className="flex items-center gap-1.5 font-mono text-xs text-primary/40">
+              <Calendar className="w-3 h-3" aria-hidden="true" />
+              {blog.publish_date}
+            </div>
+            <div className="flex items-center gap-1.5 font-mono text-xs text-primary/40">
+              <Clock className="w-3 h-3" aria-hidden="true" />
+              {blog.read_time} min read
+            </div>
+          </div>
+          <p className="font-body text-primary/60 leading-relaxed text-lg">
+            {blog.excerpt}
+          </p>
         </motion.div>
-      )}
 
-      {/* Header */}
-      <motion.div variants={itemVariants} className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
-          {blog.title}
-        </h1>
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
-          <div className="flex items-center gap-1">
-            <Calendar size={16} />
-            {blog.publish_date}
-          </div>
-          <div className="flex items-center gap-1">
-            <Clock size={16} />
-            {blog.read_time} min read
-          </div>
-        </div>
-
-        {/* Excerpt */}
-        <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
-          {blog.excerpt}
-        </p>
-      </motion.div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-3 space-y-8">
-          {/* Blog Content */}
-          <motion.div variants={itemVariants}>
-            <div className="prose dark:prose-invert max-w-none">
-              {blog.content ? (
-                <div dangerouslySetInnerHTML={createMarkup(blog.content)} />
-              ) : (
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {blog.excerpt}
-                </p>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Call to Action */}
-          <motion.div variants={itemVariants}>
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 text-white">
-              <h3 className="text-xl font-bold mb-2">
-                Enjoyed this post?
-              </h3>
-              <p className="mb-4">
-                Connect with me to discuss more about IoT and connected systems.
-              </p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => track('unimplemented_feature_clicked', { feature: 'share_article', blog_id: blog.id })}
-                  className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
-                >
-                  Share Article
-                </button>
-                <button
-                  onClick={() => track('unimplemented_feature_clicked', { feature: 'follow_author' })}
-                  className="border border-white px-4 py-2 rounded-lg font-medium hover:bg-white hover:text-blue-600 transition-colors"
-                >
-                  Follow for More
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Tags */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Tags
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {blog.tags?.map((tag, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Article Info */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Article Information
-            </h3>
-            <div className="space-y-3 text-sm">
-              <div>
-                <span className="font-medium text-gray-900 dark:text-white">Published:</span>
-                <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {blog.publish_date}
-                </span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-900 dark:text-white">Read Time:</span>
-                <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {blog.read_time} min read
-                </span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-900 dark:text-white">Author:</span>
-                <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  Vineeth Kirandumkara
-                </span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Related Projects */}
-          {blog.related_projects?.length > 0 && (
-            <motion.div
-              variants={itemVariants}
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Related Projects
-              </h3>
-              <div className="space-y-2">
-                {blog.related_projects.map((projectId) => (
-                  <Link
-                    key={projectId}
-                    to={`/projects/${projectId}`}
-                    className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-                  >
-                    <LinkIcon size={14} />
-                    {projectId}
-                  </Link>
-                ))}
+          {/* Main Content */}
+          <div className="lg:col-span-3 space-y-5">
+            <motion.div variants={fadeUp} custom={3} className="technic-module p-6">
+              <div
+                className="prose prose-sm max-w-none text-primary/70 prose-headings:font-heading prose-headings:text-primary prose-headings:font-bold prose-strong:text-primary prose-a:text-accent prose-code:text-primary/80 prose-code:bg-faint prose-code:font-mono"
+              >
+                {blog.content ? (
+                  <div dangerouslySetInnerHTML={createMarkup(blog.content)} />
+                ) : (
+                  <p className="font-body leading-relaxed">{blog.excerpt}</p>
+                )}
               </div>
             </motion.div>
-          )}
+          </div>
 
-          {/* Newsletter Signup */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg p-6"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-              📧 Stay Updated
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Get notified when new articles are published.
-            </p>
-            <button
-              onClick={() => track('unimplemented_feature_clicked', { feature: 'newsletter_subscribe' })}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Subscribe
-            </button>
-          </motion.div>
+          {/* Sidebar */}
+          <div className="space-y-4">
+            {/* Tags */}
+            {blog.tags?.length > 0 && (
+              <motion.div variants={fadeUp} custom={3} className="technic-module p-4">
+                <div className="section-label mb-3">Tags</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {blog.tags.map((tag, i) => (
+                    <span key={i} className="tag-pill">{tag}</span>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Article Info */}
+            <motion.div variants={fadeUp} custom={4} className="technic-module p-4">
+              <div className="section-label mb-3">Article Info</div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Author</span>
+                  <span className="font-mono text-xs text-primary">Vineeth K.</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Published</span>
+                  <span className="font-mono text-xs text-primary">{blog.publish_date}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Read Time</span>
+                  <span className="font-mono text-xs text-primary">{blog.read_time} min</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Related Projects */}
+            {blog.related_projects?.length > 0 && (
+              <motion.div variants={fadeUp} custom={5} className="technic-module p-4">
+                <div className="section-label mb-3">Related Projects</div>
+                <div className="space-y-2">
+                  {blog.related_projects.map((projectId) => (
+                    <Link
+                      key={projectId}
+                      to={`/projects/${projectId}`}
+                      className="flex items-center gap-2 font-mono text-xs text-primary/50 hover:text-primary transition-colors duration-200"
+                    >
+                      <LinkIcon className="w-3 h-3" aria-hidden="true" />
+                      {projectId}
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </div>
         </div>
+
       </div>
     </motion.div>
   );

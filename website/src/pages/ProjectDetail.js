@@ -1,26 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Github, ExternalLink, Calendar, Tag } from 'lucide-react';
+import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
 import { PROJECTS } from '../data/constants';
-import ImageCarousel from '../components/ImageCarousel';
 import DOMPurify from 'dompurify';
 import { useAnalytics } from '../hooks/useAnalytics';
+
+const createMarkup = (html) => ({
+  __html: DOMPurify.sanitize(html, {
+    FORBID_ATTR: ['style', 'class'],
+    FORBID_TAGS: ['style', 'link'],
+  }),
+});
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, delay: i * 0.08, ease: 'easeOut' },
+  }),
+};
 
 const ProjectDetail = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const { track } = useAnalytics();
-  const project = PROJECTS.find(p => p.id === projectId);
-
-  const createMarkup = (html) => {
-      return { 
-      __html: DOMPurify.sanitize(html, {
-        FORBID_ATTR: ['style', 'class'], // Remove inline styles and classes
-        FORBID_TAGS: ['style', 'link']    // Remove style tags
-      })
-    };
-  };
+  const project = PROJECTS?.find(p => p.id === projectId);
+  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     if (!project) {
@@ -30,247 +37,247 @@ const ProjectDetail = () => {
 
   if (!project) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Project Not Found
+      <div className="pt-28 pb-24 px-4 min-h-screen flex items-center justify-center">
+        <div className="technic-module p-8 text-center max-w-sm">
+          <div className="section-label mb-2">Error 404</div>
+          <h1 className="font-heading font-bold text-primary text-2xl mb-4">
+            Module Not Found
           </h1>
           <button
             onClick={() => navigate('/projects')}
-            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary/60 hover:text-primary transition-colors duration-200 mx-auto"
           >
-            ← Back to Projects
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+            Return to Inventory
           </button>
         </div>
       </div>
     );
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, staggerChildren: 0.1 }
-    }
-  };
+  const images = project.images?.length
+    ? project.images
+    : [{ url: null, alt: project.title, caption: 'Project overview' }];
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
+  const isOperational = project.status === 'Completed' || project.status === 'Active';
 
   return (
     <motion.div
-      variants={containerVariants}
+      className="pt-28 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen"
       initial="hidden"
       animate="visible"
-      className="container mx-auto px-4 py-8"
     >
-      {/* Back Button */}
-      <motion.button
-        variants={itemVariants}
-        onClick={() => navigate('/projects')}
-        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mb-6 transition-colors"
-      >
-        <ArrowLeft size={20} />
-        Back to Projects
-      </motion.button>
+      <div className="max-w-6xl mx-auto">
 
-      {/* Header */}
-      <motion.div variants={itemVariants} className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          {project.icon && <project.icon size={32} className="text-blue-600 dark:text-blue-400" />}
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+        {/* Back */}
+        <motion.button
+          variants={fadeUp}
+          custom={0}
+          onClick={() => navigate('/projects')}
+          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary/50 hover:text-primary transition-colors duration-200 mb-8"
+        >
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+          Component Inventory
+        </motion.button>
+
+        {/* Header */}
+        <motion.div variants={fadeUp} custom={1} className="mb-6">
+          <div className="section-label">Specification Sheet</div>
+          <h1 className="font-heading font-bold text-3xl sm:text-4xl text-primary leading-tight">
             {project.title}
           </h1>
-        </div>
-        
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-          <div className="flex items-center gap-1">
-            <Calendar size={16} />
-            {project.year}
+          <div className="flex items-center gap-4 mt-2">
+            <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">
+              Deploy Ref: {project.year}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <span
+                className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                  isOperational ? 'bg-success led-indicator' : 'bg-primary/30'
+                }`}
+                aria-hidden="true"
+              />
+              <span className={`font-mono text-xs uppercase tracking-wider ${
+                isOperational ? 'text-success' : 'text-primary/40'
+              }`}>
+                {project.status || 'Unknown'}
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <Tag size={16} />
-            {project.status}
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Image Carousel */}
-          <motion.div variants={itemVariants}>
-            <ImageCarousel
-              images={project.images || [
-                {
-                  url: '/api/placeholder/800/400',
-                  alt: `${project.title} - Main Image`,
-                  caption: 'Project overview'
-                }
-              ]}
-              title={project.title}
-              projectId={project.id}
-            />
-          </motion.div>
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
-          {/* Project Description */}
-          <motion.div variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Overview
-            </h2>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              {project.description}
-            </p>
-          </motion.div>
+          {/* Left — Image + Description */}
+          <div className="lg:col-span-3 space-y-5">
+            {/* Image Viewer */}
+            <motion.div variants={fadeUp} custom={2} className="technic-module overflow-hidden">
+              <div className="relative aspect-video bg-faint border-b-2 border-primary">
+                {images[activeImage]?.url ? (
+                  <img
+                    src={images[activeImage].url}
+                    alt={images[activeImage].alt || project.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : project.icon ? (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <project.icon className="w-20 h-20 text-primary/10" aria-hidden="true" />
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="font-mono text-xs text-primary/20 uppercase tracking-wider">
+                      No Image
+                    </span>
+                  </div>
+                )}
+                {/* Operational badge */}
+                <div className={`absolute bottom-3 left-3 flex items-center gap-1.5 px-3 py-1.5 border-2 rounded-full font-mono text-xs uppercase tracking-wider ${
+                  isOperational
+                    ? 'border-success bg-background text-success'
+                    : 'border-primary/30 bg-background text-primary/50'
+                }`}>
+                  {isOperational && (
+                    <>
+                      <span className="relative flex h-2 w-2" aria-hidden="true">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />
+                      </span>
+                    </>
+                  )}
+                  {isOperational ? 'Operational' : project.status}
+                </div>
+              </div>
+              {/* Thumbnail strip */}
+              {images.length > 1 && (
+                <div className="flex gap-2 p-3 overflow-x-auto">
+                  {images.map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveImage(i)}
+                      className={`flex-shrink-0 w-16 h-12 border-2 overflow-hidden transition-all duration-150 ${
+                        activeImage === i ? 'border-accent' : 'border-primary/20 hover:border-primary/50'
+                      }`}
+                    >
+                      {img.url ? (
+                        <img
+                          src={img.thumbnail_url || img.url}
+                          alt={img.alt || `Image ${i + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-faint" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </motion.div>
 
-          {/* Detailed Content */}
-          <motion.div variants={itemVariants}>
-            <div className="prose dark:prose-invert max-w-none">
+            {/* Overview */}
+            <motion.div variants={fadeUp} custom={3} className="technic-module p-5">
+              <div className="section-label mb-3">Overview</div>
+              <p className="font-body text-primary/70 leading-relaxed mb-4">
+                {project.description}
+              </p>
               {project.detailed_description ? (
-                <div className="prose dark:prose-invert max-w-none">
-                  <div dangerouslySetInnerHTML={createMarkup(project.detailed_description)} />
-                </div>
+                <div
+                  className="prose prose-sm max-w-none text-primary/70 prose-headings:font-heading prose-headings:text-primary prose-strong:text-primary"
+                  dangerouslySetInnerHTML={createMarkup(project.detailed_description)}
+                />
               ) : (
-                <div className="space-y-4">
-                  <p className="text-gray-700 dark:text-gray-300">
-                    This project demonstrates {project.tags?.slice(0, 3).join(', ')} technologies 
-                    in a real-world application. The implementation showcases modern development 
-                    practices and innovative solutions to complex problems.
-                  </p>
-                  
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    Key Features
-                  </h3>
-                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                    <li>Modern architecture and design patterns</li>
-                    <li>Responsive and accessible user interface</li>
-                    <li>Optimized performance and scalability</li>
-                    <li>Comprehensive testing and documentation</li>
-                  </ul>
-
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    Technical Implementation
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    The project leverages {project.technologies?.join(', ')} to create a 
-                    robust and maintainable solution. Special attention was paid to code 
-                    quality, performance optimization, and user experience.
-                  </p>
-
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    Challenges & Solutions
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    During development, several technical challenges were encountered and 
-                    successfully resolved through innovative approaches and careful planning. 
-                    The final solution demonstrates both technical expertise and practical 
-                    problem-solving skills.
+                <div className="space-y-3 text-primary/60">
+                  <p className="font-body text-sm leading-relaxed">
+                    This project demonstrates {(project.tags || []).slice(0, 3).join(', ')} in a
+                    real-world application.
                   </p>
                 </div>
               )}
-            </div>
-          </motion.div>
-        </div>
+            </motion.div>
+          </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Project Links */}
-          <motion.div 
-            variants={itemVariants}
-            className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Project Links
-            </h3>
-            <div className="space-y-3">
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => track('external_link_clicked', { type: 'github', project_id: project.id, project_title: project.title })}
-                  className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-                >
-                  <Github size={20} />
-                  View Source Code
-                </a>
-              )}
-              {project.demo && (
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => track('external_link_clicked', { type: 'demo', project_id: project.id, project_title: project.title })}
-                  className="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-                >
-                  <ExternalLink size={20} />
-                  Live Demo
-                </a>
-              )}
-            </div>
-          </motion.div>
+          {/* Right Sidebar */}
+          <div className="lg:col-span-2 space-y-4">
+            {/* CTAs */}
+            <motion.div variants={fadeUp} custom={2} className="technic-module p-5">
+              <div className="section-label mb-3">Access Points</div>
+              <div className="space-y-2">
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track('external_link_clicked', { type: 'github', project_id: project.id })}
+                    className="flex items-center gap-2 w-full px-4 py-2.5 border-2 border-primary bg-background rounded-xl hover:bg-primary hover:text-background font-mono text-xs uppercase tracking-wider transition-all duration-200"
+                    style={{ boxShadow: '3px 3px 0px 0px #031632' }}
+                  >
+                    <Github className="w-4 h-4" aria-hidden="true" />
+                    Source Code
+                  </a>
+                )}
+                {project.demo && (
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track('external_link_clicked', { type: 'demo', project_id: project.id })}
+                    className="flex items-center gap-2 w-full px-4 py-2.5 border-2 border-accent bg-accent text-primary rounded-xl hover:bg-accent/80 font-mono text-xs uppercase tracking-wider transition-all duration-200"
+                    style={{ boxShadow: '3px 3px 0px 0px #031632' }}
+                  >
+                    <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                    Live Demo
+                  </a>
+                )}
+                {!project.github && !project.demo && (
+                  <div className="font-mono text-xs text-primary/30 uppercase tracking-wider">
+                    No public links available
+                  </div>
+                )}
+              </div>
+            </motion.div>
 
-          {/* Technologies */}
-          <motion.div 
-            variants={itemVariants}
-            className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Technologies Used
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {(project.technologies || project.tags || []).map((tech, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Project Info */}
-          <motion.div 
-            variants={itemVariants}
-            className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Project Information
-            </h3>
-            <div className="space-y-3 text-sm">
-              <div>
-                <span className="font-medium text-gray-900 dark:text-white">Category:</span>
-                <span className="ml-2 text-gray-600 dark:text-gray-400 capitalize">
-                  {project.category || project.type || 'Project'}
-                </span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-900 dark:text-white">Status:</span>
-                <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {project.status}
-                </span>
-              </div>
-              <div>
-                <span className="font-medium text-gray-900 dark:text-white">Year:</span>
-                <span className="ml-2 text-gray-600 dark:text-gray-400">
-                  {project.year}
-                </span>
-              </div>
-              {project.size && (
-                <div>
-                  <span className="font-medium text-gray-900 dark:text-white">Complexity:</span>
-                  <span className="ml-2 text-gray-600 dark:text-gray-400">
-                    {project.size}/10
+            {/* Technical Specs */}
+            <motion.div variants={fadeUp} custom={3} className="technic-module p-5">
+              <div className="section-label mb-3">Technical Specs</div>
+              <div className="space-y-3 text-sm mb-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Year</span>
+                  <span className="font-mono text-xs text-primary">{project.year}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Status</span>
+                  <span className={`font-mono text-xs uppercase tracking-wider ${isOperational ? 'text-success' : 'text-primary/60'}`}>
+                    {project.status}
                   </span>
                 </div>
-              )}
-            </div>
-          </motion.div>
+                {project.size && (
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Complexity</span>
+                      <span className="font-mono text-xs text-primary">{project.size}/10</span>
+                    </div>
+                    {/* Complexity bar */}
+                    <div className="h-1.5 bg-faint border border-muted overflow-hidden">
+                      <div
+                        className="h-full bg-accent transition-all duration-700"
+                        style={{ width: `${(project.size / 10) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Tech Stack */}
+              <div className="section-label mb-2">Stack</div>
+              <div className="flex flex-wrap gap-1.5">
+                {(project.technologies || project.tags || []).map((tech, i) => (
+                  <span key={i} className="tag-pill">{tech}</span>
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </div>
+
       </div>
     </motion.div>
   );

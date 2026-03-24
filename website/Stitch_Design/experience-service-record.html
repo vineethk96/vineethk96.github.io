@@ -1,0 +1,318 @@
+<html class="light" lang="en"><head></head><body class="bg-background text-on-background font-body custom-scrollbar min-h-screen flex flex-col">```html
+
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Experience: Service Record | TECH_ARCHIVE_v1.0</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "secondary": "#795900",
+                "on-tertiary-fixed-variant": "#7e2c09",
+                "surface-container-high": "#eae8e3",
+                "surface-container-low": "#f5f3ee",
+                "surface-tint": "#4e5f7e",
+                "primary": "#031632",
+                "on-tertiary-fixed": "#380d00",
+                "on-background": "#1b1c19",
+                "surface-container-highest": "#e4e2dd",
+                "outline": "#75777e",
+                "secondary-fixed": "#ffdfa0",
+                "on-surface-variant": "#44474d",
+                "tertiary": "#310a00",
+                "secondary-container": "#ffbf00",
+                "on-primary": "#ffffff",
+                "primary-fixed-dim": "#b6c7eb",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "background": "#fbf9f4",
+                "on-primary-fixed-variant": "#374765",
+                "on-primary-fixed": "#081b38",
+                "inverse-primary": "#b6c7eb",
+                "tertiary-fixed": "#ffdbcf",
+                "on-tertiary": "#ffffff",
+                "on-error-container": "#93000a",
+                "on-surface": "#1b1c19",
+                "inverse-surface": "#30312e",
+                "surface-dim": "#dbdad5",
+                "outline-variant": "#c5c6ce",
+                "surface-bright": "#fbf9f4",
+                "tertiary-fixed-dim": "#ffb59b",
+                "primary-container": "#1a2b48",
+                "error-container": "#ffdad6",
+                "surface-variant": "#e4e2dd",
+                "primary-fixed": "#d7e2ff",
+                "on-tertiary-container": "#df754d",
+                "on-secondary-container": "#6d5000",
+                "tertiary-container": "#531700",
+                "surface": "#fbf9f4",
+                "error": "#ba1a1a",
+                "on-primary-container": "#8293b5",
+                "on-secondary-fixed": "#261a00",
+                "on-error": "#ffffff",
+                "secondary-fixed-dim": "#fbbc00",
+                "inverse-on-surface": "#f2f1ec",
+                "surface-container": "#f0eee9",
+                "on-secondary-fixed-variant": "#5c4300"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Space Grotesk"],
+                "label": ["Plus Jakarta Sans"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .blueprint-grid {
+            background-image: 
+                linear-gradient(to right, rgba(3, 22, 50, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(3, 22, 50, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f5f3ee;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #031632;
+            border-radius: 4px;
+        }
+    </style>
+<!-- Top Navigation Bar -->
+<header class="w-full fixed top-0 z-50 px-6 py-4">
+<nav class="flex justify-between items-center max-w-7xl mx-auto bg-white rounded-full border-[3px] border-[#031632] p-2 shadow-[4px_4px_0px_0px_rgba(3,22,50,1)] transition-transform hover:translate-y-[-2px]">
+<div class="flex items-center gap-4 pl-4">
+<span class="text-xl font-black tracking-tighter text-[#031632]">SYS_ARCH_V2.0</span>
+</div>
+<div class="hidden md:flex items-center gap-1 font-headline">
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">HERO</a>
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">PROJECTS</a>
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">SKILLS</a>
+<a class="text-[#031632] border-2 border-[#031632] bg-[#ffbf00] rounded-full px-4 py-1 font-bold tracking-tight uppercase text-xs" href="#">EXPERIENCE</a>
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">ABOUT</a>
+<a class="text-[#031632]/60 hover:text-[#031632] px-4 py-1 hover:bg-[#f0eee9] rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">CONTACT</a>
+</div>
+<div class="flex items-center gap-2 pr-2">
+<button class="material-symbols-outlined p-2 text-[#031632] hover:bg-[#f0eee9] rounded-full transition-all">sensors</button>
+<button class="bg-[#031632] text-white px-6 py-2 rounded-full font-black uppercase text-[10px] tracking-widest shadow-[4px_4px_0px_0px_rgba(3,22,50,1)] active:translate-y-1 active:shadow-none transition-all">DOWNLOAD_CV</button>
+</div>
+</nav>
+</header>
+<main class="flex-grow pt-32 pb-24 relative overflow-hidden">
+<!-- Blueprint Grid Background Layer -->
+<div class="fixed inset-0 blueprint-grid pointer-events-none -z-10"></div>
+<div class="container mx-auto px-8 relative z-10">
+<!-- Page Header -->
+<div class="mb-20 flex flex-col items-start gap-4">
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 text-[10px] font-black tracking-[0.2em] uppercase rounded-none border-2 border-primary">
+                Status: Verified Archive
+            </div>
+<h1 class="text-5xl md:text-7xl font-black text-primary tracking-[-0.04em] leading-[0.9] font-headline uppercase">
+                Experience: <br/><span class="text-outline opacity-40 italic">Service Record</span>
+</h1>
+</div>
+<!-- Timeline Component -->
+<div class="relative max-w-5xl mx-auto">
+<!-- Main Trace Line -->
+<div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-surface-container-highest -translate-x-1/2 hidden md:block">
+<!-- Gold Signal Trace Decoration -->
+<div class="absolute inset-0 w-full h-full bg-secondary opacity-30"></div>
+</div>
+<!-- Timeline Entries -->
+<div class="space-y-32">
+<!-- Entry 1: UCL -->
+<div class="relative flex flex-col md:flex-row items-center justify-between w-full gap-12 group">
+<div class="order-2 md:order-1 w-full md:w-[45%]">
+<div class="bg-surface-container-low border-2 border-primary p-8 rounded-DEFAULT relative shadow-[8px_8px_0px_0px_#031632] hover:translate-x-1 hover:-translate-y-1 transition-all duration-300">
+<!-- Modular Pegs -->
+<div class="absolute top-4 right-4 flex gap-1 opacity-40">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+</div>
+<div class="mb-6">
+<span class="text-secondary font-black text-[10px] tracking-[0.2em] uppercase mb-1 block">Present Deployment</span>
+<h3 class="text-xl font-black text-primary mt-1 font-headline tracking-[-0.02em] uppercase">CREATIVE TECHNOLOGIST</h3>
+<p class="text-on-surface-variant font-bold text-sm tracking-tight opacity-70">UCL Connected Environments</p>
+</div>
+<div class="flex items-center gap-4 mb-6 text-[10px] font-bold text-outline uppercase tracking-widest">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> LONDON, UK</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> HYBRID ARCHITECTURE</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
+                                Leading research into human-centric design and architectural performance metrics using high-fidelity sensor networks.
+                            </p>
+<ul class="space-y-3 mb-8">
+<li class="flex items-start gap-3 text-xs font-bold text-primary">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Deployed real-time spatial analysis dashboards for large-scale urban testbeds.
+                                </li>
+<li class="flex items-start gap-3 text-xs font-bold text-primary">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    Architected modular IoT gateways for environmental performance tracking.
+                                </li>
+</ul>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">IOT</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">REACT</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">D3.JS</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">PYTHON</span>
+</div>
+</div>
+</div>
+<!-- Node -->
+<div class="absolute left-4 md:left-1/2 w-8 h-8 -translate-x-1/2 z-20">
+<div class="w-full h-full rounded-full border-4 border-primary bg-secondary-container shadow-[0_0_15px_rgba(255,191,0,0.5)] flex items-center justify-center">
+<div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+</div>
+</div>
+<div class="order-1 md:order-2 w-full md:w-[45%] md:pl-12">
+<div class="hidden md:block">
+<span class="text-6xl font-black text-outline/20 tracking-tighter font-headline">PRESENT</span>
+</div>
+</div>
+</div>
+<!-- Entry 2: Aero-Tech -->
+<div class="relative flex flex-col md:flex-row items-center justify-between w-full gap-12 group">
+<div class="order-1 w-full md:w-[45%] md:pr-12 text-right">
+<div class="hidden md:block">
+<span class="text-6xl font-black text-outline/20 tracking-tighter font-headline">2020 — 2022</span>
+</div>
+</div>
+<!-- Node -->
+<div class="absolute left-4 md:left-1/2 w-8 h-8 -translate-x-1/2 z-20">
+<div class="w-full h-full rounded-full border-4 border-primary bg-surface-container-highest flex items-center justify-center group-hover:bg-secondary transition-colors duration-300">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+</div>
+<div class="order-2 w-full md:w-[45%]">
+<div class="bg-surface-container-low border-2 border-primary p-8 rounded-DEFAULT relative shadow-[8px_8px_0px_0px_#031632] hover:translate-x-1 hover:-translate-y-1 transition-all duration-300">
+<div class="absolute top-4 right-4 flex gap-1 opacity-40">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+</div>
+<div class="mb-6">
+<span class="text-secondary font-black text-[10px] tracking-[0.2em] uppercase mb-1 block">2020 — 2022</span>
+<h3 class="text-xl font-black text-primary mt-1 font-headline tracking-[-0.02em] uppercase">CREATIVE TECHNOLOGIST</h3>
+<p class="text-on-surface-variant font-bold text-sm tracking-tight opacity-70">Aero-Tech Dynamics</p>
+</div>
+<div class="flex items-center gap-4 mb-6 text-[10px] font-bold text-outline uppercase tracking-widest">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">public</span> REMOTE</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">settings_input_component</span> EMBEDDED SYSTEMS</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
+                                Focused on hardware/software co-design for high-reliability aerospace control units and signal processing modules.
+                            </p>
+<ul class="space-y-3 mb-8">
+<li class="flex items-start gap-3 text-xs font-bold text-primary">
+<span class="material-symbols-outlined text-primary text-sm">terminal</span>
+                                    Developed RTOS-based firmware for flight-critical telemetry modules.
+                                </li>
+<li class="flex items-start gap-3 text-xs font-bold text-primary">
+<span class="material-symbols-outlined text-primary text-sm">terminal</span>
+                                    Reduced power consumption of standby sensors by 35% through silicon optimization.
+                                </li>
+</ul>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">C++</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">RTOS</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">ARM</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">CANBUS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Entry 3: Med-Core -->
+<div class="relative flex flex-col md:flex-row items-center justify-between w-full gap-12 group">
+<div class="order-2 md:order-1 w-full md:w-[45%]">
+<div class="bg-surface-container-low border-2 border-primary p-8 rounded-DEFAULT relative shadow-[8px_8px_0px_0px_#031632] hover:translate-x-1 hover:-translate-y-1 transition-all duration-300">
+<div class="absolute top-4 right-4 flex gap-1 opacity-40">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+</div>
+<div class="mb-6">
+<span class="text-secondary font-black text-[10px] tracking-[0.2em] uppercase mb-1 block">2018 — 2020</span>
+<h3 class="text-xl font-black text-primary mt-1 font-headline tracking-[-0.02em] uppercase">CREATIVE TECHNOLOGIST</h3>
+<p class="text-on-surface-variant font-bold text-sm tracking-tight opacity-70">Med-Core Systems</p>
+</div>
+<div class="flex items-center gap-4 mb-6 text-[10px] font-bold text-outline uppercase tracking-widest">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">flag</span> BERLIN, DE</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">health_and_safety</span> MEDICAL DIAGNOSTICS</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
+                                Engineered precision medical diagnostic instruments following strict ISO 13485 safety protocols and EMC standards.
+                            </p>
+<ul class="space-y-3 mb-8">
+<li class="flex items-start gap-3 text-xs font-bold text-primary">
+<span class="material-symbols-outlined text-tertiary text-sm">verified</span>
+                                    Achieved 100% compliance on three consecutive product safety audits.
+                                </li>
+<li class="flex items-start gap-3 text-xs font-bold text-primary">
+<span class="material-symbols-outlined text-tertiary text-sm">verified</span>
+                                    Designed high-precision analog-to-digital signal paths for patient sensors.
+                                </li>
+</ul>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">FPGA</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">VHDL</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">PCB-DESIGN</span>
+<span class="bg-surface-container-highest text-primary px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase border border-outline">ISO-13485</span>
+</div>
+</div>
+</div>
+<!-- Node -->
+<div class="absolute left-4 md:left-1/2 w-8 h-8 -translate-x-1/2 z-20">
+<div class="w-full h-full rounded-full border-4 border-primary bg-surface-container-highest flex items-center justify-center group-hover:bg-tertiary transition-colors duration-300">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+</div>
+<div class="order-1 md:order-2 w-full md:w-[45%] md:pl-12">
+<div class="hidden md:block">
+<span class="text-6xl font-black text-outline/20 tracking-tighter font-headline">2018 — 2020</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Technical Metrics Module -->
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-16 px-8 border-t-[6px] border-[#031632] bg-white mt-auto relative z-10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 font-headline">
+<div class="flex flex-col items-center md:items-start gap-3">
+<span class="font-black text-[#031632] uppercase tracking-tighter text-2xl">CORE_SYSTEM_LOGS</span>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold tracking-widest uppercase text-[#031632]/50">© 2024 CORE_SYSTEMS</span>
+<span class="text-[#031632]/20">|</span>
+<span class="text-[10px] font-bold tracking-widest uppercase text-[#031632]/50">BUILD_V2.0.4</span>
+</div>
+</div>
+<div class="flex gap-12">
+<a class="text-[11px] font-black tracking-widest uppercase text-[#031632] hover:text-[#310a00] transition-colors underline decoration-2 decoration-[#ffbf00]" href="#">GITHUB</a>
+<a class="text-[11px] font-black tracking-widest uppercase text-[#031632] hover:text-[#310a00] transition-colors underline decoration-2 decoration-[#ffbf00]" href="#">LINKEDIN</a>
+<a class="text-[11px] font-black tracking-widest uppercase text-[#031632] hover:text-[#310a00] transition-colors underline decoration-2 decoration-[#ffbf00]" href="#">TERMINAL</a>
+</div>
+<div class="flex items-center gap-4 bg-[#f0eee9] px-6 py-3 rounded-full border-2 border-[#031632]">
+<div class="w-3 h-3 bg-[#ffbf00] rounded-full shadow-[inset_0_2px_4px_0_rgba(255,255,255,0.3)] animate-pulse"></div>
+<span class="text-[11px] font-black tracking-[0.2em] uppercase text-[#031632]">SYSTEM_NOMINAL</span>
+</div>
+</div>
+</footer>
+```</body></html>

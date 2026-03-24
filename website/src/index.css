@@ -5,61 +5,170 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    background-color: #FBF9F4;
   }
-  
+
   body {
     @apply font-sans antialiased;
+    background-color: #FBF9F4;
+    color: #031632;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
   }
 }
 
 @layer components {
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
-  }
-  
   .blueprint-bg {
-    background-image: 
-      linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-color: #FBF9F4;
+    background-image:
+      linear-gradient(rgba(3, 22, 50, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(3, 22, 50, 0.06) 1px, transparent 1px),
+      linear-gradient(rgba(3, 22, 50, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(3, 22, 50, 0.1) 1px, transparent 1px);
+    background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
   }
-  
-  .circuit-trace {
+
+  .technic-module {
+    @apply border-2 border-primary bg-background rounded-2xl;
+    box-shadow: 4px 4px 0px 0px #031632;
+  }
+
+  .technic-module-hover {
+    @apply technic-module transition-all duration-150;
+  }
+
+  .technic-module-hover:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 6px 6px 0px 0px #031632;
+  }
+
+  .led-indicator {
+    @apply inline-block w-2.5 h-2.5 rounded-full bg-success flex-shrink-0;
+    animation: ledPulse 2s ease-in-out infinite;
+    box-shadow: 0 0 4px #94A744;
+  }
+
+  .tag-pill {
+    @apply font-mono text-xs uppercase tracking-wider px-2 py-0.5 border border-primary/30 bg-faint text-primary/60 rounded-md;
+  }
+
+  .section-label {
+    @apply font-mono text-xs uppercase tracking-widest text-primary/50 mb-1;
+  }
+
+  /* === LEVER SWITCH ============================================= */
+
+  /* Root wrapper — adds top padding so knob (which pokes 32px above track) has room */
+  .lever-switch-root {
     position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 28px;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
   }
-  
-  .circuit-trace::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-    transform: translateY(-50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+
+  .lever-switch-root:focus-visible {
+    outline: 2px solid #FFBF00;
+    outline-offset: 4px;
+    border-radius: 4px;
   }
-  
-  .circuit-trace:hover::before {
-    opacity: 1;
-  }
-  
-  .data-packet {
+
+  /* Track — the horizontal pill slot */
+  .lever-track {
     position: relative;
-    overflow: hidden;
+    width: 80px;
+    height: 20px;
+    background-color: #031632;
+    border-radius: 20px;
+    border: 3px solid #FBF9F4;
+    box-shadow: inset 0 4px 8px rgba(3, 22, 50, 0.5), 4px 4px 0px 0px #FFBF00, 0 0 14px rgba(148, 167, 68, 0.45);
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
   }
-  
-  .data-packet::after {
-    content: '';
+
+  .lever-track--on {
+    background-color: #94A744;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3), 4px 4px 0px 0px #94A744, 0 0 14px rgba(148, 167, 68, 0.45);
+  }
+
+  /* Lever arm — pivots inside the track, anchored at bottom center */
+  .lever-arm {
     position: absolute;
-    top: 50%;
-    left: -10px;
-    width: 20px;
-    height: 4px;
-    background: #22c55e;
-    border-radius: 2px;
-    transform: translateY(-50%);
-    animation: dataFlow 2s ease-in-out infinite;
+    bottom: 8px;
+    left: 50%;
+    width: 12px;
+    height: 46px;
+    margin-left: -6px;
+    transform-origin: bottom center;
+    transform: rotate(-35deg);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
+
+  .lever-arm--on {
+    transform: rotate(35deg);
+  }
+
+  /* Slow down snap on :active for tactile feel */
+  .lever-switch-root:active .lever-arm {
+    transition-duration: 0.1s;
+  }
+
+  /* Metal rod (the shaft) */
+  .lever-rod {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #1a2d4a, #4a6fa5, #1a2d4a);
+    border-radius: 4px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Knob — positioned above the rod top, pokes above the track */
+  .lever-knob {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle at 30% 30%, #FFE07A, #FFBF00);
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.45), inset -2px -2px 5px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .lever-arm--on .lever-knob {
+    background: radial-gradient(circle at 30% 30%, #FFE07A, #FFBF00);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), inset -2px -2px 5px rgba(0, 0, 0, 0.2),
+      0 0 12px rgba(148, 167, 68, 0.65);
+  }
+
+  /* Status label */
+  .lever-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    transition: color 0.2s ease;
+  }
+
+  .lever-label--off {
+    color: rgba(3, 22, 50, 0.40);
+  }
+
+  .lever-label--on {
+    color: #94A744;
+  }
+}
+
+@keyframes ledPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px #94A744; }
+  50% { opacity: 0.5; box-shadow: 0 0 12px #94A744; }
 }

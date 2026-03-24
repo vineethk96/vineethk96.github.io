@@ -1,124 +1,147 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Grid, Network } from 'lucide-react';
-import SystemMap from '../components/SystemMapD3';
-import ProjectGrid from '../components/ProjectGrid';
-import { useAnalytics } from '../hooks/useAnalytics';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { PROJECTS } from '../data/constants';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, delay: i * 0.06, ease: 'easeOut' },
+  }),
+};
+
+const ProjectCard = ({ project, index }) => {
+  const thumbnail = project.images?.[0]?.thumbnail_url || project.images?.[0]?.url;
+
+  return (
+    <motion.div variants={fadeUp} custom={index}>
+      <Link to={`/projects/${project.id}`} className="group block">
+        <div className="technic-module-hover overflow-hidden">
+          {/* Image with grayscale-to-color transition */}
+          <div className="relative overflow-hidden border-b-2 border-primary aspect-video bg-faint">
+            {thumbnail ? (
+              <img
+                src={thumbnail}
+                alt={project.title}
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-faint">
+                {project.icon && (
+                  <project.icon
+                    className="w-12 h-12 text-primary/20 group-hover:text-primary/50 transition-colors duration-300"
+                    aria-hidden="true"
+                  />
+                )}
+              </div>
+            )}
+            {/* Serial number overlay */}
+            <div className="absolute top-2 left-2 font-mono text-xs text-background bg-primary px-2 py-0.5 uppercase tracking-wider">
+              #{String(index + 1).padStart(2, '0')}
+            </div>
+            {/* Status badge */}
+            <div className={`absolute top-2 right-2 flex items-center gap-1.5 px-2 py-0.5 border border-current text-xs font-mono uppercase tracking-wider ${
+              project.status === 'Completed' || project.status === 'Active'
+                ? 'text-success bg-background/90 border-success/30'
+                : 'text-primary/50 bg-background/90 border-primary/20'
+            }`}>
+              <span
+                className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                  project.status === 'Completed' || project.status === 'Active'
+                    ? 'bg-success'
+                    : 'bg-primary/30'
+                }`}
+                aria-hidden="true"
+              />
+              {project.status || 'Complete'}
+            </div>
+          </div>
+
+          {/* Card body */}
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <h3 className="font-heading font-bold text-primary text-base leading-tight group-hover:text-accent transition-colors duration-200">
+                {project.title}
+              </h3>
+              <span className="font-mono text-xs text-primary/40 uppercase tracking-wider whitespace-nowrap flex-shrink-0">
+                {project.year}
+              </span>
+            </div>
+            <p className="font-body text-xs text-primary/60 leading-relaxed mb-3 line-clamp-2">
+              {project.description}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {(project.tags || []).slice(0, 4).map((tag) => (
+                <span key={tag} className="tag-pill">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+};
+
+const SlotEmpty = ({ index }) => (
+  <motion.div variants={fadeUp} custom={index}>
+    <div className="border-2 border-dashed border-primary/20 aspect-video bg-faint/50 rounded-2xl flex items-center justify-center">
+      <div className="text-center">
+        <div className="font-mono text-xs text-primary/20 uppercase tracking-widest mb-1">
+          Slot Empty
+        </div>
+        <div className="font-mono text-xs text-primary/15 uppercase tracking-widest">
+          Module {String(index + 1).padStart(2, '0')}
+        </div>
+      </div>
+    </div>
+  </motion.div>
+);
 
 const Projects = () => {
-  const { track } = useAnalytics();
-  const [viewMode, setViewMode] = useState('grid'); // 'map' or 'grid'
+  const projects = PROJECTS || [];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
+  // Pad to multiple of 2 so grid looks intentional
+  const targetCount = Math.max(projects.length, Math.ceil(projects.length / 2) * 2 + 2);
+  const slots = Array.from({ length: targetCount }, (_, i) =>
+    i < projects.length ? { type: 'project', data: projects[i] } : { type: 'empty' }
+  );
 
   return (
     <motion.div
-      className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 min-h-screen"
-      variants={containerVariants}
+      className="pt-28 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen"
       initial="hidden"
       animate="visible"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
+
         {/* Header */}
-        <motion.div variants={itemVariants} className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-6">
-            My <span className="gradient-text">Projects</span>
+        <motion.div variants={fadeUp} custom={0} className="mb-8">
+          <div className="section-label">Component Inventory</div>
+          <h1 className="font-heading font-bold text-4xl sm:text-5xl text-primary">
+            Projects
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Explore my work through an interactive system map or traditional grid view. 
-            Each project represents a step in my journey from embedded systems to IoT architecture.
+          <p className="font-body text-primary/50 mt-2">
+            {projects.length} modules catalogued
           </p>
         </motion.div>
 
-        {/* View Toggle */}
-        <motion.div variants={itemVariants} className="flex justify-center mb-12">
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1 flex items-center space-x-1">
-            <button
-              onClick={() => { setViewMode('map'); track('project_view_mode_changed', { mode: 'map' }); }}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-300 ${
-                viewMode === 'map'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-              }`}
-            >
-              <Network className="w-4 h-4" />
-              <span className="font-medium">System Map</span>
-            </button>
-            <button
-              onClick={() => { setViewMode('grid'); track('project_view_mode_changed', { mode: 'grid' }); }}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-300 ${
-                viewMode === 'grid'
-                  ? 'bg-primary-600 text-white shadow-md'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-              }`}
-            >
-              <Grid className="w-4 h-4" />
-              <span className="font-medium">Grid View</span>
-            </button>
-          </div>
-        </motion.div>
-
-        {/* Content */}
-        <motion.div variants={itemVariants}>
-          <AnimatePresence mode="wait">
-            {viewMode === 'map' ? (
-              <motion.div
-                key="map"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-              >
-                <SystemMap />
-              </motion.div>
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {slots.map((slot, i) =>
+            slot.type === 'project' ? (
+              <ProjectCard
+                key={slot.data.id}
+                project={slot.data}
+                index={i}
+              />
             ) : (
-              <motion.div
-                key="grid"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ProjectGrid />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+              <SlotEmpty key={`empty-${i}`} index={i} />
+            )
+          )}
+        </div>
 
-        {/* Description */}
-        <motion.div variants={itemVariants} className="mt-16 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">
-              Systems Thinking in Action
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              Each project demonstrates different aspects of connected systems design - from low-level 
-              embedded programming to cloud architectures and user interfaces. The system map view shows 
-              how these projects interconnect and build upon each other, reflecting my evolution from 
-              component-level thinking to system-level architecture.
-            </p>
-          </div>
-        </motion.div>
       </div>
     </motion.div>
   );

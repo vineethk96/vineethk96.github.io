@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navigation';
+import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -12,22 +13,15 @@ import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
-import { useDarkMode } from './hooks/useDarkMode';
 import PageviewTracker from './components/analytics/PageviewTracker';
 import CookieConsent from './components/analytics/CookieConsent';
 
 function App() {
-  const [darkMode, toggleDarkMode] = useDarkMode();
-
   return (
     <Router>
       <PageviewTracker />
-      <div className={`min-h-screen transition-colors duration-300 ${
-        darkMode
-          ? 'bg-gray-900 text-white blueprint-bg'
-          : 'bg-white text-gray-900'
-      }`}>
-        <Navigation darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <div className="min-h-screen blueprint-bg text-primary">
+        <Navigation />
 
         <ErrorBoundary>
           <AnimatePresence mode="wait">
@@ -44,6 +38,8 @@ function App() {
             </Routes>
           </AnimatePresence>
         </ErrorBoundary>
+
+        <Footer />
         <CookieConsent />
       </div>
     </Router>
