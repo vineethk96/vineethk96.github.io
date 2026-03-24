@@ -6,8 +6,11 @@ import FaderSwitch from '../components/ui/fader-switch';
 import { PERSONAL_INFO, SOCIAL_LINKS, PROJECTS } from '../data/constants';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useConnectionStatus } from '../hooks/useConnectionStatus';
+import { useGitHubData } from '../hooks/useGitHubData';
+import ContributionOscilloscope from '../components/ui/ContributionOscilloscope';
 
 const GITHUB_USERNAME = 'vineethk96';
+
 
 const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
   const [displayValue, setDisplayValue] = useState('—');
@@ -151,9 +154,9 @@ const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
 const Home = () => {
   const [isPowerEngaged, setIsPowerEngaged] = useState(false);
   const [carouselAngle, setCarouselAngle] = useState(0);
-  const [githubGraphLoaded, setGithubGraphLoaded] = useState(false);
   const { track } = useAnalytics();
   const { isOnline, connectionLabel, downlink, uptimePercent } = useConnectionStatus();
+  const { weeklyCommits, currentStreak, ongoingProjectsCount, contributionsByDay } = useGitHubData();
 
   const featuredProjects = (PROJECTS || []).slice(0, 6);
 
@@ -285,7 +288,7 @@ const Home = () => {
             />
             <TelemetryModule
               label="Ongoing Projects"
-              value={(PROJECTS || []).filter(p => p.status === 'In Progress' || p.status === 'Active').length || 3}
+              value={ongoingProjectsCount ?? '—'}
               unit="active"
               isActive={isPowerEngaged}
             />
@@ -311,23 +314,25 @@ const Home = () => {
                 <ExternalLink className="w-3 h-3" aria-hidden="true" />
               </a>
             </div>
-            <div
-              className={`transition-opacity duration-500 ${isPowerEngaged ? 'opacity-100' : 'opacity-40'}`}
-            >
-              <img
-                src={`https://ghchart.rshah.org/94A744/${GITHUB_USERNAME}`}
-                alt={`${GITHUB_USERNAME} GitHub contribution graph`}
-                className="w-full h-auto"
-                onLoad={() => setGithubGraphLoaded(true)}
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
-              {!githubGraphLoaded && (
-                <div className="h-24 flex items-center justify-center">
-                  <span className="font-mono text-xs text-primary/30 uppercase tracking-wider">
-                    Loading contribution data…
-                  </span>
-                </div>
-              )}
+            <ContributionOscilloscope
+              data={contributionsByDay}
+              isPowered={isPowerEngaged}
+              weeklyCommits={weeklyCommits}
+            />
+            <div className="mt-2 flex items-center gap-4 font-mono text-xs text-primary/50">
+              <span>
+                Commits (7d):&nbsp;
+                <span className="text-accent">
+                  {isPowerEngaged ? (weeklyCommits ?? '—') : '—'}
+                </span>
+              </span>
+              <span className="text-primary/20">|</span>
+              <span>
+                Streak:&nbsp;
+                <span className="text-accent">
+                  {isPowerEngaged && currentStreak != null ? `${currentStreak}d` : '—'}
+                </span>
+              </span>
             </div>
             <div className="mt-3 flex items-center gap-2">
               <span
