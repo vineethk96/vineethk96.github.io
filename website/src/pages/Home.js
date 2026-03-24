@@ -1,51 +1,159 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Github, ExternalLink, User } from 'lucide-react';
 import FaderSwitch from '../components/ui/fader-switch';
 import { PERSONAL_INFO, SOCIAL_LINKS, PROJECTS } from '../data/constants';
 import { useAnalytics } from '../hooks/useAnalytics';
+import { useConnectionStatus } from '../hooks/useConnectionStatus';
 
 const GITHUB_USERNAME = 'vineethk96';
 
-const TelemetryModule = ({ label, value, unit, isActive }) => (
-  <div
-    className={`technic-module p-4 transition-all duration-500 ${
-      isActive ? '' : 'opacity-30'
-    }`}
-  >
-    <div className="section-label">{label}</div>
-    <div className="flex items-end gap-1.5 mt-1">
-      <span
-        className={`font-mono font-bold text-2xl transition-colors duration-500 ${
-          isActive ? 'text-accent' : 'text-primary/30'
-        }`}
-      >
-        {isActive ? value : '—'}
-      </span>
-      {unit && isActive && (
-        <span className="font-mono text-xs text-primary/50 mb-1">{unit}</span>
-      )}
+const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
+  const [displayValue, setDisplayValue] = useState('—');
+  const isAnimatingRef = useRef(false);
+  const timerRef       = useRef(null);
+  const displayRef     = useRef('—');
+
+  const setDisplay = (v) => {
+    displayRef.current = String(v);
+    setDisplayValue(String(v));
+  };
+
+  // Boot / shutdown animation — only triggers on isActive toggle
+  useEffect(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+
+    if (!isActive) {
+      // Aborted mid-boot: snap off immediately
+      if (isAnimatingRef.current) {
+        isAnimatingRef.current = false;
+        setDisplay('—');
+        return;
+      }
+
+      // Shutdown animation from current display
+      const snapshot = displayRef.current;
+      if (snapshot === '—') return;
+
+      const numVal    = parseFloat(snapshot);
+      const isNumeric = !isNaN(numVal);
+      isAnimatingRef.current = true;
+
+      if (isNumeric) {
+        const hasDecimal = snapshot.includes('.');
+        let step = 0;
+        const STEPS = 36;
+        timerRef.current = setInterval(() => {
+          step++;
+          const t   = step / STEPS;
+          const cur = numVal * (1 - Math.pow(t, 3)); // ease-in
+          setDisplay(hasDecimal ? cur.toFixed(1) : String(Math.round(cur)));
+          if (step >= STEPS) {
+            clearInterval(timerRef.current);
+            isAnimatingRef.current = false;
+            setDisplay('—');
+          }
+        }, 33);
+      } else {
+        const str = snapshot;
+        const n   = str.length;
+        let step  = 0;
+        timerRef.current = setInterval(() => {
+          step++;
+          setDisplay(str.slice(0, n - step) + '-'.repeat(Math.min(step, n)));
+          if (step >= n) {
+            clearInterval(timerRef.current);
+            isAnimatingRef.current = false;
+            setDisplay('—');
+          }
+        }, 80);
+      }
+      return;
+    }
+
+    // Boot animation
+    isAnimatingRef.current = true;
+    const numVal    = parseFloat(value);
+    const isNumeric = !isNaN(numVal) && value !== '';
+
+    if (isNumeric) {
+      const hasDecimal = String(value).includes('.');
+      let step = 0;
+      const STEPS = 36;
+      timerRef.current = setInterval(() => {
+        step++;
+        const t     = step / STEPS;
+        const eased = 1 - Math.pow(1 - t, 3);
+        const cur   = numVal * eased;
+        setDisplay(hasDecimal ? cur.toFixed(1) : String(Math.round(cur)));
+        if (step >= STEPS) {
+          clearInterval(timerRef.current);
+          isAnimatingRef.current = false;
+          setDisplay(String(value));
+        }
+      }, 33);
+    } else {
+      const str = String(value);
+      const n   = str.length;
+      let step  = 0;
+      setDisplay('-'.repeat(n));
+      timerRef.current = setInterval(() => {
+        step++;
+        setDisplay('-'.repeat(n - step) + str.slice(n - step));
+        if (step >= n) {
+          clearInterval(timerRef.current);
+          isAnimatingRef.current = false;
+        }
+      }, 80);
+    }
+
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [isActive]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Live value pass-through (after boot animation completes)
+  useEffect(() => {
+    if (isActive && !isAnimatingRef.current) {
+      setDisplay(String(value));
+    }
+  }, [value, isActive]);
+
+  return (
+    <div className="technic-module p-4">
+      <div className="section-label">{label}</div>
+      <div className="flex items-end gap-1.5 mt-1">
+        <span className={`font-mono font-bold text-2xl transition-colors duration-500 ${
+          isActive ? (isError ? 'text-danger' : 'text-accent') : 'text-primary/30'
+        }`}>
+          {displayValue}
+        </span>
+        {unit && isActive && (
+          <span className="font-mono text-xs text-primary/50 mb-1">{unit}</span>
+        )}
+      </div>
+      <div className="flex items-center gap-1.5 mt-2">
+        <span
+          className={`inline-block w-3 h-3 rounded-full transition-all duration-500 ${
+            isActive
+              ? isError ? 'bg-danger led-indicator-error' : 'bg-success led-indicator'
+              : 'bg-danger led-indicator-off'
+          }`}
+          aria-hidden="true"
+        />
+        <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">
+          {isActive ? (isError ? 'No Signal' : 'Online') : 'Standby'}
+        </span>
+      </div>
     </div>
-    <div className="flex items-center gap-1.5 mt-2">
-      <span
-        className={`inline-block w-2 h-2 rounded-full transition-all duration-500 ${
-          isActive ? 'bg-success led-indicator' : 'bg-primary/20'
-        }`}
-        aria-hidden="true"
-      />
-      <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">
-        {isActive ? 'Online' : 'Standby'}
-      </span>
-    </div>
-  </div>
-);
+  );
+};
 
 const Home = () => {
   const [isPowerEngaged, setIsPowerEngaged] = useState(false);
   const [carouselAngle, setCarouselAngle] = useState(0);
   const [githubGraphLoaded, setGithubGraphLoaded] = useState(false);
   const { track } = useAnalytics();
+  const { isOnline, connectionLabel, downlink, uptimePercent } = useConnectionStatus();
 
   const featuredProjects = (PROJECTS || []).slice(0, 6);
 
@@ -164,13 +272,14 @@ const Home = () => {
           <div className="lg:col-span-2 grid grid-cols-1 gap-4">
             <TelemetryModule
               label="Connection Status"
-              value="Established"
-              unit=""
+              value={connectionLabel}
+              unit={downlink != null ? `${downlink} Mbps` : ''}
               isActive={isPowerEngaged}
+              isError={!isOnline}
             />
             <TelemetryModule
               label="System Uptime"
-              value="99.8"
+              value={uptimePercent}
               unit="%"
               isActive={isPowerEngaged}
             />
@@ -222,8 +331,8 @@ const Home = () => {
             </div>
             <div className="mt-3 flex items-center gap-2">
               <span
-                className={`inline-block w-2 h-2 rounded-full transition-all duration-500 ${
-                  isPowerEngaged ? 'bg-success led-indicator' : 'bg-primary/20'
+                className={`inline-block w-3 h-3 rounded-full transition-all duration-500 ${
+                  isPowerEngaged ? 'bg-success led-indicator' : 'bg-danger led-indicator-off'
                 }`}
                 aria-hidden="true"
               />
