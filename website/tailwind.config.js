@@ -11,6 +11,7 @@ module.exports = {
         accent: '#FFBF00',
         secondary: '#f0eee9',
         success: '#94A744',
+        danger: '#EC0B43',
         muted: '#E5E7EB',
         faint: '#F3F4F6',
       },

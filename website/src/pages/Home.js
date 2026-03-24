@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Github, ExternalLink, User } from 'lucide-react';
-import LeverSwitch from '../components/ui/lever-switch';
+import FaderSwitch from '../components/ui/fader-switch';
 import { PERSONAL_INFO, SOCIAL_LINKS, PROJECTS } from '../data/constants';
 import { useAnalytics } from '../hooks/useAnalytics';
 
@@ -57,10 +57,10 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handlePowerToggle = () => {
-    const next = !isPowerEngaged;
-    setIsPowerEngaged(next);
-    track('hero_power_engaged', { state: next ? 'active' : 'standby' });
+  const handlePowerToggle = (next) => {
+    const value = typeof next === 'boolean' ? next : !isPowerEngaged;
+    setIsPowerEngaged(value);
+    track('hero_power_engaged', { state: value ? 'active' : 'standby' });
   };
 
   return (
@@ -88,7 +88,8 @@ const Home = () => {
           <div className="lg:col-span-3 flex flex-col gap-4">
             {/* System ID Header */}
             <div className="technic-module p-5 sm:p-8">
-              <div className="flex flex-col md:flex-row items-start gap-8">
+              {/* Top row: headshot + bio text */}
+              <div className="flex flex-col md:flex-row items-start gap-8 mb-6">
 
                 {/* Headshot */}
                 <div className="relative flex-shrink-0">
@@ -131,43 +132,32 @@ const Home = () => {
                       </span>
                     </div>
                   </div>
+
                 </div>
 
-                {/* Text + Power Button */}
+                {/* Text column */}
                 <div className="flex flex-col flex-1 gap-4">
                   <div className="section-label">System Operator</div>
 
                   <p className="font-body text-primary/70 leading-relaxed max-w-lg">
                     {PERSONAL_INFO?.bio || 'Building connected systems from embedded devices to cloud architectures — designing products ready for the mass market.'}
                   </p>
-
-                  <LeverSwitch
-                    checked={isPowerEngaged}
-                    onChange={handlePowerToggle}
-                    label="System Power Toggle"
-                    activeLabel="SYSTEM ACTIVE"
-                    standbyLabel="ENGAGE POWER"
-                  />
                 </div>
 
               </div>
+
+              {/* Divider */}
+              <div className="border-t-2 border-primary/10 mb-5" />
+
+              {/* Full-width fader */}
+              <FaderSwitch
+                checked={isPowerEngaged}
+                onChange={handlePowerToggle}
+                activeLabel="SYSTEM ACTIVE"
+                standbyLabel="ENGAGE POWER"
+              />
             </div>
 
-            {/* Power State Notice */}
-            <AnimatePresence>
-              {!isPowerEngaged && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="border-2 border-primary/20 bg-faint px-4 py-2 rounded-xl"
-                >
-                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">
-                    ⚡ Standby Mode — Engage power to activate telemetry modules
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Right Column — Telemetry Modules */}

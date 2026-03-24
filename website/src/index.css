@@ -59,116 +59,173 @@
     @apply font-mono text-xs uppercase tracking-widest text-primary/50 mb-1;
   }
 
-  /* === LEVER SWITCH ============================================= */
-
-  /* Root wrapper — adds top padding so knob (which pokes 32px above track) has room */
-  .lever-switch-root {
-    position: relative;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding-top: 28px;
-    cursor: pointer;
-    user-select: none;
-    outline: none;
-  }
-
-  .lever-switch-root:focus-visible {
-    outline: 2px solid #FFBF00;
-    outline-offset: 4px;
-    border-radius: 4px;
-  }
-
-  /* Track — the horizontal pill slot */
-  .lever-track {
-    position: relative;
-    width: 80px;
-    height: 20px;
-    background-color: #031632;
-    border-radius: 20px;
-    border: 3px solid #FBF9F4;
-    box-shadow: inset 0 4px 8px rgba(3, 22, 50, 0.5), 4px 4px 0px 0px #FFBF00, 0 0 14px rgba(148, 167, 68, 0.45);
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
-  }
-
-  .lever-track--on {
-    background-color: #94A744;
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3), 4px 4px 0px 0px #94A744, 0 0 14px rgba(148, 167, 68, 0.45);
-  }
-
-  /* Lever arm — pivots inside the track, anchored at bottom center */
-  .lever-arm {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    width: 12px;
-    height: 46px;
-    margin-left: -6px;
-    transform-origin: bottom center;
-    transform: rotate(-35deg);
-    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  .lever-arm--on {
-    transform: rotate(35deg);
-  }
-
-  /* Slow down snap on :active for tactile feel */
-  .lever-switch-root:active .lever-arm {
-    transition-duration: 0.1s;
-  }
-
-  /* Metal rod (the shaft) */
-  .lever-rod {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, #1a2d4a, #4a6fa5, #1a2d4a);
-    border-radius: 4px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-  }
-
-  /* Knob — positioned above the rod top, pokes above the track */
-  .lever-knob {
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px;
-    height: 30px;
-    background: radial-gradient(circle at 30% 30%, #FFE07A, #FFBF00);
-    border-radius: 50%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.45), inset -2px -2px 5px rgba(0, 0, 0, 0.3);
-    transition: background 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .lever-arm--on .lever-knob {
-    background: radial-gradient(circle at 30% 30%, #FFE07A, #FFBF00);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), inset -2px -2px 5px rgba(0, 0, 0, 0.2),
-      0 0 12px rgba(148, 167, 68, 0.65);
-  }
-
-  /* Status label */
-  .lever-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    transition: color 0.2s ease;
-  }
-
-  .lever-label--off {
-    color: rgba(3, 22, 50, 0.40);
-  }
-
-  .lever-label--on {
-    color: #94A744;
-  }
 }
 
 @keyframes ledPulse {
   0%, 100% { opacity: 1; box-shadow: 0 0 4px #94A744; }
   50% { opacity: 0.5; box-shadow: 0 0 12px #94A744; }
+}
+
+/* === FADER SWITCH ============================================= */
+
+.fader-switch-root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+  outline: none;
+  width: 100%;
+}
+
+.fader-switch-root:focus-visible {
+  outline: 2px solid #FFBF00;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.fader-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  /* 32px left = half knob width, aligns knob left edge at 0% with container left.
+     0px right = LED right edge flush with container right (bio text column edge).
+     52px gap = 32px knob overhang at 100% + 20px visual buffer before LED. */
+  padding-left: 32px;
+  padding-right: 0;
+  gap: 52px;
+  box-sizing: border-box;
+}
+
+.fader-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* knob is 48px tall, track is 14px → knob overhangs 34px below track bottom.
+     margin-top pushes labels clear of that overhang with a small visual buffer. */
+  margin-top: 28px;
+  /* left label flush with container left (headshot edge), right label flush right */
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.fader-track {
+  position: relative;
+  flex-grow: 1;
+  height: 14px;
+  background: #031632;
+  border-radius: 10px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4), 0 0 0 2px #031632;
+  display: flex;
+  align-items: center;
+}
+
+.fader-ticks {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  top: -13px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  padding: 0 2px;
+  box-sizing: border-box;
+}
+
+.fader-tick {
+  width: 1px;
+  height: 100%;
+  background: rgba(3, 22, 50, 0.15);
+}
+
+.fader-tick--major {
+  width: 2px;
+  background: rgba(3, 22, 50, 0.35);
+}
+
+.fader-knob {
+  position: absolute;
+  width: 64px;
+  height: 48px;
+  background: linear-gradient(180deg, #ffffff, #e8e4dc);
+  border: 2px solid #031632;
+  border-radius: 5px;
+  cursor: grab;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow:
+    4px 4px 0px 0px #031632,
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  z-index: 10;
+  transform: translateX(-50%);
+  transition: left 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
+  user-select: none;
+}
+
+.fader-knob--dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.fader-knob--active {
+  box-shadow:
+    4px 4px 0px 0px #031632,
+    0 0 12px rgba(148, 167, 68, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.fader-center-line {
+  position: absolute;
+  height: 100%;
+  width: 3px;
+  background: #EC0B43;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 4px rgba(237, 37, 78, 0.6);
+  z-index: 11;
+}
+
+.fader-knob--active .fader-center-line {
+  background: #94A744;
+  box-shadow: 0 0 6px rgba(148, 167, 68, 0.8);
+}
+
+.fader-ridges {
+  width: 75%;
+  height: 55%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.fader-ridge {
+  width: 2px;
+  height: 100%;
+  background: rgba(3, 22, 50, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.fader-led {
+  width: 12px;
+  height: 12px;
+  background: #EC0B43;
+  border-radius: 50%;
+  border: 2px solid #031632;
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.fader-led--active {
+  background: #94A744;
+  box-shadow: 0 0 12px #94A744, inset 0 0 3px white;
+}
+
+.fader-status-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: rgba(3, 22, 50, 0.3);
 }
