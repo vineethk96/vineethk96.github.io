@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
@@ -16,10 +16,19 @@ import NotFound from './pages/NotFound';
 import PageviewTracker from './components/analytics/PageviewTracker';
 import CookieConsent from './components/analytics/CookieConsent';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   return (
     <Router>
       <PageviewTracker />
+      <ScrollToTop />
       <div className="min-h-screen blueprint-bg text-primary">
         <Navigation />
 
