@@ -8,6 +8,7 @@ import { useAnalytics } from '../hooks/useAnalytics';
 import { useConnectionStatus } from '../hooks/useConnectionStatus';
 import { useGitHubData } from '../hooks/useGitHubData';
 import ContributionOscilloscope from '../components/ui/ContributionOscilloscope';
+import { ThreeDPhotoCarousel } from '../components/ui/ThreeDCarousel';
 
 const GITHUB_USERNAME = 'vineethk96';
 
@@ -153,20 +154,11 @@ const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
 
 const Home = () => {
   const [isPowerEngaged, setIsPowerEngaged] = useState(false);
-  const [carouselAngle, setCarouselAngle] = useState(0);
   const { track } = useAnalytics();
   const { isOnline, connectionLabel, downlink, uptimePercent } = useConnectionStatus();
   const { weeklyCommits, currentStreak, ongoingProjectsCount, contributionsByDay } = useGitHubData();
 
   const featuredProjects = (PROJECTS || []).slice(0, 6);
-
-  // Slowly rotate the carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCarouselAngle((a) => (a + 0.3) % 360);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
 
   const handlePowerToggle = (next) => {
     const value = typeof next === 'boolean' ? next : !isPowerEngaged;
@@ -359,54 +351,23 @@ const Home = () => {
               </Link>
             </div>
             <div
-              className={`relative h-56 transition-opacity duration-500 ${
+              className={`relative transition-opacity duration-500 ${
                 isPowerEngaged ? 'opacity-100' : 'opacity-30'
               }`}
               aria-label="Project carousel"
             >
-              {featuredProjects.length > 0 ? (
-                featuredProjects.map((project, i) => {
-                  const angle = ((carouselAngle + (i / featuredProjects.length) * 360) % 360);
-                  const rad = (angle * Math.PI) / 180;
-                  const x = Math.sin(rad) * 130;
-                  const y = -Math.cos(rad) * 50;
-                  const z = Math.cos(rad);
-                  return (
-                    <div
-                      key={project.id}
-                      style={{
-                        position: 'absolute',
-                        left: `calc(50% + ${x}px - 55px)`,
-                        top: `calc(50% + ${y}px - 35px)`,
-                        zIndex: Math.round(z * 10 + 10),
-                        opacity: Math.max(0.2, 0.5 + z * 0.5),
-                        transform: `scale(${Math.max(0.7, 0.85 + z * 0.15)})`,
-                        transition: 'opacity 0.1s, transform 0.1s',
-                      }}
-                    >
-                      <Link
-                        to={`/projects/${project.id}`}
-                        className="block w-[110px] border-2 border-primary bg-background rounded-2xl p-2.5 hover:bg-faint transition-colors duration-200"
-                        style={{ boxShadow: `${2 + z * 2}px ${2 + z * 2}px 0px 0px #031632` }}
-                        tabIndex={z > 0 ? 0 : -1}
-                      >
-                        <div className="font-mono text-xs text-primary/40 uppercase mb-1">
-                          {project.year}
-                        </div>
-                        <div className="font-heading font-bold text-primary text-xs leading-tight line-clamp-2">
-                          {project.title}
-                        </div>
-                      </Link>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="font-mono text-xs text-primary/30 uppercase tracking-wider">
-                    No projects loaded
-                  </span>
-                </div>
-              )}
+              <ThreeDPhotoCarousel projects={featuredProjects} isPowered={isPowerEngaged} />
+            </div>
+            <div className="mt-3 flex items-center gap-2">
+              <span
+                className={`inline-block w-3 h-3 rounded-full transition-all duration-500 ${
+                  isPowerEngaged ? 'bg-success led-indicator' : 'bg-danger led-indicator-off'
+                }`}
+                aria-hidden="true"
+              />
+              <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">
+                {isPowerEngaged ? 'System Online' : 'Offline'}
+              </span>
             </div>
           </div>
         </div>
