@@ -68,7 +68,12 @@ const About = () => {
           </p>
           <h1 className="font-heading font-extrabold text-5xl sm:text-7xl text-primary tracking-tighter uppercase leading-none">
             System_Manual:<br />
-            <span className="text-accent">Origins_&amp;_Pivot</span>
+            <span
+              className="italic text-accent"
+              style={{ textShadow: '4px 4px 0px rgba(3, 22, 50, 0.4)' }}
+            >
+              Origins_&amp;_Pivot
+            </span>
           </h1>
         </motion.header>
 
