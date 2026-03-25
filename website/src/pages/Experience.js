@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Cpu } from 'lucide-react';
 import { TIMELINE_DATA } from '../data/constants';
@@ -12,7 +12,7 @@ const fadeUp = {
   }),
 };
 
-const ExperienceCard = ({ exp, index, isLeft }) => {
+const ExperienceCard = ({ exp, index, isLeft, nodeRef }) => {
   const isCurrent = exp.isCurrent;
   const yearLabel = isCurrent ? `${exp.start_year} — Current` : `${exp.start_year}`;
 
@@ -20,7 +20,7 @@ const ExperienceCard = ({ exp, index, isLeft }) => {
     <motion.div
       variants={fadeUp}
       custom={index + 1}
-      className="relative flex items-center justify-between gap-0 group"
+      className="relative z-10 flex items-center justify-between gap-0 group"
     >
       {/* Left slot: card (isLeft) OR year label */}
       <div className="w-[45%] flex justify-end pr-10">
@@ -45,7 +45,7 @@ const ExperienceCard = ({ exp, index, isLeft }) => {
       </div>
 
       {/* Timeline Node (centered) */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20 flex items-center justify-center">
+      <div ref={nodeRef} className="absolute left-1/2 -translate-x-1/2 z-20 flex items-center justify-center">
         {isCurrent ? (
           <motion.div
             className="w-8 h-8 border-4 border-primary bg-accent flex items-center justify-center"
@@ -56,7 +56,7 @@ const ExperienceCard = ({ exp, index, isLeft }) => {
             <div className="w-2 h-2 rounded-full bg-primary -rotate-45" />
           </motion.div>
         ) : (
-          <div className="w-8 h-8 rotate-45 border-4 border-primary bg-background flex items-center justify-center transition-colors duration-200 group-hover:bg-accent/20">
+          <div className="w-8 h-8 rotate-45 border-4 border-primary bg-background flex items-center justify-center transition-colors duration-200">
             <div className="w-2 h-2 rounded-full bg-primary/40 -rotate-45" />
           </div>
         )}
@@ -177,6 +177,27 @@ const CardContent = ({ exp, isCurrent }) => (
 );
 
 const Experience = () => {
+  const containerRef = useRef(null);
+  const firstNodeRef = useRef(null);
+  const lastNodeRef = useRef(null);
+  const [lineStyle, setLineStyle] = useState({ top: 0, height: 0 });
+
+  useEffect(() => {
+    const update = () => {
+      if (!containerRef.current || !firstNodeRef.current || !lastNodeRef.current) return;
+      const containerTop = containerRef.current.getBoundingClientRect().top;
+      const first = firstNodeRef.current.getBoundingClientRect();
+      const last = lastNodeRef.current.getBoundingClientRect();
+      const top = first.top + first.height / 2 - containerTop;
+      const height = last.top + last.height / 2 - containerTop - top;
+      setLineStyle({ top, height });
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const entries = (TIMELINE_DATA || []).map((item, index) => {
     const isEducation = !!item.title;
     return {
@@ -212,20 +233,27 @@ const Experience = () => {
               className="italic text-accent"
               style={{ textShadow: '4px 4px 0px rgba(3, 22, 50, 0.4)' }}
             >
-              Service Record
+              Service_Record
             </span>
           </h1>
         </motion.header>
 
         {/* Desktop Timeline */}
-        <div className="hidden md:block relative">
+        <div ref={containerRef} className="hidden md:block relative">
           <div
-            className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-0.5 bg-primary/20"
+            className="absolute left-1/2 -translate-x-1/2 w-2 bg-primary/40 z-[1]"
+            style={{ top: lineStyle.top, height: lineStyle.height }}
             aria-hidden="true"
           />
           <div className="space-y-16">
             {entries.map((exp, i) => (
-              <ExperienceCard key={i} exp={exp} index={i} isLeft={i % 2 === 0} />
+              <ExperienceCard
+                key={i}
+                exp={exp}
+                index={i}
+                isLeft={i % 2 === 0}
+                nodeRef={i === 0 ? firstNodeRef : i === entries.length - 1 ? lastNodeRef : null}
+              />
             ))}
           </div>
         </div>

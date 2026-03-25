@@ -116,16 +116,21 @@ const Projects = () => {
     >
       <div className="max-w-6xl mx-auto">
 
-        {/* Header */}
-        <motion.div variants={fadeUp} custom={0} className="mb-8">
-          <div className="section-label">Component Inventory</div>
-          <h1 className="font-heading font-bold text-4xl sm:text-5xl text-primary">
-            Projects
-          </h1>
-          <p className="font-body text-primary/50 mt-2">
-            {projects.length} modules catalogued
+        {/* Page Header */}
+        <motion.header variants={fadeUp} custom={0} className="mb-8 border-l-8 border-accent pl-6">
+          <p className="font-mono text-xs font-bold text-accent tracking-widest mb-2 uppercase">
+            System_Documentation // Vol_01
           </p>
-        </motion.div>
+          <h1 className="font-heading font-extrabold text-5xl sm:text-7xl text-primary tracking-tighter uppercase leading-none">
+            Projects:<br />
+            <span
+              className="italic text-accent"
+              style={{ textShadow: '4px 4px 0px rgba(50, 50, 50, 0.7)' }}
+            >
+              Component_Inventory
+            </span>
+          </h1>
+        </motion.header>
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
