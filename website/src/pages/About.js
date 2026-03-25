@@ -49,7 +49,7 @@ const About = () => {
   const workHistory = (WORK_EXPERIENCE || []).slice(0, 3);
 
   const minStartYear = Math.min(...(WORK_EXPERIENCE || [{ start_year: new Date().getFullYear() }]).map(w => w.start_year));
-  const yearsExperience = new Date().getFullYear() - minStartYear;
+  const yearsExperience = new Date().getFullYear() - 2019;  // 2019 is when I graduated undergrad
 
   const locationDisplay = PERSONAL_INFO?.location?.split(', ').slice(0, 2).join('_').toUpperCase() || 'LONDON_UK';
 
@@ -68,7 +68,7 @@ const About = () => {
           </p>
           <h1 className="font-heading font-extrabold text-5xl sm:text-7xl text-primary tracking-tighter uppercase leading-none">
             System_Manual:<br />
-            <span className="text-danger">Origins_&amp;_Pivot</span>
+            <span className="text-accent">Origins_&amp;_Pivot</span>
           </h1>
         </motion.header>
 
@@ -94,7 +94,7 @@ const About = () => {
               <div className="grid md:grid-cols-2 gap-10 text-primary/60 leading-relaxed">
                 <div className="space-y-3">
                   <p className="font-mono font-bold text-primary uppercase text-xs tracking-wider">
-                    Phase_01: Industrial_Rigor
+                    Phase_01: The_Purpose
                   </p>
                   <p>{PERSONAL_STORY?.introduction || ''}</p>
                 </div>

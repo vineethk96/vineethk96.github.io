@@ -176,7 +176,7 @@ const Home = () => {
       <div className="max-w-7xl mx-auto">
 
         {/* === HERO NAME TITLE === */}
-        <h1 className="font-heading font-bold text-5xl sm:text-7xl lg:text-8xl xl:text-9xl text-primary leading-none mb-4 tracking-tight">
+        <h1 className="font-heading font-bold text-5xl sm:text-7xl lg:text-8xl xl:text-9xl text-primary leading-none mb-4 tracking-tight drop-shadow-[8px_8px_0px_#FFBF00]">
           {PERSONAL_INFO?.name || 'Vineeth_Kirandumkara'}
         </h1>
 
