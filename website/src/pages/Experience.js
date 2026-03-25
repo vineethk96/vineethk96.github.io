@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Cpu } from 'lucide-react';
-import { WORK_EXPERIENCE } from '../data/constants';
+import { TIMELINE_DATA } from '../data/constants';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -13,8 +13,8 @@ const fadeUp = {
 };
 
 const ExperienceCard = ({ exp, index, isLeft }) => {
-  const isCurrent = index === 0;
-  const yearLabel = exp.end_year ? `${exp.start_year} — ${exp.end_year}` : 'PRESENT';
+  const isCurrent = exp.isCurrent;
+  const yearLabel = isCurrent ? `${exp.start_year} — Current` : `${exp.start_year}`;
 
   return (
     <motion.div
@@ -35,7 +35,8 @@ const ExperienceCard = ({ exp, index, isLeft }) => {
           </motion.div>
         ) : (
           <span
-            className="font-heading font-extrabold text-5xl text-primary/10 tracking-tighter uppercase select-none"
+            className="font-heading font-extrabold text-5xl text-primary tracking-tighter uppercase select-none"
+            style={{ textShadow: isCurrent ? '6px 6px 0px #FFBF00' : 'none' }}
             aria-hidden="true"
           >
             {yearLabel}
@@ -47,15 +48,16 @@ const ExperienceCard = ({ exp, index, isLeft }) => {
       <div className="absolute left-1/2 -translate-x-1/2 z-20 flex items-center justify-center">
         {isCurrent ? (
           <motion.div
-            className="w-8 h-8 rounded-full border-4 border-primary bg-accent flex items-center justify-center"
-            animate={{ scale: [1, 1.12, 1] }}
+            className="w-8 h-8 border-4 border-primary bg-accent flex items-center justify-center"
+            initial={{ rotate: 45 }}
+            animate={{ scale: [1, 1.12, 1], rotate: 45 }}
             transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
           >
-            <div className="w-2 h-2 rounded-full bg-primary" />
+            <div className="w-2 h-2 rounded-full bg-primary -rotate-45" />
           </motion.div>
         ) : (
-          <div className="w-8 h-8 rounded-full border-4 border-primary bg-background flex items-center justify-center transition-colors duration-200 group-hover:bg-accent/20">
-            <div className="w-2 h-2 rounded-full bg-primary/40" />
+          <div className="w-8 h-8 rotate-45 border-4 border-primary bg-background flex items-center justify-center transition-colors duration-200 group-hover:bg-accent/20">
+            <div className="w-2 h-2 rounded-full bg-primary/40 -rotate-45" />
           </div>
         )}
       </div>
@@ -73,7 +75,8 @@ const ExperienceCard = ({ exp, index, isLeft }) => {
           </motion.div>
         ) : (
           <span
-            className="font-heading font-extrabold text-5xl text-primary/10 tracking-tighter uppercase select-none"
+            className="font-heading font-extrabold text-5xl text-primary tracking-tighter uppercase select-none"
+            style={{ textShadow: isCurrent ? '6px 6px 0px #FFBF00' : 'none' }}
             aria-hidden="true"
           >
             {yearLabel}
@@ -95,13 +98,22 @@ const CardContent = ({ exp, isCurrent }) => (
 
     {/* Header */}
     <div className="mb-4 pr-6">
-      <span
-        className={`font-mono text-[10px] font-bold uppercase tracking-widest block mb-1 ${
-          isCurrent ? 'text-accent' : 'text-primary/40'
-        }`}
-      >
-        {exp.end_year ? `${exp.start_year} — ${exp.end_year}` : `${exp.start_year} — Present`}
-      </span>
+      <div className="flex items-center gap-2 mb-1">
+        <span
+          className={`font-mono text-[10px] font-bold uppercase tracking-widest ${
+            isCurrent ? 'text-accent' : 'text-primary/40'
+          }`}
+        >
+          {exp.end_year ? `${exp.start_year} — ${exp.end_year}` : `${exp.start_year} — Present`}
+        </span>
+        <span className={`font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 border ${
+          exp.type === 'education'
+            ? 'border-blue-400/40 text-blue-400/70'
+            : 'border-accent/40 text-accent/70'
+        }`}>
+          {exp.type === 'education' ? 'Education' : 'Work'}
+        </span>
+      </div>
       <h3 className="font-heading font-bold text-lg text-primary uppercase tracking-tight leading-tight mb-1">
         {exp.position}
       </h3>
@@ -134,7 +146,9 @@ const CardContent = ({ exp, isCurrent }) => (
     {/* Achievements */}
     {exp.achievements?.length > 0 && (
       <div className="mb-5">
-        <div className="section-label mb-2">Key_Deployments</div>
+        <div className="section-label mb-2">
+          {exp.type === 'education' ? 'Key_Highlights' : 'Key_Deployments'}
+        </div>
         <ul className="space-y-2">
           {exp.achievements.map((item, i) => (
             <li key={i} className="flex items-start gap-2">
@@ -163,16 +177,21 @@ const CardContent = ({ exp, isCurrent }) => (
 );
 
 const Experience = () => {
-  const experiences = (WORK_EXPERIENCE || []).map(exp => ({
-    company: exp.company,
-    position: exp.position,
-    start_year: exp.start_year,
-    end_year: exp.end_year,
-    location: exp.location,
-    description: exp.description,
-    achievements: exp.achievements || [],
-    technologies: exp.tags || [],
-  }));
+  const entries = (TIMELINE_DATA || []).map((item, index) => {
+    const isEducation = !!item.title;
+    return {
+      type: isEducation ? 'education' : 'work',
+      company: isEducation ? item.title : item.company,
+      position: isEducation ? item.subtitle : item.position,
+      start_year: item.start_year,
+      end_year: item.end_year,
+      location: item.location,
+      description: item.description,
+      achievements: isEducation ? (item.highlights || []) : (item.achievements || []),
+      technologies: isEducation ? [] : (item.tags || []),
+      isCurrent: index === 0,
+    };
+  });
 
   return (
     <motion.div
@@ -205,7 +224,7 @@ const Experience = () => {
             aria-hidden="true"
           />
           <div className="space-y-16">
-            {experiences.map((exp, i) => (
+            {entries.map((exp, i) => (
               <ExperienceCard key={i} exp={exp} index={i} isLeft={i % 2 === 0} />
             ))}
           </div>
@@ -218,8 +237,8 @@ const Experience = () => {
             aria-hidden="true"
           />
           <div className="space-y-6 ml-12">
-            {experiences.map((exp, i) => {
-              const isCurrent = i === 0;
+            {entries.map((exp, i) => {
+              const isCurrent = exp.isCurrent;
               return (
                 <motion.div key={i} variants={fadeUp} custom={i + 1} className="relative">
                   {/* Node */}
@@ -229,15 +248,16 @@ const Experience = () => {
                   >
                     {isCurrent ? (
                       <motion.div
-                        className="w-6 h-6 rounded-full border-4 border-primary bg-accent flex items-center justify-center"
-                        animate={{ scale: [1, 1.12, 1] }}
+                        className="w-6 h-6 border-4 border-primary bg-accent flex items-center justify-center"
+                        initial={{ rotate: 45 }}
+                        animate={{ scale: [1, 1.12, 1], rotate: 45 }}
                         transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
                       >
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary -rotate-45" />
                       </motion.div>
                     ) : (
-                      <div className="w-6 h-6 rounded-full border-4 border-primary bg-background flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+                      <div className="w-6 h-6 rotate-45 border-4 border-primary bg-background flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary/40 -rotate-45" />
                       </div>
                     )}
                   </div>
