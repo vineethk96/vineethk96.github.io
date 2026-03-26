@@ -143,6 +143,12 @@ export const projectType = defineType({
       ],
     }),
     defineField({
+      name: 'cadModel',
+      title: 'CAD Model (STL)',
+      type: 'file',
+      options: { accept: '.stl' },
+    }),
+    defineField({
       name: 'linkedBy',
       title: 'Linked By',
       type: 'string',

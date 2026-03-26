@@ -6,6 +6,7 @@ import { PROJECTS } from '../data/constants';
 import DOMPurify from 'dompurify';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { ProjectImageCarousel } from '../components/ui/ProjectImageCarousel';
+import { CADModelViewer } from '../components/ui/CADModelViewer';
 
 const createMarkup = (html) => ({
   __html: DOMPurify.sanitize(html, {
@@ -80,18 +81,8 @@ const ProjectDetail = () => {
         {/* Section 1: Hero — 2-col */}
         <motion.div variants={fadeUp} custom={1} className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
 
-          {/* Left: CAD Model Placeholder */}
-          <div className="relative min-h-[360px] technic-module overflow-hidden blueprint-bg flex flex-col items-center justify-center gap-4">
-            {project.icon && (
-              <project.icon className="w-20 h-20 text-primary/20" aria-hidden="true" />
-            )}
-            <p className="font-mono text-xs text-accent tracking-widest uppercase">
-              CAD_Model // TBD
-            </p>
-            <span className="font-mono text-[10px] text-primary/40 border border-primary/20 px-3 py-1 rounded">
-              INTERACTIVE_MODEL // COMING_SOON
-            </span>
-          </div>
+          {/* Left: CAD Model Viewer */}
+          <CADModelViewer projectId={projectId} />
 
           {/* Right: Title + Meta */}
           <div className="flex flex-col justify-center gap-4 lg:pl-4">
