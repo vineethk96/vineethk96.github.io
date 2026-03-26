@@ -44,7 +44,7 @@ function ProjectImageCarousel({ images = [] }) {
               <CarouselItem key={i}>
                 <div className="w-full">
                   <div
-                    className="w-full h-64 flex items-center justify-center overflow-hidden rounded border border-primary/20 bg-black/10 cursor-pointer group"
+                    className="relative w-full h-64 flex items-center justify-center overflow-hidden rounded border border-primary/20 bg-black/10 cursor-pointer group"
                     onClick={() => setLightboxIndex(i)}
                     title="Click to enlarge"
                   >
@@ -54,24 +54,25 @@ function ProjectImageCarousel({ images = [] }) {
                       className="max-w-full max-h-full object-contain object-center transition-transform duration-200 group-hover:scale-[1.02]"
                       draggable={false}
                     />
+                    {(image.caption || image.alt) && (
+                      <span className="absolute bottom-2 left-2 text-[10px] px-2 py-1 bg-primary border border-background/20 text-background/80 uppercase font-mono">
+                        {image.caption || image.alt}
+                      </span>
+                    )}
                   </div>
-                  {(image.caption || image.alt) && (
-                    <p className="mt-2 font-mono text-xs text-primary/40 uppercase tracking-widest truncate">
-                      {image.caption || image.alt}
-                    </p>
-                  )}
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
           <CarouselNavigation
+            loop
             alwaysShow
             classNameButton="w-10 h-10 border-2 border-primary bg-background text-primary flex items-center justify-center transition-all duration-150 hover:bg-amber-400 hover:-translate-x-px hover:-translate-y-px active:translate-x-0 active:translate-y-0 disabled:opacity-40 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_#031632] hover:shadow-[6px_6px_0px_0px_#031632]"
           />
           <CarouselIndicator
-            className="relative bottom-auto mt-4"
-            classNameButtonActive="bg-accent"
-            classNameButton="bg-accent/30 hover:bg-accent/60"
+            className="absolute bottom-2 z-50"
+            classNameButtonActive="rounded-none rotate-45 bg-amber-400"
+            classNameButton="rounded-full bg-black/30 hover:bg-zinc-100/60"
           />
         </Carousel>
       </div>

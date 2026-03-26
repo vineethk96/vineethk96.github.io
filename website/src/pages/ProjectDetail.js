@@ -203,7 +203,7 @@ const ProjectDetail = () => {
 
           {/* Right: 3D Image Carousel */}
           <div className="lg:col-span-2 technic-module p-5">
-            <p className="font-mono text-xs text-accent tracking-widest uppercase mb-4">
+            <p className="font-mono text-xs text-primary tracking-widest uppercase mb-4">
               System_Schematics
             </p>
             {projectImages.length > 0 ? (
@@ -221,7 +221,7 @@ const ProjectDetail = () => {
         {/* Section 3: Execution Log / Body */}
         <motion.div variants={fadeUp} custom={3} className="technic-module p-6 mb-10">
           <div className="flex items-center justify-between border-b-2 border-primary pb-3 mb-6">
-            <p className="font-mono text-xs text-accent tracking-widest uppercase">
+            <p className="font-mono text-xs text-primary tracking-widest uppercase">
               Execution_Log // {project.title}
             </p>
             <span className="font-mono text-[10px] text-primary/40 uppercase border border-primary/20 px-2 py-0.5 rounded">

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, Clock, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { BLOG_POSTS } from '../data/constants';
@@ -91,21 +91,24 @@ const BlogDetail = () => {
 
         {/* Header */}
         <motion.div variants={fadeUp} custom={2} className="mb-6">
-          <div className="section-label">Field Note</div>
-          <h1 className="font-heading font-bold text-3xl sm:text-4xl text-primary leading-tight mb-3">
-            {blog.title}
+          <p className="font-mono text-xs text-primary tracking-widest uppercase mb-3">
+            FIELD_NOTE_REF: {blog.publish_date}
+          </p>
+          <h1 className="font-heading font-extrabold text-4xl sm:text-5xl text-primary tracking-tighter uppercase leading-none mb-4">
+            <span
+              className="italic text-accent"
+              style={{ textShadow: '4px 4px 0px rgba(50, 50, 50, 0.7)' }}
+            >
+              {blog.title}
+            </span>
           </h1>
           <div className="flex flex-wrap items-center gap-4 mb-3">
-            <div className="flex items-center gap-1.5 font-mono text-xs text-primary/40">
-              <Calendar className="w-3 h-3" aria-hidden="true" />
-              {blog.publish_date}
-            </div>
             <div className="flex items-center gap-1.5 font-mono text-xs text-primary/40">
               <Clock className="w-3 h-3" aria-hidden="true" />
               {blog.read_time} min read
             </div>
           </div>
-          <p className="font-body text-primary/60 leading-relaxed text-lg">
+          <p className="font-heading text-primary/80 leading-relaxed text-xl">
             {blog.excerpt}
           </p>
         </motion.div>
@@ -143,7 +146,11 @@ const BlogDetail = () => {
             )}
 
             {/* Article Info */}
-            <motion.div variants={fadeUp} custom={4} className="technic-module p-4">
+            <motion.div variants={fadeUp} custom={4} className="technic-module p-4 relative">
+              <div
+                className="absolute -top-3 -right-3 w-7 h-7 bg-accent border-2 border-primary rotate-45"
+                aria-hidden="true"
+              />
               <div className="section-label mb-3">Article Info</div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">

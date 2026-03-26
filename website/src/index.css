@@ -242,8 +242,8 @@
 
 .fader-status-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
+  font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  color: rgba(3, 22, 50, 0.3);
+  letter-spacing: 2px;
+  color: rgba(3, 22, 50, 0.847);
 }

@@ -60,6 +60,7 @@ function Carousel({
   index: externalIndex,
   onIndexChange,
   disableDrag = false,
+  footer,
 }) {
   const [internalIndex, setInternalIndex] = useState(initialIndex);
   const isControlled = externalIndex !== undefined;
@@ -79,7 +80,8 @@ function Carousel({
       disableDrag={disableDrag}
     >
       <div className={cn('group/hover relative', className)}>
-        <div className='overflow-hidden'>{children}</div>
+        <div className='relative overflow-hidden'>{children}</div>
+        {footer}
       </div>
     </CarouselProvider>
   );
@@ -89,6 +91,7 @@ function CarouselNavigation({
   className,
   classNameButton,
   alwaysShow,
+  loop,
 }) {
   const { index, setIndex, itemsCount } = useCarousel();
 
@@ -112,11 +115,9 @@ function CarouselNavigation({
             : 'group-hover/hover:disabled:opacity-40',
           classNameButton
         )}
-        disabled={index === 0}
+        disabled={loop ? false : index === 0}
         onClick={() => {
-          if (index > 0) {
-            setIndex(index - 1);
-          }
+          setIndex(loop ? (index - 1 + itemsCount) % itemsCount : Math.max(0, index - 1));
         }}
       >
         <ChevronLeft size={16} />
@@ -134,11 +135,9 @@ function CarouselNavigation({
           classNameButton
         )}
         aria-label='Next slide'
-        disabled={index + 1 === itemsCount}
+        disabled={loop ? false : index + 1 === itemsCount}
         onClick={() => {
-          if (index < itemsCount - 1) {
-            setIndex(index + 1);
-          }
+          setIndex(loop ? (index + 1) % itemsCount : Math.min(itemsCount - 1, index + 1));
         }}
       >
         <ChevronRight size={16} />
@@ -169,10 +168,10 @@ function CarouselIndicator({
             aria-label={`Go to slide ${i + 1}`}
             onClick={() => setIndex(i)}
             className={cn(
-              'h-2 w-2 rounded-full transition-all duration-300',
+              'h-2 w-2 transition-all duration-300',
               index === i
-                ? cn('bg-zinc-950 dark:bg-zinc-50', classNameButtonActive)
-                : cn('bg-zinc-900/50 dark:bg-zinc-100/50', classNameButton)
+                ? cn('rounded-full', classNameButtonActive)
+                : cn('rounded-full bg-zinc-900/50', classNameButton)
             )}
           />
         ))}

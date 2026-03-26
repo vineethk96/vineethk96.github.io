@@ -13,7 +13,7 @@ const fadeUp = {
 };
 
 const ProjectCard = ({ project, index }) => {
-  const thumbnail = project.images?.[0]?.thumbnail_url || project.images?.[0]?.url;
+  const medium = project.images?.[0]?.medium_url || project.images?.[0]?.url;
 
   return (
     <motion.div variants={fadeUp} custom={index}>
@@ -21,9 +21,9 @@ const ProjectCard = ({ project, index }) => {
         <div className="technic-module-hover overflow-hidden">
           {/* Image with grayscale-to-color transition */}
           <div className="relative overflow-hidden border-b-2 border-primary aspect-video bg-faint">
-            {thumbnail ? (
+            {medium ? (
               <img
-                src={thumbnail}
+                src={medium}
                 alt={project.title}
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
               />
