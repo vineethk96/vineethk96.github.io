@@ -43,13 +43,21 @@ const Contact = () => {
     >
       <div className="max-w-5xl mx-auto">
 
-        {/* Header */}
-        <motion.div variants={fadeUp} custom={0} className="mb-8">
-          <div className="section-label">Communication Channel</div>
-          <h1 className="font-heading font-bold text-4xl sm:text-5xl text-primary">
-            Contact
+        {/* Page Header */}
+        <motion.header variants={fadeUp} custom={0} className="mb-8 border-l-8 border-accent pl-6">
+          <p className="font-mono text-xs font-bold text-accent tracking-widest mb-2 uppercase">
+            System_Documentation // Vol_01
+          </p>
+          <h1 className="font-heading font-extrabold text-5xl sm:text-7xl text-primary tracking-tighter uppercase leading-none">
+            Contact:<br />
+            <span
+              className="italic text-accent"
+              style={{ textShadow: '4px 4px 0px rgba(50, 50, 50, 0.7)' }}
+            >
+              Uplink_Protocol
+            </span>
           </h1>
-        </motion.div>
+        </motion.header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 

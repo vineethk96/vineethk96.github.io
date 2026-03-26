@@ -26,16 +26,21 @@ const Blog = () => {
     >
       <div className="max-w-5xl mx-auto">
 
-        {/* Header */}
-        <motion.div variants={fadeUp} custom={0} className="mb-8">
-          <div className="section-label">Field Notes</div>
-          <h1 className="font-heading font-bold text-4xl sm:text-5xl text-primary">
-            Blog
-          </h1>
-          <p className="font-body text-primary/50 mt-2">
-            {posts.length} article{posts.length !== 1 ? 's' : ''} published
+        {/* Page Header */}
+        <motion.header variants={fadeUp} custom={0} className="mb-8 border-l-8 border-accent pl-6">
+          <p className="font-mono text-xs font-bold text-accent tracking-widest mb-2 uppercase">
+            System_Documentation // Vol_01
           </p>
-        </motion.div>
+          <h1 className="font-heading font-extrabold text-5xl sm:text-7xl text-primary tracking-tighter uppercase leading-none">
+            Blog:<br />
+            <span
+              className="italic text-accent"
+              style={{ textShadow: '4px 4px 0px rgba(50, 50, 50, 0.7)' }}
+            >
+              Field_Notes
+            </span>
+          </h1>
+        </motion.header>
 
         {/* Posts Grid */}
         {posts.length > 0 ? (
