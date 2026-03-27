@@ -173,6 +173,32 @@ export const projectType = defineType({
       },
     }),
     defineField({
+      name: 'cadModelRotation',
+      title: 'CAD Model Rotation',
+      type: 'object',
+      description: 'Rotate the model around its own axes for the default view.',
+      fields: [
+        defineField({
+          name: 'x',
+          title: 'X Rotation (°)',
+          type: 'number',
+          description: 'Rotate model around its own X axis (-180 to 180)',
+        }),
+        defineField({
+          name: 'y',
+          title: 'Y Rotation (°)',
+          type: 'number',
+          description: 'Rotate model around its own Y axis (-180 to 180)',
+        }),
+        defineField({
+          name: 'z',
+          title: 'Z Rotation (°)',
+          type: 'number',
+          description: 'Rotate model around its own Z axis (-180 to 180)',
+        }),
+      ],
+    }),
+    defineField({
       name: 'linkedBy',
       title: 'Linked By',
       type: 'string',

@@ -5,8 +5,8 @@ import App from './App';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 
-posthog.init(process.env.REACT_APP_POSTHOG_KEY, {
-  api_host: process.env.REACT_APP_POSTHOG_HOST,
+posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
+  api_host: import.meta.env.VITE_POSTHOG_HOST,
   capture_pageview: false,
   capture_pageleave: true,
   autocapture: true,

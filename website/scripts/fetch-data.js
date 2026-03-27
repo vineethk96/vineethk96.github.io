@@ -150,7 +150,12 @@ async function fetchProjects() {
         url
       }
     },
-    "cad_camera_view": cadCameraView
+    "cad_camera_view": cadCameraView,
+    "cad_model_rotation": cadModelRotation {
+      "x": x,
+      "y": y,
+      "z": z
+    }
   }`;
 
   const rawProjects = await sanityClient.fetch(query);
@@ -550,7 +555,7 @@ async function main() {
       }
     }
 
-    console.log('\n📝 Generating constants.js...');
+    console.log('\n📝 Generating constants.jsx...');
 
     // Sort all data by start year descending (blog posts are pre-sorted by publishedAt in GROQ)
     projects.sort(byStartYearDesc);

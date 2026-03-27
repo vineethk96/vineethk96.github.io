@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useMemo } from 'react';
 import { Canvas, useLoader, useThree } from '@react-three/fiber';
 import { OrbitControls, Center } from '@react-three/drei';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
@@ -22,12 +22,48 @@ const CAMERA_POSITIONS = {
 };
 const DEFAULT_CAMERA_POSITION = [1, 1, 1];
 
-function STLMesh({ url, cameraPosition }) {
+// X = green, Y = red, Z = blue
+function AxisLines({ size }) {
+  const xPos = useMemo(() => new Float32Array([0, 0, 0, size, 0, 0]), [size]);
+  const yPos = useMemo(() => new Float32Array([0, 0, 0, 0, size, 0]), [size]);
+  const zPos = useMemo(() => new Float32Array([0, 0, 0, 0, 0, size]), [size]);
+
+  return (
+    <group>
+      <line>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" array={xPos} count={2} itemSize={3} />
+        </bufferGeometry>
+        <lineBasicMaterial color="#00cc44" />
+      </line>
+      <line>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" array={yPos} count={2} itemSize={3} />
+        </bufferGeometry>
+        <lineBasicMaterial color="#ff3333" />
+      </line>
+      <line>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" array={zPos} count={2} itemSize={3} />
+        </bufferGeometry>
+        <lineBasicMaterial color="#3399ff" />
+      </line>
+    </group>
+  );
+}
+
+function STLMesh({ url, cameraPosition, modelRotation }) {
   const geometry = useLoader(STLLoader, url);
   const { camera } = useThree();
 
+  const xRad = ((modelRotation?.x ?? 0) * Math.PI) / 180;
+  const yRad = ((modelRotation?.y ?? 0) * Math.PI) / 180;
+  const zRad = ((modelRotation?.z ?? 0) * Math.PI) / 180;
+
+  geometry.computeBoundingSphere();
+  const axisSize = (geometry.boundingSphere?.radius ?? 1) * 1.5;
+
   useEffect(() => {
-    geometry.computeBoundingSphere();
     const radius = geometry.boundingSphere.radius;
     const fovRad = (camera.fov * Math.PI) / 180;
     const distance = (radius / Math.tan(fovRad / 2)) * 1.4;
@@ -42,9 +78,12 @@ function STLMesh({ url, cameraPosition }) {
 
   return (
     <Center>
-      <mesh geometry={geometry} castShadow>
-        <meshStandardMaterial color="#c0c8d0" metalness={0.7} roughness={0.3} />
-      </mesh>
+      <group rotation={[xRad, yRad, zRad]}>
+        <mesh geometry={geometry} castShadow>
+          <meshStandardMaterial color="#c0c8d0" metalness={0.7} roughness={0.3} />
+        </mesh>
+        <AxisLines size={axisSize} />
+      </group>
     </Center>
   );
 }
@@ -58,7 +97,7 @@ function WireframeCube() {
   );
 }
 
-export function CADModelViewer({ modelUrl, cameraView }) {
+export function CADModelViewer({ modelUrl, cameraView, modelRotation }) {
   const cameraPosition = CAMERA_POSITIONS[cameraView] ?? DEFAULT_CAMERA_POSITION;
 
   if (!modelUrl) {
@@ -85,7 +124,7 @@ export function CADModelViewer({ modelUrl, cameraView }) {
         <directionalLight position={[-5, -5, -5]} intensity={0.3} />
 
         <Suspense fallback={<WireframeCube />}>
-          <STLMesh url={modelUrl} cameraPosition={cameraPosition} />
+          <STLMesh url={modelUrl} cameraPosition={cameraPosition} modelRotation={modelRotation} />
         </Suspense>
 
         <OrbitControls enableDamping dampingFactor={0.05} />

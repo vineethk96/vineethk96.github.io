@@ -22,7 +22,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
-    "react-scripts": "5.0.1",
     "react-syntax-highlighter": "^16.1.0",
     "tailwind-merge": "3.5.0",
     "three": "^0.183.2",
@@ -31,18 +30,10 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "react-scripts eject",
+    "start": "vite",
+    "build": "vite build",
     "fetch-data": "node scripts/fetch-data.js",
     "prebuild": "npm run fetch-data"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -57,36 +48,13 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
+    "vite": "^5.4.0",
+    "@vitejs/plugin-react": "^4.3.0",
     "@tailwindcss/typography": "^0.5.19",
     "autoprefixer": "^10.4.18",
     "dotenv": "^16.4.5",
     "gh-pages": "^6.3.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1"
-  },
-  "overrides": {
-    "@babel/plugin-proposal-class-properties": "npm:@babel/plugin-transform-class-properties@^7.24.1",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "npm:@babel/plugin-transform-nullish-coalescing-operator@^7.24.1",
-    "@babel/plugin-proposal-numeric-separator": "npm:@babel/plugin-transform-numeric-separator@^7.24.1",
-    "@babel/plugin-proposal-optional-chaining": "npm:@babel/plugin-transform-optional-chaining@^7.24.1",
-    "@babel/plugin-proposal-private-methods": "npm:@babel/plugin-transform-private-methods@^7.24.1",
-    "@babel/plugin-proposal-private-property-in-object": "npm:@babel/plugin-transform-private-property-in-object@^7.24.1",
-    "glob": "^10.4.5",
-    "inflight": "npm:lru-cache@^11.0.1",
-    "rimraf": "^5.0.10",
-    "svgo": "^3.3.2"
-  },
-  "resolutions": {
-    "@babel/plugin-proposal-class-properties": "@babel/plugin-transform-class-properties",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "@babel/plugin-transform-nullish-coalescing-operator",
-    "@babel/plugin-proposal-numeric-separator": "@babel/plugin-transform-numeric-separator",
-    "@babel/plugin-proposal-optional-chaining": "@babel/plugin-transform-optional-chaining",
-    "@babel/plugin-proposal-private-methods": "@babel/plugin-transform-private-methods",
-    "@babel/plugin-proposal-private-property-in-object": "@babel/plugin-transform-private-property-in-object",
-    "glob": "^10.4.5",
-    "inflight": "lru-cache",
-    "rimraf": "^5.0.10",
-    "svgo": "^3.3.2"
   }
 }

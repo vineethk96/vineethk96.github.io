@@ -90,7 +90,7 @@ const ProjectDetail = () => {
               <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">Loading_CAD_Model...</span>
             </div>
           }>
-            <CADModelViewer modelUrl={project.cad_model_url} cameraView={project.cad_camera_view} />
+            <CADModelViewer modelUrl={project.cad_model_url} cameraView={project.cad_camera_view} modelRotation={project.cad_model_rotation} />
           </React.Suspense>
 
           {/* Right: Title + Meta */}
