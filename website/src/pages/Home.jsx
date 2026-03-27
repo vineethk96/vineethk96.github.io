@@ -180,7 +180,7 @@ const Home = () => {
           {PERSONAL_INFO?.name || 'Vineeth_Kirandumkara'}
         </h1>
 
-        <p className="font-mono text-sm sm:text-base text-primary-sub uppercase tracking-widest mb-8">
+        <p className="font-mono text-sm sm:text-xl text-primary-sub uppercase tracking-widest mb-8">
           {PERSONAL_INFO?.tagline || 'IoT Systems Engineer & Product Designer'}
         </p>
 
