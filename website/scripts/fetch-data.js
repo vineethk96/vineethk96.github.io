@@ -148,12 +148,16 @@ async function fetchProjects() {
     size,
     detailedDescription[] {
       ...,
-      asset
+      asset,
+      crop,
+      hotspot
     },
     images[] {
       alt,
       caption,
-      asset
+      asset,
+      crop,
+      hotspot
     },
     cadModel {
       asset-> {
@@ -189,7 +193,7 @@ async function fetchProjects() {
             types: {
               image: ({ value }) => {
                 if (!value?.asset?._ref) return '';
-                const src = urlFor(value.asset).width(800).auto('format').quality(85).url();
+                const src = urlFor(value).width(800).auto('format').quality(85).url();
                 const alt = sanitizeAttr(value.alt);
                 const caption = sanitizeAttr(value.caption);
                 if (caption) {
@@ -209,10 +213,10 @@ async function fetchProjects() {
       return {
         alt: img.alt ?? '',
         caption: img.caption ?? '',
-        original_url: urlFor(img.asset).url(),
-        url: urlFor(img.asset).width(1200).auto('format').quality(90).url(),
-        medium_url: urlFor(img.asset).width(600).auto('format').quality(85).url(),
-        thumbnail_url: urlFor(img.asset).width(300).auto('format').quality(75).url(),
+        original_url: urlFor(img).url(),
+        url: urlFor(img).width(1200).auto('format').quality(90).url(),
+        medium_url: urlFor(img).width(600).auto('format').quality(85).url(),
+        thumbnail_url: urlFor(img).width(300).auto('format').quality(75).url(),
       };
     }).filter(Boolean);
 
@@ -270,6 +274,7 @@ async function fetchPersonalInfo() {
   console.log('📡 Fetching personal info (Sanity)...');
   const query = `*[_type == "personalInfo" && _id == "personalInfo"][0] {
     name, email, location, tagline, bio, expectedGraduation,
+    "headshotUrl": headshot.asset->url,
     socialLinks[] { key, url, displayUrl, icon, label, color },
     calendlyUrl,
     "resumeUrl": resume.asset->url,
@@ -299,8 +304,8 @@ async function fetchBlogPosts() {
     published,
     excerpt,
     tags,
-    "coverImage": coverImage { alt, caption, asset },
-    "body": body[] { ..., asset },
+    "coverImage": coverImage { alt, caption, asset, crop, hotspot },
+    "body": body[] { ..., asset, crop, hotspot },
     "related_projects": relatedProjects[]->slug.current
   }`;
 
@@ -312,8 +317,8 @@ async function fetchBlogPosts() {
 
   const posts = rawPosts.map(rawPost => {
     const cover_image = rawPost.coverImage?.asset?._ref ? {
-      url: urlFor(rawPost.coverImage.asset).width(1200).auto('format').quality(90).url(),
-      thumbnail_url: urlFor(rawPost.coverImage.asset).width(600).auto('format').quality(85).url(),
+      url: urlFor(rawPost.coverImage).width(1200).auto('format').quality(90).url(),
+      thumbnail_url: urlFor(rawPost.coverImage).width(600).auto('format').quality(85).url(),
       alt: rawPost.coverImage.alt ?? '',
     } : null;
 
@@ -333,7 +338,7 @@ async function fetchBlogPosts() {
             types: {
               image: ({ value }) => {
                 if (!value?.asset?._ref) return '';
-                const src = urlFor(value.asset).width(800).auto('format').quality(85).url();
+                const src = urlFor(value).width(800).auto('format').quality(85).url();
                 const alt = sanitizeAttr(value.alt);
                 const caption = sanitizeAttr(value.caption);
                 if (caption) {
@@ -421,6 +426,7 @@ function generateConstantsFile(projects, workExperience, education, blogPosts, s
     tagline: info.tagline || '',
     bio: info.bio || '',
     expectedGraduation: info.expectedGraduation || '',
+    headshotUrl: info.headshotUrl || '/headshot.jpg',
   };
 
   // Derive CONTACT_INFO from PERSONAL_INFO and SOCIAL_LINKS
@@ -551,6 +557,15 @@ async function main() {
       fetchSystemMapLinks(),
       fetchPersonalInfo(),
     ]);
+
+    // Download headshot and replace private CDN URL with local static path
+    if (personalInfo?.headshotUrl) {
+      const headshotPath = path.join(__dirname, '..', 'public', 'headshot.jpg');
+      console.log('⬇️  Downloading headshot...');
+      await downloadFile(personalInfo.headshotUrl, headshotPath, SANITY_TOKEN);
+      personalInfo.headshotUrl = '/headshot.jpg';
+      console.log('   ✅ Saved to public/headshot.jpg');
+    }
 
     // Download STL files and replace private CDN URLs with local static paths
     const modelsDir = path.join(__dirname, '..', 'public', 'models');

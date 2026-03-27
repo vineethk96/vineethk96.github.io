@@ -204,17 +204,17 @@ const Home = () => {
 
                     {/* Image area */}
                     <div className="flex-1 relative group overflow-hidden bg-faint">
-                      <img
-                        src="/headshot.jpg"
-                        alt="Vineeth Kirandumkara"
-                        className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all duration-700"
-                        onError={(e) => { e.target.style.display = 'none'; }}
-                      />
-
-                      {/* Fallback user icon */}
+                      {/* Fallback user icon — rendered first so img paints on top */}
                       <div className="absolute inset-0 flex items-center justify-center text-primary/20 pointer-events-none">
                         <User className="w-16 h-16" aria-hidden="true" />
                       </div>
+
+                      <img
+                        src={PERSONAL_INFO?.headshotUrl || "/headshot.jpg"}
+                        alt="Vineeth Kirandumkara"
+                        className="w-full h-full object-cover brightness-100"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
 
                       {/* Yellow accent bars — top-left overlay */}
                       <div className="absolute top-2 left-2 flex flex-col gap-1 pointer-events-none">

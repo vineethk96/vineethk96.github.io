@@ -262,7 +262,7 @@ const ProjectDetail = () => {
           </div>
           {project.detailed_description ? (
             <div
-              className="prose prose-sm max-w-none text-primary/70 prose-headings:font-heading prose-headings:text-primary prose-strong:text-primary dark:prose-invert"
+              className="prose prose-sm max-w-none text-primary/70 prose-headings:font-heading prose-headings:text-primary prose-strong:text-primary prose-a:text-primary dark:prose-invert"
               dangerouslySetInnerHTML={createMarkup(project.detailed_description)}
             />
           ) : (
