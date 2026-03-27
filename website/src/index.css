@@ -5,61 +5,245 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    background-color: #FBF9F4;
   }
-  
+
   body {
     @apply font-sans antialiased;
+    background-color: #FBF9F4;
+    color: #031632;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
   }
 }
 
 @layer components {
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
-  }
-  
   .blueprint-bg {
-    background-image: 
-      linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-color: #FBF9F4;
+    background-image:
+      linear-gradient(rgba(3, 22, 50, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(3, 22, 50, 0.06) 1px, transparent 1px),
+      linear-gradient(rgba(3, 22, 50, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(3, 22, 50, 0.1) 1px, transparent 1px);
+    background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
   }
-  
-  .circuit-trace {
-    position: relative;
+
+  .technic-module {
+    @apply border-2 border-primary bg-background rounded-2xl;
+    box-shadow: 4px 4px 0px 0px #031632;
   }
-  
-  .circuit-trace::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-    transform: translateY(-50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+
+  .technic-module-hover {
+    @apply technic-module transition-all duration-150;
   }
-  
-  .circuit-trace:hover::before {
-    opacity: 1;
+
+  .technic-module-hover:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 6px 6px 0px 0px #031632;
   }
-  
-  .data-packet {
-    position: relative;
-    overflow: hidden;
+
+  .led-indicator {
+    @apply inline-block w-3 h-3 rounded-full bg-success flex-shrink-0;
+    border: 1px solid #031632;
+    animation: ledPulse 2s ease-in-out infinite;
+    box-shadow: 0 0 4px #94A744;
   }
-  
-  .data-packet::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -10px;
-    width: 20px;
-    height: 4px;
-    background: #22c55e;
-    border-radius: 2px;
-    transform: translateY(-50%);
-    animation: dataFlow 2s ease-in-out infinite;
+
+  .tag-pill {
+    @apply font-mono text-xs uppercase tracking-wider px-2 py-0.5 border border-primary/30 bg-faint text-primary/60 rounded-md;
   }
+
+  .section-label {
+    @apply font-mono text-xs uppercase tracking-widest text-primary/50 mb-1;
+  }
+
+}
+
+@keyframes ledPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px #94A744; }
+  50% { opacity: 0.5; box-shadow: 0 0 12px #94A744; }
+}
+
+.led-indicator-error {
+  border: 1px solid #031632;
+  animation: ledPulseError 2s ease-in-out infinite;
+}
+
+@keyframes ledPulseError {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 4px  #EC0B43; }
+  50%       { opacity: 0.5; box-shadow: 0 0 12px #EC0B43; }
+}
+
+.led-indicator-off {
+  background-color: #EC0B43;
+  border: 1px solid #031632;
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* === FADER SWITCH ============================================= */
+
+.fader-switch-root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+  outline: none;
+  width: 100%;
+}
+
+.fader-switch-root:focus-visible {
+  outline: 2px solid #FFBF00;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.fader-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  /* 32px left = half knob width, aligns knob left edge at 0% with container left.
+     0px right = LED right edge flush with container right (bio text column edge).
+     52px gap = 32px knob overhang at 100% + 20px visual buffer before LED. */
+  padding-left: 32px;
+  padding-right: 0;
+  gap: 52px;
+  box-sizing: border-box;
+}
+
+.fader-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* knob is 48px tall, track is 14px → knob overhangs 34px below track bottom.
+     margin-top pushes labels clear of that overhang with a small visual buffer. */
+  margin-top: 28px;
+  /* left label flush with container left (headshot edge), right label flush right */
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.fader-track {
+  position: relative;
+  flex-grow: 1;
+  height: 14px;
+  background: #031632;
+  border-radius: 10px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4), 0 0 0 2px #031632;
+  display: flex;
+  align-items: center;
+}
+
+.fader-ticks {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  top: -13px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  padding: 0 2px;
+  box-sizing: border-box;
+}
+
+.fader-tick {
+  width: 1px;
+  height: 100%;
+  background: rgba(3, 22, 50, 0.15);
+}
+
+.fader-tick--major {
+  width: 2px;
+  background: rgba(3, 22, 50, 0.35);
+}
+
+.fader-knob {
+  position: absolute;
+  width: 64px;
+  height: 48px;
+  background: linear-gradient(180deg, #ffffff, #e8e4dc);
+  border: 2px solid #031632;
+  border-radius: 5px;
+  cursor: grab;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow:
+    4px 4px 0px 0px #031632,
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  z-index: 10;
+  transform: translateX(-50%);
+  transition: left 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
+  user-select: none;
+}
+
+.fader-knob--dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.fader-knob--active {
+  box-shadow:
+    4px 4px 0px 0px #031632,
+    0 0 12px rgba(148, 167, 68, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.fader-center-line {
+  position: absolute;
+  height: 100%;
+  width: 3px;
+  background: #EC0B43;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 4px rgba(237, 37, 78, 0.6);
+  z-index: 11;
+}
+
+.fader-knob--active .fader-center-line {
+  background: #94A744;
+  box-shadow: 0 0 6px rgba(148, 167, 68, 0.8);
+}
+
+.fader-ridges {
+  width: 75%;
+  height: 55%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.fader-ridge {
+  width: 2px;
+  height: 100%;
+  background: rgba(3, 22, 50, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.fader-led {
+  width: 12px;
+  height: 12px;
+  background: #EC0B43;
+  border-radius: 50%;
+  border: 1px solid #031632;
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.fader-led--active {
+  background: #94A744;
+  box-shadow: 0 0 12px #94A744, inset 0 0 3px white;
+  animation: ledPulse 2s ease-in-out infinite;
+}
+
+.fader-status-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(3, 22, 50, 0.847);
 }

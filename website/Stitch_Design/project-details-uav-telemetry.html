@@ -1,0 +1,308 @@
+<html lang="en"><head></head><body class="font-body text-on-surface antialiased">```html
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Details | UAV_TELEMETRY_MOD</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+          tailwind.config = {
+            darkMode: "class",
+            theme: {
+              extend: {
+                colors: {
+                  "primary": "#031632",
+                  "secondary-container": "#ffbf00",
+                  "surface": "#fbf9f4",
+                  "on-surface": "#1b1c19",
+                  "on-surface-variant": "#44474d",
+                  "outline": "#75777e",
+                  "outline-variant": "#c5c6ce",
+                  "surface-container-low": "#f5f3ee",
+                  "surface-container-highest": "#e4e2dd",
+                },
+                fontFamily: {
+                  "headline": ["Space Grotesk", "sans-serif"],
+                  "body": ["Plus Jakarta Sans", "sans-serif"],
+                  "mono": ["JetBrains Mono", "monospace"],
+                },
+                borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+              },
+            },
+          }
+        </script>
+<style>
+            body {
+                background-color: #fbf9f4;
+                /* Blueprint Grid Implementation */
+                background-image: 
+                    linear-gradient(to right, #e4e2dd 1px, transparent 1px),
+                    linear-gradient(to bottom, #e4e2dd 1px, transparent 1px),
+                    linear-gradient(to right, #dcdad5 2px, transparent 2px),
+                    linear-gradient(to bottom, #dcdad5 2px, transparent 2px);
+                background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+                position: relative;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+            .segmented-progress {
+                display: flex;
+                gap: 2px;
+            }
+            .progress-block {
+                height: 12px;
+                width: 100%;
+                background-color: #e4e2dd;
+            }
+            .progress-block.active {
+                background-color: #031632;
+            }
+
+            /* 3D Carousel Styles */
+            .carousel-container {
+                perspective: 1200px;
+                overflow: hidden;
+            }
+            .carousel-stage {
+                position: relative;
+                width: 100%;
+                height: 400px;
+                transform-style: preserve-3d;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .carousel-card {
+                position: absolute;
+                width: 320px;
+                height: 220px;
+                transition: all 0.5s ease-in-out;
+                cursor: pointer;
+                border: 2px solid #031632;
+                background: white;
+                box-shadow: 4px 4px 0px 0px #031632;
+            }
+            .carousel-card:nth-child(1) { transform: rotateY(0deg) translateZ(250px); z-index: 5; }
+            .carousel-card:nth-child(2) { transform: rotateY(40deg) translateZ(150px) translateX(200px); opacity: 0.6; z-index: 4; }
+            .carousel-card:nth-child(3) { transform: rotateY(-40deg) translateZ(150px) translateX(-200px); opacity: 0.6; z-index: 4; }
+            .carousel-card:nth-child(4) { transform: rotateY(60deg) translateZ(50px) translateX(350px); opacity: 0.3; z-index: 3; }
+            .carousel-card:nth-child(5) { transform: rotateY(-60deg) translateZ(50px) translateX(-350px); opacity: 0.3; z-index: 3; }
+        </style>
+<!-- Updated Top Navigation Bar -->
+<div class="fixed top-4 left-0 right-0 z-50 px-8 flex justify-center">
+<nav class="bg-white border-2 border-primary rounded-full px-12 py-3 flex justify-between items-center w-full max-w-[1400px]">
+<div class="font-headline font-bold text-xl tracking-tighter text-primary">
+                SYS_ARCH_v2.0
+            </div>
+<div class="hidden md:flex items-center gap-10 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+<a class="hover:opacity-70 transition-opacity" href="#">Hero</a>
+<div class="bg-secondary-container text-primary px-6 py-1.5 rounded-full border border-primary">
+<a href="#">Projects</a>
+</div>
+<a class="hover:opacity-70 transition-opacity" href="#">Skills</a>
+<a class="hover:opacity-70 transition-opacity" href="#">Experience</a>
+</div>
+<button class="bg-primary text-white px-8 py-2 rounded-full font-mono font-bold uppercase text-[10px] tracking-widest hover:opacity-90 transition-all">
+                DOWNLOAD_CV
+            </button>
+</nav>
+</div>
+<main class="flex-grow max-w-7xl mx-auto px-4 md:px-8 pt-32 pb-12 space-y-8 w-full">
+<!-- Hero Section -->
+<section class="bg-surface border-2 border-primary rounded-DEFAULT shadow-[4px_4px_0px_0px_rgba(3,22,50,1)] overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2">
+<!-- Project Image -->
+<div class="relative h-[400px] lg:h-full bg-surface-container-highest border-b-2 lg:border-b-0 lg:border-r-2 border-primary overflow-hidden">
+<img alt="High tech modular UAV circuit board" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKK-60l5d54EX6Nhfs0oATm_CNw-pXkFAYZioyW_FiehMIDTtyAXnATUR2bYeP0tiifF1P4Exqb4KtqroFBZsazNwdJ_0lqpVbJK09SP_E2D4ji_qRu8XknVij69Njvv9Sqo9e7ND5zbDfzoG09Pu4GdYgkC6w0YWvaqrbkNg9K_l-3-_tpB02C0hrpqxfo8hhcaCLoRtFdteom5qQIBLlAMTlq9SfS_r__nTTkudHfPLz2X9ALo5rGnpn3VF1RqekmZsVTF-ygJA"/>
+<div class="absolute top-6 left-6 bg-secondary-container text-primary px-4 py-1 font-black text-sm tracking-widest border-2 border-primary flex items-center gap-2">
+<span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                        OPERATIONAL
+                    </div>
+</div>
+<!-- Project Summary -->
+<div class="p-8 md:p-12 flex flex-col justify-center space-y-8">
+<div class="space-y-4">
+<div class="flex items-center justify-between font-mono"><span class="text-sm font-bold text-primary uppercase tracking-widest">DEPLOYMENT_REF: 2022</span>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">STATUS:</span>
+<div class="flex items-center gap-1.5 bg-green-50 px-3 py-1 border-2 border-green-500 rounded-full shadow-[2px_2px_0px_0px_rgba(34,197,94,0.3)]">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+</span>
+<span class="text-[10px] font-black text-green-700 uppercase tracking-widest">COMPLETED</span>
+</div>
+</div></div>
+<h1 class="text-5xl md:text-6xl font-headline font-bold tracking-tighter text-primary leading-tight">UAV_TELEMETRY_MOD</h1>
+</div>
+<p class="text-lg text-on-surface-variant leading-relaxed max-w-xl font-body">
+                        A high-performance modular communications array designed for long-range UAV operations. Featuring triple-redundant link protocols and hardened kernel architecture for mission-critical telemetry in electromagnetic interference environments.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="flex items-center gap-3 bg-primary text-white px-8 py-4 font-mono font-bold text-sm rounded-DEFAULT hover:translate-y-[2px] hover:translate-x-[2px] transition-all shadow-[4px_4px_0px_0px_#ffbf00]">
+<span class="material-symbols-outlined text-sm">code</span>
+                            VIEW_GITHUB
+                        </button>
+<button class="flex items-center gap-3 border-2 border-primary bg-white text-primary px-8 py-4 font-mono font-bold text-sm rounded-DEFAULT hover:translate-y-[2px] hover:translate-x-[2px] transition-all shadow-[4px_4px_0px_0px_#031632]">
+<span class="material-symbols-outlined text-sm">sensors</span>
+                            LIVE_DEMO
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Secondary Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Technical Specifications -->
+<div class="lg:col-span-1 bg-surface-container-low border-2 border-primary rounded-DEFAULT p-8 relative shadow-[4px_4px_0px_0px_rgba(3,22,50,1)]">
+<h3 class="text-xl font-headline font-bold text-primary uppercase tracking-tight mb-8">Technical Specifications</h3>
+<div class="space-y-6">
+<div>
+<span class="text-[10px] font-mono font-bold text-outline uppercase tracking-widest block mb-2">Complexity Index</span>
+<div class="segmented-progress">
+<div class="progress-block active"></div>
+<div class="progress-block active"></div>
+<div class="progress-block active"></div>
+<div class="progress-block active"></div>
+<div class="progress-block active"></div>
+<div class="progress-block active"></div>
+<div class="progress-block active"></div>
+<div class="progress-block active"></div>
+<div class="progress-block active"></div>
+<div class="progress-block"></div>
+</div>
+<div class="flex justify-between mt-1 font-mono">
+<span class="text-[10px] font-bold text-primary">0%</span>
+<span class="text-[10px] font-bold text-primary">90%</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-white border-2 border-primary rounded-DEFAULT">
+<span class="text-[10px] font-mono font-bold text-outline uppercase block mb-1">Core Tech</span>
+<span class="font-bold text-primary text-sm font-headline">C++ / RTOS</span>
+</div>
+<div class="p-4 bg-white border-2 border-primary rounded-DEFAULT">
+<span class="text-[10px] font-mono font-bold text-outline uppercase block mb-1">Architecture</span>
+<span class="font-bold text-primary text-sm font-headline">ARM Cortex</span>
+</div>
+<div class="p-4 bg-white border-2 border-primary rounded-DEFAULT">
+<span class="text-[10px] font-mono font-bold text-outline uppercase block mb-1">Protocol</span>
+<span class="font-bold text-primary text-sm font-headline">CANBUS v2</span>
+</div>
+<div class="p-4 bg-white border-2 border-primary rounded-DEFAULT">
+<span class="text-[10px] font-mono font-bold text-outline uppercase block mb-1">Encryption</span>
+<span class="font-bold text-primary text-sm font-headline">AES-256</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 3D Image Carousel Section (Replaces Deep-Dive) -->
+<div class="lg:col-span-2 bg-surface border-2 border-primary rounded-DEFAULT p-8 relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(3,22,50,1)] carousel-container">
+<h3 class="text-xl font-headline font-bold text-primary uppercase tracking-tight mb-4">SYSTEM_SCHEMATICS_3D_VIEW</h3>
+<div class="carousel-stage">
+<!-- Active Slide: Schematic -->
+<div class="carousel-card p-2 flex flex-col">
+<div class="flex-grow bg-surface-container-highest overflow-hidden">
+<img alt="Technical Schematic" class="w-full h-full object-cover grayscale contrast-125 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8PyIyP2l9bOkUcbDIWrbso-8Dq489V83VZITriruf7LACiF7EGB19f6G1JFEh4T0geW4V5jHaYkcGlrn2uuz7lopoQNllHdFabAKGCMsm9uS9PrZqkkVTGu3yaXRnG0qWLCTJ7lvGpEGwTaRRBACq8EDewHz2aIw0nW-cTKZzr-KQe4efKwfaHIT28kUtSbYbjjwMWeiqvUXDOrqHvEMJ3HS8JhH1v9V2zmL5ckx7RLsXSTywPAR9nZCmvudyoO3lXA2E0OkZKwI"/>
+</div>
+<div class="p-2 border-t border-primary flex justify-between items-center font-mono text-[8px] font-bold">
+<span>REF: SCH_MOD_01</span>
+<span>LVL: CORE</span>
+</div>
+</div>
+<!-- Right 1: PCB Build -->
+<div class="carousel-card p-2 flex flex-col">
+<div class="flex-grow bg-surface-container-highest overflow-hidden">
+<img alt="PCB Build Photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC0SeuuvGCw9bSOeXyh-e9RKQZD4jPxObnBZWufbrqHInQ3w7WCqEZtOCtP15dBr4fWV5uz1B3SlWK4Q_GUd5dKYmVAhbsqAVemwr9Hu4AC6puZHXVY4gTfUm-TXNkZ6uFot95SFRh2F-8jxChfvCdzZn74NyMZV9ZFwkgB7gEpILIRP-K3dBA2Q3B8dfktAe-FN0KfpGJy2zZZqIamPMtUfiFd90GJRYM6CppixzZbElIv1KTtQFKzlovxbQ-2frdFPmCJNztp3k"/>
+</div>
+<div class="p-2 border-t border-primary flex justify-between items-center font-mono text-[8px] font-bold">
+<span>REF: ASY_PCB_77</span>
+<span>LVL: PHYSICAL</span>
+</div>
+</div>
+<!-- Left 1: CAD Drawing -->
+<div class="carousel-card p-2 flex flex-col">
+<div class="flex-grow bg-surface-container-highest overflow-hidden">
+<img alt="CAD Drawing" class="w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv8hK4AUOoNwDbZRz7xLoURYuQknJEUSEvx-O-z5KXXENDMm193sqCXvHGcIot4PRr1sWuJBcOU257VfNmJ5KMU_p8B7Bg7jKdwIEgc-Wt7Zkh9mhhlDsKuyRrqVc4w9_m5dFJ0qzKdeFU3auffSED-LXdwEyNBca9uhETRPfSILOVlwpeKcLO-eO_JfU8h_LVbbz5XFY7lpyKoFDnsZsH6lfv0QD5tEbd7YYLBxEJBRqw2pmGYIxz6U8wltcdzYIO73MSxBHMvvg"/>
+</div>
+<div class="p-2 border-t border-primary flex justify-between items-center font-mono text-[8px] font-bold">
+<span>REF: CAD_EXT_12</span>
+<span>LVL: CHASSIS</span>
+</div>
+</div>
+<!-- Background placeholders -->
+<div class="carousel-card"></div>
+<div class="carousel-card"></div>
+</div>
+<!-- Carousel Controls -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4">
+<button class="w-10 h-10 border-2 border-primary bg-white flex items-center justify-center hover:bg-secondary-container transition-colors shadow-[2px_2px_0px_0px_#031632]">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<div class="font-mono text-[10px] font-bold text-primary tracking-widest">01 / 05</div>
+<button class="w-10 h-10 border-2 border-primary bg-white flex items-center justify-center hover:bg-secondary-container transition-colors shadow-[2px_2px_0px_0px_#031632]">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Execution Results -->
+<section class="bg-surface border-2 border-primary rounded-DEFAULT overflow-hidden shadow-[4px_4px_0px_0px_rgba(3,22,50,1)]">
+<div class="p-8 border-b-2 border-primary flex justify-between items-center bg-white">
+<h3 class="text-xl font-headline font-bold text-primary uppercase tracking-tight">Execution Metrics &amp; Performance</h3>
+<span class="text-[10px] font-mono font-bold py-1 px-3 bg-primary text-white rounded-full">REAL_TIME_VALIDATION</span>
+</div>
+<div class="p-12 bg-surface text-center">
+<p class="text-2xl md:text-3xl font-headline font-bold text-primary tracking-tight leading-relaxed max-w-4xl mx-auto">
+        MISSION_CRITICAL_PERFORMANCE: ARCHITECTURE OPTIMIZED FOR HIGH-ALTITUDE DEPLOYMENT. ACHIEVED 99.9% SIGNAL FIDELITY ACROSS ALL MEASURED PARAMETERS UNDER VARYING ELECTROMAGNETIC INTERFERENCE CONDITIONS.
+    </p>
+</div>
+<div class="bg-white space-y-8 font-body p-8">
+<p class="text-on-surface-variant leading-loose text-lg border-l-4 border-secondary-container pl-6">
+                    The <strong>UAV_TELEMETRY_MOD</strong> represents a paradigm shift in how high-altitude unmanned systems communicate. By moving away from standard commercial protocols to a custom-silicon optimized stack, we achieved a 400% increase in signal reliability. 
+                </p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-6">
+<div class="p-6 bg-surface-container-low border-2 border-primary rounded-DEFAULT">
+<h5 class="font-headline font-bold text-primary uppercase text-sm mb-4">Phase 01: Spectrum Analysis</h5>
+<p class="text-sm leading-relaxed text-on-surface-variant">Initial testing involved wide-band spectrum analysis to identify interference patterns. Developed a proprietary Frequency Hopping Spread Spectrum algorithm adjusting in 250μs increments.</p>
+</div>
+<div class="p-6 bg-surface-container-low border-2 border-primary rounded-DEFAULT">
+<h5 class="font-headline font-bold text-primary uppercase text-sm mb-4">Phase 02: Thermal Hardening</h5>
+<p class="text-sm leading-relaxed text-on-surface-variant">Electronic components were sealed in a nitrogen-purged ceramic chassis, ensuring that extreme temperature fluctuations at 30,000ft do not cause oscillators to drift.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Modular Assembly Footer -->
+<footer class="mt-20 border-t-2 border-primary bg-white">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between p-8">
+<!-- Branding Segment -->
+<div class="flex flex-col items-start">
+<div class="font-headline font-bold text-xl uppercase tracking-tighter text-primary">MODULAR_ASSEMBLY_SYSTEM</div>
+<p class="font-mono text-[10px] text-outline mt-2 uppercase tracking-widest">©2024 SYSTEM_OPERATOR // ALL RIGHTS RESERVED</p>
+</div>
+<!-- Links Segment -->
+<div class="flex items-center gap-8 font-mono text-[10px] font-bold uppercase tracking-widest my-6 md:my-0">
+<a class="hover:text-primary underline decoration-2 decoration-secondary-container" href="#">GitHub</a>
+<a class="hover:text-primary underline decoration-2 decoration-secondary-container" href="#">LinkedIn</a>
+<a class="hover:text-primary underline decoration-2 decoration-secondary-container" href="#">Documentation</a>
+</div>
+<!-- Status Segment -->
+<div class="flex items-center">
+<div class="flex items-center gap-3 bg-surface-container-low border-2 border-primary rounded-full px-4 py-2 font-mono text-[10px] font-bold">
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+</span>
+<span class="text-primary tracking-widest">SYSTEM: OPTIMAL</span>
+</div>
+</div>
+</div>
+</footer>
+```</body></html>

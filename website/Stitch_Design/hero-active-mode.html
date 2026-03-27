@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MODULAR_PORTFOLIO | Creative Technologist</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "lego-yellow": "#ffbf00",
+              "lego-navy": "#031632",
+              "lego-red": "#d92312",
+              "lego-orange": "#ff6200",
+              "surface-bright": "#fbf9f4",
+              "primary": "#031632",
+              "secondary": "#ffbf00",
+              "tertiary": "#d92312",
+              "background": "#fbf9f4",
+              "on-surface": "#1b1c19",
+              "surface-container": "#f0eee9",
+              "outline": "#031632"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {
+                "DEFAULT": "0.5rem", 
+                "lg": "1rem", 
+                "xl": "1.5rem", 
+                "full": "9999px"
+            },
+            boxShadow: {
+                'chunky': '4px 4px 0px 0px rgba(3,22,50,1)',
+                'chunky-lg': '8px 8px 0px 0px rgba(3,22,50,1)',
+                'inner-lego': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.3)'
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .blueprint-grid {
+            background-image: 
+                linear-gradient(to right, rgba(3, 22, 50, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(3, 22, 50, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* 3D Carousel Styles */
+        .carousel-container {
+            perspective: 1200px;
+            overflow: visible;
+        }
+        .carousel-track {
+            display: flex;
+            gap: 2rem;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            justify-content: center;
+            align-items: center;
+        }
+        .carousel-item {
+            flex: 0 0 280px;
+            aspect-ratio: 4/3;
+            transition: all 0.5s ease;
+            transform: rotateY(35deg) scale(0.85);
+            opacity: 0.6;
+        }
+        .carousel-item.active {
+            transform: rotateY(0deg) scale(1.1) translateZ(80px);
+            opacity: 1;
+            z-index: 10;
+        }
+        .carousel-item.prev {
+            transform: rotateY(45deg) scale(0.9) translateX(-20%);
+        }
+        .carousel-item.next {
+            transform: rotateY(-45deg) scale(0.9) translateX(20%);
+        }
+    </style>
+</head>
+<body class="bg-surface-bright font-body text-lego-navy selection:bg-lego-yellow/30">
+<!-- TopNavBar -->
+<header class="w-full sticky top-0 z-50 px-6 py-4">
+<nav class="flex justify-between items-center max-w-7xl mx-auto bg-white rounded-full border-[3px] border-lego-navy p-2 shadow-chunky transition-transform hover:translate-y-[-2px]">
+<div class="flex items-center gap-4 pl-4">
+<span class="text-xl font-black tracking-tighter text-lego-navy">MODULAR_PORTFOLIO</span>
+</div>
+<div class="hidden md:flex items-center gap-1">
+<a class="text-lego-navy border-2 border-lego-navy bg-lego-yellow rounded-full px-4 py-1 font-bold tracking-tight uppercase text-xs" href="#">HERO</a>
+<a class="text-lego-navy/60 hover:text-lego-navy px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">PROJECTS</a>
+<a class="text-lego-navy/60 hover:text-lego-navy px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">SKILLS</a>
+<a class="text-lego-navy/60 hover:text-lego-navy px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">EXPERIENCE</a>
+<a class="text-lego-navy/60 hover:text-lego-navy px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-150 font-bold tracking-tight uppercase text-xs" href="#">ABOUT</a>
+</div>
+<div class="flex items-center gap-2 pr-2">
+<button class="material-symbols-outlined p-2 text-lego-navy hover:bg-surface-container rounded-full transition-all">sensors</button>
+<button class="bg-lego-navy text-white px-6 py-2 rounded-full font-black uppercase text-[10px] tracking-widest shadow-chunky active:translate-y-1 active:shadow-none transition-all">HIRE_ME</button>
+</div>
+</nav>
+</header>
+<main class="relative min-h-screen blueprint-grid pt-12 pb-24 px-6 overflow-hidden">
+<div class="max-w-7xl mx-auto flex flex-col items-center justify-center relative z-10">
+<!-- Pre-Hero Badge -->
+<div class="inline-flex items-center gap-3 bg-lego-navy text-white px-4 py-1.5 border-b-4 border-lego-red mb-8">
+<span class="w-2 h-2 rounded-full bg-lego-yellow animate-pulse"></span>
+<span class="text-xs font-black tracking-[0.3em] uppercase">SYSTEM_INIT_COMPLETE</span>
+</div>
+<!-- Hero Title -->
+<div class="text-center mb-16">
+<h1 class="text-7xl md:text-9xl font-black text-lego-navy leading-none tracking-tighter uppercase mb-4">
+                ARTHUR_MODULAR
+            </h1>
+<p class="text-lg md:text-xl font-bold text-lego-navy/70 uppercase tracking-widest">
+                Creative Technologist / <span class="text-lego-navy border-b-4 border-lego-yellow">Embedded Systems Engineer</span>
+</p>
+</div>
+<!-- Main Assembly Block -->
+<div class="relative w-full max-w-6xl mb-12">
+<div class="flex flex-col lg:flex-row gap-8 items-start relative">
+<!-- Central Content Chassis -->
+<div class="flex-1 relative bg-white border-[4px] border-lego-navy rounded-2xl p-6 md:p-12 shadow-chunky-lg">
+<div class="absolute top-6 right-6 flex gap-2">
+<div class="w-3 h-3 rounded-full bg-lego-navy/10"></div>
+<div class="w-3 h-3 rounded-full bg-lego-navy/10"></div>
+<div class="w-3 h-3 rounded-full bg-lego-navy/10"></div>
+</div>
+<div class="flex flex-col md:flex-row items-center gap-12">
+<!-- Headshot Component -->
+<div class="relative flex-shrink-0">
+<div class="absolute inset-0 bg-lego-navy translate-x-3 translate-y-3 rounded-xl"></div>
+<div class="relative w-64 h-72 bg-lego-navy border-[4px] border-lego-navy rounded-xl overflow-hidden flex flex-col">
+<div class="flex-1 bg-surface-container relative group overflow-hidden">
+<img alt="Arthur Modular" class="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ0NRl5jVTE3TbpHW2PensMtQ2tXOFo6wkzuLHTdmtOUkG5mNYymQswDGzPS8f4mZheVV5wltXVWSnPWHpnjqU4UoSS6WSlucfAAr87rxpQGibywqvOMqVJKa8J403zLmpm1c2Wdt4gyaO1rppGmp4GadE5_xRmQ0MkfPuL6ivc8TLmkLxFJ2NPn2195ZarOYvvDK_EpkvU9qaRKtJ2ksftWxAU41qXOq5yCYZ_iPVRbHlNQtI6gLyOewHiXERkxz_tyHBswO-yBg"/>
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<div class="w-6 h-1 bg-lego-yellow"></div>
+<div class="w-3 h-1 bg-lego-yellow"></div>
+</div>
+<div class="absolute top-2 right-2 bg-lego-yellow px-2 py-0.5 rounded text-[8px] font-black text-lego-navy">OP_01</div>
+</div>
+<div class="bg-lego-navy p-3 flex justify-between items-center text-white">
+<span class="text-[10px] font-black tracking-widest">SYSTEM_ARCHITECT_ID</span>
+<span class="material-symbols-outlined text-sm">verified</span>
+</div>
+</div>
+</div>
+<!-- Hero Text & CTA -->
+<div class="flex-1 text-center md:text-left space-y-8">
+<h2 class="text-4xl md:text-5xl font-black text-lego-navy leading-[1.1]">
+                                “Building technology that makes the world marginally better.”
+                            </h2>
+<div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+<button class="relative group translate-x-1 translate-y-1 active:translate-x-0 active:translate-y-0 transition-all">
+<div class="absolute inset-0 bg-lego-navy rounded-lg"></div>
+<div class="relative bg-lego-orange border-[3px] border-lego-navy px-8 py-5 rounded-lg flex items-center gap-4 shadow-[inset_0_2px_4px_0_rgba(255,255,255,0.3)]">
+<div class="w-6 h-6 rounded-full bg-lego-navy flex items-center justify-center">
+<div class="w-2.5 h-2.5 rounded-full bg-[#00e676] shadow-[0_0_15px_#00e676] animate-pulse"></div>
+</div>
+<span class="font-black text-lego-navy text-xl tracking-tighter uppercase">POWER_ENGAGED</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side Module Stack -->
+<div class="w-full lg:w-72 flex flex-col gap-6">
+<!-- Module 01: Connection -->
+<div class="bg-white border-[3px] border-lego-navy p-4 rounded-lg shadow-chunky transition-transform flex flex-col gap-1">
+<div class="flex justify-between items-center border-b-2 border-lego-navy pb-2 mb-2">
+<span class="text-[10px] font-black text-lego-navy/40 uppercase">MODULE_01</span>
+<span class="material-symbols-outlined text-sm">signal_cellular_alt</span>
+</div>
+<span class="text-[9px] font-black text-lego-navy/60 uppercase">CONNECTION</span>
+<div class="flex flex-col gap-2">
+<span class="text-lg font-black tracking-tighter">SYNCED_LOCKED</span>
+<div class="flex gap-1.5 items-end h-4">
+<div class="w-full bg-lego-navy h-[25%]"></div>
+<div class="w-full bg-lego-navy h-[50%]"></div>
+<div class="w-full bg-lego-navy h-[75%]"></div>
+<div class="w-full bg-lego-navy h-[100%]"></div>
+</div>
+</div>
+</div>
+<!-- Module 02: Uptime -->
+<div class="bg-white border-[3px] border-lego-navy p-4 rounded-lg shadow-chunky transition-transform flex flex-col gap-1">
+<div class="flex justify-between items-center border-b-2 border-lego-navy pb-2 mb-2">
+<span class="text-[10px] font-black text-lego-navy/40 uppercase">MODULE_02</span>
+<span class="material-symbols-outlined text-sm">timer</span>
+</div>
+<span class="text-[9px] font-black text-lego-navy/60 uppercase">UPTIME</span>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-black text-lego-navy tabular-nums">99.984%</span>
+<div class="flex items-center gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-lego-red animate-pulse"></div>
+<span class="text-[8px] font-black text-lego-red uppercase">LIVE</span>
+</div>
+</div>
+</div>
+<!-- Module 03: Ongoing Projects -->
+<div class="bg-white border-[3px] border-lego-navy p-4 rounded-lg shadow-chunky transition-transform flex flex-col gap-1">
+<div class="flex justify-between items-center border-b-2 border-lego-navy pb-2 mb-2">
+<span class="text-[10px] font-black text-lego-navy/40 uppercase">MODULE_03</span>
+<span class="material-symbols-outlined text-sm">inventory_2</span>
+</div>
+<span class="text-[9px] font-black text-lego-navy/60 uppercase leading-none">ONGOING PROJECTS</span>
+<div class="mt-1 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-[#00e676] animate-ping"></div>
+<span class="text-lg font-black tracking-tighter">STATUS: ONGOING</span>
+</div>
+<span class="text-[7px] font-bold text-lego-navy/40 uppercase mt-1">LAST_ACTIVITY: 2m_AGO</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Grid Specs -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-stretch">
+<!-- GitHub Dashboard -->
+<div class="lg:col-span-4 bg-white border-[3px] border-lego-navy p-6 rounded-2xl shadow-chunky relative flex flex-col min-h-[500px]">
+<div class="absolute top-4 right-4 flex gap-1.5">
+<div class="w-2 h-2 rounded-full bg-lego-navy/20"></div>
+<div class="w-2 h-2 rounded-full bg-lego-navy/20"></div>
+</div>
+<h3 class="text-2xl font-black text-lego-navy mb-4 uppercase tracking-tighter">GITHUB_DASHBOARD</h3>
+<div class="flex flex-wrap gap-1.5 mb-6">
+<span class="bg-lego-navy text-white px-2 py-1 rounded-full text-[8px] font-black tracking-widest uppercase">C++</span>
+<span class="bg-lego-navy text-white px-2 py-1 rounded-full text-[8px] font-black tracking-widest uppercase">RTOS</span>
+<span class="bg-lego-navy text-white px-2 py-1 rounded-full text-[8px] font-black tracking-widest uppercase">ARM</span>
+</div>
+<div class="flex-1 flex flex-col gap-4">
+<!-- Contribution Chart -->
+<div class="bg-surface-container border-2 border-lego-navy p-4 rounded-xl flex flex-col h-48 relative overflow-hidden">
+<span class="text-[8px] font-black text-lego-navy/50 uppercase mb-4">CONTRIBUTION_VOLTAGE</span>
+<svg class="flex-1 w-full" preserveaspectratio="none" viewbox="0 0 100 40">
+<path d="M0 35 L10 28 L20 32 L30 15 L40 22 L50 8 L60 18 L70 12 L80 25 L90 5 L100 15" fill="none" stroke="#031632" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<circle cx="50" cy="8" fill="#ffbf00" r="2" stroke="#031632" stroke-width="1"></circle>
+<circle cx="90" cy="5" fill="#ffbf00" r="2" stroke="#031632" stroke-width="1"></circle>
+</svg>
+</div>
+<!-- Commits List -->
+<div class="flex-1 bg-white border-2 border-lego-navy p-4 rounded-xl overflow-y-auto">
+<span class="text-[8px] font-black text-lego-navy/50 uppercase block mb-4">RECENT_COMMITS</span>
+<div class="space-y-4">
+<div class="border-b-2 border-lego-navy/10 pb-3">
+<p class="text-[10px] font-black text-lego-navy truncate uppercase">uav-telemetry-firmware</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[7px] font-bold text-lego-red uppercase bg-lego-red/10 px-1 rounded">PUSHED 2h AGO</span>
+<span class="text-[7px] font-bold text-lego-navy/40 uppercase">ARMv8 / RTOS</span>
+</div>
+</div>
+<div class="border-b-2 border-lego-navy/10 pb-3">
+<p class="text-[10px] font-black text-lego-navy truncate uppercase">smart-grid-interface</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[7px] font-bold text-lego-red uppercase bg-lego-red/10 px-1 rounded">PUSHED 5h AGO</span>
+<span class="text-[7px] font-bold text-lego-navy/40 uppercase">C++ / MQTT</span>
+</div>
+</div>
+<div class="pb-3">
+<p class="text-[10px] font-black text-lego-navy truncate uppercase">modular-os-kernel</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[7px] font-bold text-lego-red uppercase bg-lego-red/10 px-1 rounded">PUSHED 1d AGO</span>
+<span class="text-[7px] font-bold text-lego-navy/40 uppercase">C / SCHEDULER</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-lego-navy p-3 rounded-xl flex items-center justify-between">
+<span class="text-[8px] font-black text-white uppercase tracking-widest">DATA_STREAM</span>
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-[#00e676] shadow-[0_0_5px_#00e676] animate-pulse"></div>
+<span class="text-[8px] font-black text-[#00e676]">LIVE</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Prototypes Section -->
+<div class="lg:col-span-8 bg-lego-yellow border-[3px] border-lego-navy p-8 rounded-2xl shadow-chunky flex flex-col justify-between overflow-hidden">
+<div class="flex justify-between items-start mb-8">
+<div>
+<div class="w-14 h-14 bg-lego-navy rounded-full flex items-center justify-center mb-6 shadow-chunky">
+<span class="material-symbols-outlined text-white text-3xl">bolt</span>
+</div>
+<h3 class="text-4xl font-black text-lego-navy uppercase tracking-tighter leading-none">PROTOTYPES</h3>
+</div>
+</div>
+<!-- 3D Carousel Implementation -->
+<div class="carousel-container relative h-80 md:h-[450px] flex items-center justify-center py-10">
+<div class="carousel-track">
+<!-- Prev Slide -->
+<div class="carousel-item prev hidden md:block">
+<div class="bg-white border-[3px] border-lego-navy rounded-xl overflow-hidden shadow-chunky flex flex-col h-full">
+<img alt="Grid Control" class="w-full h-full object-cover grayscale brightness-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzIDHXeq_K18Ut2_raPYufgVT4SpC50RxbAaq4kLHtWa8ftF8TcK5vEHboDp59FCSoLCfU91q-bcz_wLHukS7e9YrPLBkpuVrAnTPqw6CRo4oo3kgbIu9leUmp14tpYBcBv9Gfv9noKeoY6grdznTF1_sylpnsKd31qrh7HS7VcdiIWFfYNU70opdqZry6uawGTCwJUoc-0w5T-gXI8PpuBvbMlUG1msV24yUiNc7joy5BiWl-i4n0b_rs_tMUv0KlEiNrOeqQzUA"/>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-white border-t-[3px] border-lego-navy">
+<span class="text-[10px] font-black text-lego-navy uppercase">GRID_CONTROL_V1</span>
+</div>
+</div>
+</div>
+<!-- Active Slide -->
+<div class="carousel-item active">
+<div class="bg-white border-[3px] border-lego-navy rounded-xl overflow-hidden shadow-chunky-lg flex flex-col h-full">
+<div class="relative flex-1">
+<img alt="UAV_TELEMETRY_MOD" class="w-full h-full object-cover grayscale contrast-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbWVgbbu_tp50n-Pp7pBiWbSxiIkvkl80jF3dE-UlMVH57luwykpGJk79cF791zmzZZ7agCwDQPfFFh-p8TJwi2jdNf6vWdeDP4BArmlACtkt_OFiToEQPpDis2QvMeytAFbSdhof8GqB-KwWxjG3t3r_ydUzFUJrW2Vqe0wrmabm2xj2YCsmqcLTacAglY4sFXSG3B3qrf2t1Ohid0of2iT3YnWKLJJIPQ0Egy9c50pc69lu5TPZeoAZdZa1aj0ydEkY1WhEHWDw"/>
+<div class="absolute bottom-4 left-4 bg-lego-navy text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest">UNIT_042</div>
+</div>
+<div class="p-6 bg-white border-t-[4px] border-lego-navy flex justify-between items-center">
+<span class="text-lg font-black text-lego-navy uppercase tracking-tighter">UAV_TELEMETRY_MOD</span>
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-lego-navy"></div>
+<div class="w-3 h-3 rounded-full bg-lego-navy/20"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Next Slide -->
+<div class="carousel-item next hidden md:block">
+<div class="bg-white border-[3px] border-lego-navy rounded-xl overflow-hidden shadow-chunky flex flex-col h-full">
+<img alt="Robotic Arm" class="w-full h-full object-cover grayscale brightness-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWxcFvAu7plO6rboP1dENJI3p7fd2Q996UQEDox-PtIOK7djf7f7ZkU37KrBiKIWYswMG0tDeVUsRMbUpiErmOlbp1h-n690hgalG26KHMwToGH8EaCtT6P_qlLAe-cOip9AME5wuz4X8mT5zKNaPJdgjEDS4OACED4-MG-qJuZsvgxvHY_dqhDkr8yj80RM6g2LUIDRE8H5-VXLJb7UXlpEb70n5_paBD-0RcBgl2WDrMILszQ6jecSICaE3oooWiC7q7Wew2WtM"/>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-white border-t-[3px] border-lego-navy">
+<span class="text-[10px] font-black text-lego-navy uppercase">ROBOTIC_ARM_OS</span>
+</div>
+</div>
+</div>
+</div>
+</div><div class="flex justify-center gap-6 mt-4 relative z-20">
+<button class="w-12 h-12 rounded-full border-2 border-lego-navy flex items-center justify-center bg-white hover:bg-lego-navy hover:text-white transition-all shadow-chunky active:translate-y-1 active:shadow-none">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-12 h-12 rounded-full border-2 border-lego-navy flex items-center justify-center bg-white hover:bg-lego-navy hover:text-white transition-all shadow-chunky active:translate-y-1 active:shadow-none">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full py-16 px-8 border-t-[6px] border-lego-navy bg-white">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+<div class="flex flex-col items-center md:items-start gap-3">
+<span class="font-black text-lego-navy uppercase tracking-tighter text-2xl">MODULAR_ASSEMBLY_SYSTEM</span>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold tracking-widest uppercase text-lego-navy/50">© 2024 MODULAR_CORP</span>
+<span class="text-lego-navy/20">|</span>
+<span class="text-[10px] font-bold tracking-widest uppercase text-lego-navy/50">BUILD_V2.4.0</span>
+</div>
+</div>
+<div class="flex gap-12">
+<a class="text-[11px] font-black tracking-widest uppercase text-lego-navy hover:text-lego-red transition-colors underline decoration-2 decoration-lego-yellow" href="#">GITHUB</a>
+<a class="text-[11px] font-black tracking-widest uppercase text-lego-navy hover:text-lego-red transition-colors underline decoration-2 decoration-lego-yellow" href="#">LINKEDIN</a>
+<a class="text-[11px] font-black tracking-widest uppercase text-lego-navy hover:text-lego-red transition-colors underline decoration-2 decoration-lego-yellow" href="#">SPECS</a>
+</div>
+<div class="flex items-center gap-4 bg-surface-container px-6 py-3 rounded-full border-2 border-lego-navy">
+<div class="w-3 h-3 bg-lego-yellow rounded-full shadow-inner-lego animate-pulse"></div>
+<span class="text-[11px] font-black tracking-[0.2em] uppercase text-lego-navy">SYSTEM_NOMINAL</span>
+</div>
+</div>
+</footer>
+</body></html>

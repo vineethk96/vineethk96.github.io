@@ -29,21 +29,22 @@ export default function CookieConsent() {
     <div
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-4 px-6 py-4 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300"
+      className="fixed bottom-16 left-4 right-4 z-50 flex items-center justify-between gap-4 px-5 py-3 bg-background border-2 border-primary rounded-2xl text-sm text-primary"
+      style={{ boxShadow: '4px 4px 0px 0px #031632' }}
     >
-      <p className="flex-1">
-        This site uses analytics to improve the experience. No personal data is sold.{' '}
+      <p className="flex-1 font-body text-xs text-primary/60">
+        This site uses analytics to improve the experience. No personal data is sold.
       </p>
-      <div className="flex gap-3 shrink-0">
+      <div className="flex gap-2 shrink-0">
         <button
           onClick={optOut}
-          className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+          className="px-3 py-1.5 border-2 border-primary/30 rounded-xl font-mono text-xs uppercase tracking-wider hover:border-primary transition-colors duration-200"
         >
           Opt out
         </button>
         <button
           onClick={dismiss}
-          className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors duration-200"
+          className="px-3 py-1.5 border-2 border-primary bg-primary text-background rounded-xl font-mono text-xs uppercase tracking-wider hover:bg-primary/80 transition-colors duration-200"
         >
           Got it
         </button>
