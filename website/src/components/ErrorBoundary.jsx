@@ -12,8 +12,11 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    console.error('ErrorBoundary caught:', error, info.componentStack);
-    posthog.captureException(error, { extra: { componentStack: info.componentStack } });
+    console.error('ErrorBoundary caught:', error.name, error.message);
+    posthog.captureException(
+      { name: error.name, message: error.message },
+      { extra: { componentType: (info.componentStack || '').split('\n')[1]?.trim() ?? '' } }
+    );
   }
 
   render() {

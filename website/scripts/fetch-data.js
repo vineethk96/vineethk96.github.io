@@ -7,6 +7,16 @@ const https = require('https');
 const { createClient } = require('@sanity/client');
 const imageUrlBuilder = require('@sanity/image-url');
 
+// Escapes user-supplied values before interpolating them into HTML strings.
+function sanitizeAttr(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // Configuration (loaded from .env.local or environment)
 const SANITY_TOKEN = process.env.SANITY_TOKEN;
 
@@ -39,7 +49,7 @@ function downloadFile(url, destPath, token) {
       if (res.statusCode !== 200) {
         file.close();
         fs.unlink(destPath, () => {});
-        reject(new Error(`Failed to download ${url}: HTTP ${res.statusCode}`));
+        reject(new Error(`Failed to download file: HTTP ${res.statusCode}`));
         return;
       }
       res.pipe(file);
@@ -180,8 +190,8 @@ async function fetchProjects() {
               image: ({ value }) => {
                 if (!value?.asset?._ref) return '';
                 const src = urlFor(value.asset).width(800).auto('format').quality(85).url();
-                const alt = value.alt ?? '';
-                const caption = value.caption ?? '';
+                const alt = sanitizeAttr(value.alt);
+                const caption = sanitizeAttr(value.caption);
                 if (caption) {
                   return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
                 }
@@ -324,15 +334,15 @@ async function fetchBlogPosts() {
               image: ({ value }) => {
                 if (!value?.asset?._ref) return '';
                 const src = urlFor(value.asset).width(800).auto('format').quality(85).url();
-                const alt = value.alt ?? '';
-                const caption = value.caption ?? '';
+                const alt = sanitizeAttr(value.alt);
+                const caption = sanitizeAttr(value.caption);
                 if (caption) {
                   return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
                 }
                 return `<figure><img src="${src}" alt="${alt}" /></figure>`;
               },
               codeBlock: ({ value }) => {
-                const language = value.language ?? 'other';
+                const language = sanitizeAttr(value.language ?? 'other');
                 const escaped = (value.code ?? '')
                   .replace(/&/g, '&amp;')
                   .replace(/</g, '&lt;')
@@ -340,9 +350,9 @@ async function fetchBlogPosts() {
                 return `<pre class="code-block language-${language}"><code>${escaped}</code></pre>`;
               },
               callout: ({ value }) => {
-                const variant = value.variant ?? 'info';
-                const emoji = CALLOUT_EMOJIS[variant] ?? 'ℹ️';
-                const body = value.content ?? '';
+                const variant = sanitizeAttr(value.variant ?? 'info');
+                const emoji = CALLOUT_EMOJIS[value.variant ?? 'info'] ?? 'ℹ️';
+                const body = sanitizeAttr(value.content);
                 return `<div class="callout callout-${variant}"><span class="callout-icon">${emoji}</span><div class="callout-body">${body}</div></div>`;
               },
             },
