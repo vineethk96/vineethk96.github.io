@@ -31,7 +31,7 @@ const ProjectCard = ({ project, index }) => {
               <div className="w-full h-full flex items-center justify-center bg-faint">
                 {project.icon && (
                   <project.icon
-                    className="w-12 h-12 text-primary/20 group-hover:text-primary/50 transition-colors duration-300"
+                    className="w-12 h-12 text-primary-muted group-hover:text-primary-sub transition-colors duration-300"
                     aria-hidden="true"
                   />
                 )}
@@ -44,8 +44,8 @@ const ProjectCard = ({ project, index }) => {
             {/* Status badge */}
             <div className={`absolute top-2 right-2 flex items-center gap-1.5 px-2 py-0.5 border border-current text-xs font-mono uppercase tracking-wider ${
               project.status === 'Completed' || project.status === 'Active'
-                ? 'text-success bg-background/90 border-success/30'
-                : 'text-primary/50 bg-background/90 border-primary/20'
+                ? 'text-success-text bg-background/90 border-success/30'
+                : 'text-primary-muted bg-background/90 border-primary/20'
             }`}>
               <span
                 className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
@@ -65,11 +65,11 @@ const ProjectCard = ({ project, index }) => {
               <h3 className="font-heading font-bold text-primary text-base leading-tight group-hover:text-accent transition-colors duration-200">
                 {project.title}
               </h3>
-              <span className="font-mono text-xs text-primary/40 uppercase tracking-wider whitespace-nowrap flex-shrink-0">
+              <span className="font-mono text-xs text-primary-muted uppercase tracking-wider whitespace-nowrap flex-shrink-0">
                 {project.year}
               </span>
             </div>
-            <p className="font-body text-xs text-primary/60 leading-relaxed mb-3 line-clamp-2">
+            <p className="font-body text-xs text-primary-sub leading-relaxed mb-3 line-clamp-2">
               {project.description}
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -88,10 +88,10 @@ const SlotEmpty = ({ index }) => (
   <motion.div variants={fadeUp} custom={index}>
     <div className="border-2 border-dashed border-primary/20 aspect-video bg-faint/50 rounded-2xl flex items-center justify-center">
       <div className="text-center">
-        <div className="font-mono text-xs text-primary/20 uppercase tracking-widest mb-1">
+        <div className="font-mono text-xs text-primary-muted uppercase tracking-widest mb-1">
           Slot Empty
         </div>
-        <div className="font-mono text-xs text-primary/15 uppercase tracking-widest">
+        <div className="font-mono text-xs text-primary-muted uppercase tracking-widest">
           Module {String(index + 1).padStart(2, '0')}
         </div>
       </div>

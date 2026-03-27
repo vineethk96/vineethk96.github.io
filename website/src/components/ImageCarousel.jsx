@@ -29,7 +29,7 @@ const ImageCarousel = ({ images, title, projectId }) => {
   if (!images || images.length === 0) {
     return (
       <div className="w-full h-64 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-        <p className="text-gray-500 dark:text-gray-400">No images available</p>
+        <p className="text-primary-muted dark:text-gray-400">No images available</p>
       </div>
     );
   }
@@ -98,7 +98,7 @@ const ImageCarousel = ({ images, title, projectId }) => {
 
         {/* Image Caption */}
         {images[currentIndex].caption && (
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 italic">
+          <p className="mt-2 text-sm text-primary-sub dark:text-gray-400 italic">
             {images[currentIndex].caption}
           </p>
         )}

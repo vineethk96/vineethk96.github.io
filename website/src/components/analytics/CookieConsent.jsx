@@ -45,7 +45,7 @@ export default function CookieConsent() {
       className="fixed bottom-16 left-4 right-4 z-50 flex items-center justify-between gap-4 px-5 py-3 bg-background border-2 border-primary rounded-2xl text-sm text-primary"
       style={{ boxShadow: '4px 4px 0px 0px #031632' }}
     >
-      <p className="flex-1 font-body text-xs text-primary/60">
+      <p className="flex-1 font-body text-xs text-primary-sub">
         This site uses analytics to improve the experience. No personal data is sold.
       </p>
       <div className="flex gap-2 shrink-0">

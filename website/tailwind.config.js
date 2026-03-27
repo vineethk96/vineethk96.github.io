@@ -14,6 +14,12 @@ module.exports = {
         danger: '#EC0B43',
         muted: '#E5E7EB',
         faint: '#F3F4F6',
+        // Accessible text variants for use on light (#FBF9F4) backgrounds
+        'primary-sub': '#3A4D65',    // secondary text — 8.2:1 contrast
+        'primary-muted': '#5E6E8A',  // tertiary/muted text — 4.9:1 contrast
+        'accent-text': '#7A5500',    // accent text on light bg — 6.4:1 contrast
+        'success-text': '#4A6A00',   // success text on light bg — 5.9:1 contrast
+        'danger-text': '#C8003A',    // danger text on light bg — 5.7:1 contrast
       },
       fontFamily: {
         'heading': ['Space Grotesk', 'system-ui', 'sans-serif'],

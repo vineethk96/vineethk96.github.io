@@ -65,7 +65,7 @@ const Blog = () => {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <BookOpen className="w-10 h-10 text-primary/15 group-hover:text-primary/30 transition-colors duration-300" aria-hidden="true" />
+                            <BookOpen className="w-10 h-10 text-primary-muted group-hover:text-primary-sub transition-colors duration-300" aria-hidden="true" />
                           </div>
                         )}
                         {/* Index badge */}
@@ -78,7 +78,7 @@ const Blog = () => {
                       <div className="p-4 flex-1 flex flex-col">
                         {/* Meta */}
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="flex items-center gap-1 font-mono text-xs text-primary/40">
+                          <div className="flex items-center gap-1 font-mono text-xs text-primary-muted">
                             <Calendar className="w-3 h-3" aria-hidden="true" />
                             {new Date(post.publish_date).toLocaleDateString('en-US', {
                               year: 'numeric',
@@ -86,7 +86,7 @@ const Blog = () => {
                               day: 'numeric',
                             })}
                           </div>
-                          <div className="flex items-center gap-1 font-mono text-xs text-primary/40">
+                          <div className="flex items-center gap-1 font-mono text-xs text-primary-muted">
                             <Clock className="w-3 h-3" aria-hidden="true" />
                             {post.read_time} min
                           </div>
@@ -96,7 +96,7 @@ const Blog = () => {
                           {post.title}
                         </h2>
 
-                        <p className="font-body text-xs text-primary/60 leading-relaxed mb-3 line-clamp-3 flex-1">
+                        <p className="font-body text-xs text-primary-sub leading-relaxed mb-3 line-clamp-3 flex-1">
                           {post.excerpt}
                         </p>
 
@@ -106,7 +106,7 @@ const Blog = () => {
                           ))}
                         </div>
 
-                        <div className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-primary/40 group-hover:text-primary transition-colors duration-200">
+                        <div className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-primary-muted group-hover:text-primary transition-colors duration-200">
                           Read Article
                           <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-200" aria-hidden="true" />
                         </div>
@@ -119,8 +119,8 @@ const Blog = () => {
           </div>
         ) : (
           <motion.div variants={fadeUp} custom={1} className="technic-module p-8 text-center mb-10">
-            <BookOpen className="w-10 h-10 text-primary/20 mx-auto mb-3" aria-hidden="true" />
-            <p className="font-mono text-xs text-primary/30 uppercase tracking-wider">
+            <BookOpen className="w-10 h-10 text-primary-muted mx-auto mb-3" aria-hidden="true" />
+            <p className="font-mono text-xs text-primary-muted uppercase tracking-wider">
               No articles published yet
             </p>
           </motion.div>

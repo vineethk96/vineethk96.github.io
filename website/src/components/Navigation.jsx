@@ -81,7 +81,7 @@ const Navigation = () => {
                 className={`relative z-10 px-4 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-colors duration-200 block ${
                   isActive(item.path)
                     ? 'text-primary font-bold'
-                    : 'text-primary/70 hover:text-primary'
+                    : 'text-primary-sub hover:text-primary'
                 }`}
               >
                 {item.name}
@@ -135,7 +135,7 @@ const Navigation = () => {
                 className={`block px-4 py-2.5 rounded-xl font-mono text-xs uppercase tracking-wider transition-colors duration-200 ${
                   isActive(item.path)
                     ? 'bg-accent text-primary font-bold ring-4 ring-primary'
-                    : 'text-primary/70 hover:bg-faint hover:text-primary'
+                    : 'text-primary-sub hover:bg-faint hover:text-primary'
                 }`}
               >
                 {item.name}

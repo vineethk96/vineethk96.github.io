@@ -24,13 +24,13 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="min-h-screen flex items-center justify-center px-4">
           <div className="technic-module p-8 text-center max-w-md">
-            <div className="font-mono text-xs uppercase tracking-widest text-primary/40 mb-2">
+            <div className="font-mono text-xs uppercase tracking-widest text-primary-muted mb-2">
               System Error
             </div>
             <h1 className="font-heading font-bold text-primary text-2xl mb-4">
               Something went wrong
             </h1>
-            <p className="font-body text-primary/60 mb-6">
+            <p className="font-body text-primary-sub mb-6">
               An unexpected error occurred. Please refresh the page to try again.
             </p>
             <button

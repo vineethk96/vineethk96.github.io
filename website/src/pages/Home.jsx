@@ -127,12 +127,12 @@ const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
       <div className="section-label">{label}</div>
       <div className="flex items-end gap-1.5 mt-1">
         <span className={`font-mono font-bold text-2xl transition-colors duration-500 ${
-          isActive ? (isError ? 'text-danger' : 'text-accent') : 'text-primary/30'
+          isActive ? (isError ? 'text-danger-text' : 'text-accent') : 'text-primary-muted'
         }`}>
           {displayValue}
         </span>
         {unit && isActive && (
-          <span className="font-mono text-xs text-primary/50 mb-1">{unit}</span>
+          <span className="font-mono text-xs text-primary-muted mb-1">{unit}</span>
         )}
       </div>
       <div className="flex items-center gap-1.5 mt-2">
@@ -144,7 +144,7 @@ const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
           }`}
           aria-hidden="true"
         />
-        <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">
+        <span className="font-mono text-xs text-primary-muted uppercase tracking-wider">
           {isActive ? (isError ? 'No Signal' : 'Online') : 'Standby'}
         </span>
       </div>
@@ -180,7 +180,7 @@ const Home = () => {
           {PERSONAL_INFO?.name || 'Vineeth_Kirandumkara'}
         </h1>
 
-        <p className="font-mono text-sm sm:text-base text-primary/60 uppercase tracking-widest mb-8">
+        <p className="font-mono text-sm sm:text-base text-primary-sub uppercase tracking-widest mb-8">
           {PERSONAL_INFO?.tagline || 'IoT Systems Engineer & Product Designer'}
         </p>
 
@@ -242,7 +242,7 @@ const Home = () => {
                 <div className="flex flex-col flex-1 gap-4">
                   <div className="section-label">System Operator</div>
 
-                  <p className="font-body text-primary/70 leading-relaxed max-w-lg">
+                  <p className="font-body text-primary-sub leading-relaxed max-w-lg">
                     {PERSONAL_INFO?.bio || 'Building connected systems from embedded devices to cloud architectures — designing products ready for the mass market.'}
                   </p>
                 </div>
@@ -299,7 +299,7 @@ const Home = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track('external_link_clicked', { type: 'github', page: 'hero' })}
-                className="flex items-center gap-1.5 font-mono text-xs text-primary/50 hover:text-primary transition-colors duration-200"
+                className="flex items-center gap-1.5 font-mono text-xs text-primary-muted hover:text-primary transition-colors duration-200"
               >
                 <Github className="w-3 h-3" aria-hidden="true" />
                 @{GITHUB_USERNAME}
@@ -311,14 +311,14 @@ const Home = () => {
               isPowered={isPowerEngaged}
               weeklyCommits={weeklyCommits}
             />
-            <div className="mt-2 flex items-center gap-4 font-mono text-xs text-primary/50">
+            <div className="mt-2 flex items-center gap-4 font-mono text-xs text-primary-muted">
               <span>
                 Commits (7d):&nbsp;
                 <span className="text-accent">
                   {isPowerEngaged ? (weeklyCommits ?? '—') : '—'}
                 </span>
               </span>
-              <span className="text-primary/20">|</span>
+              <span className="text-primary-muted">|</span>
               <span>
                 Streak:&nbsp;
                 <span className="text-accent">
@@ -333,7 +333,7 @@ const Home = () => {
                 }`}
                 aria-hidden="true"
               />
-              <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">
+              <span className="font-mono text-xs text-primary-muted uppercase tracking-wider">
                 {isPowerEngaged ? 'Live Data' : 'Offline'}
               </span>
             </div>
@@ -345,7 +345,7 @@ const Home = () => {
               <div className="section-label">Component Inventory</div>
               <Link
                 to="/projects"
-                className="font-mono text-xs text-primary/50 hover:text-primary transition-colors duration-200 uppercase tracking-wider"
+                className="font-mono text-xs text-primary-muted hover:text-primary transition-colors duration-200 uppercase tracking-wider"
               >
                 All Projects →
               </Link>
@@ -365,7 +365,7 @@ const Home = () => {
                 }`}
                 aria-hidden="true"
               />
-              <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">
+              <span className="font-mono text-xs text-primary-muted uppercase tracking-wider">
                 {isPowerEngaged ? 'System Online' : 'Offline'}
               </span>
             </div>
