@@ -6,6 +6,15 @@ export const personalInfoType = defineType({
   type: 'document',
   fields: [
     // ── PERSONAL INFO ──────────────────────────────────
+    defineField({
+      name: 'headshot',
+      title: 'Headshot Photo',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [
+        defineField({name: 'alt', title: 'Alt Text', type: 'string'}),
+      ],
+    }),
     defineField({name: 'name', title: 'Name', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'email', title: 'Email', type: 'string'}),
     defineField({name: 'location', title: 'Location', type: 'string'}),

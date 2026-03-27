@@ -96,7 +96,7 @@ const About = () => {
                   Core_Logic (The Narrative)
                 </h2>
               </div>
-              <div className="grid md:grid-cols-2 gap-10 text-primary/60 leading-relaxed">
+              <div className="grid md:grid-cols-2 gap-10 text-primary-sub leading-relaxed">
                 <div className="space-y-3">
                   <p className="font-mono font-bold text-primary uppercase text-xs tracking-wider">
                     Phase_01: The_Purpose
@@ -125,14 +125,14 @@ const About = () => {
                       <span className="text-xs font-bold text-accent tracking-wider uppercase">
                         {edu.degreeLevel}
                       </span>
-                      <span className="text-xs text-primary/40">{edu.location}</span>
+                      <span className="text-xs text-primary-muted">{edu.location}</span>
                     </div>
                     <h3 className="font-heading font-extrabold text-base uppercase text-primary leading-tight mb-1">
                       {edu.degree}
                     </h3>
                     <p className="text-xs text-primary font-black mb-1 uppercase">{edu.institution}</p>
-                    <p className="font-mono text-xs text-primary/40 mb-4">{edu.period}</p>
-                    <p className="text-sm text-primary/60 leading-relaxed mb-5">{edu.description}</p>
+                    <p className="font-mono text-xs text-primary-muted mb-4">{edu.period}</p>
+                    <p className="text-sm text-primary-sub leading-relaxed mb-5">{edu.description}</p>
                     <div className="space-y-2">
                       {edu.highlights.map((h, j) => (
                         <div key={j} className="flex items-start gap-2">
@@ -233,12 +233,12 @@ const About = () => {
                       <span className="text-[10px] font-bold text-accent uppercase">
                         {job.start_year} — {job.end_year || 'Pres'}
                       </span>
-                      <span className="text-[10px] text-primary/40">
+                      <span className="text-[10px] text-primary-muted">
                         {job.location?.split(',')[1]?.trim() || ''}
                       </span>
                     </div>
                     <h3 className="font-heading font-bold text-sm uppercase text-primary">{job.position}</h3>
-                    <p className="text-[11px] text-primary/50 font-medium uppercase">{job.company}</p>
+                    <p className="text-[11px] text-primary-muted font-medium uppercase">{job.company}</p>
                   </div>
                 ))}
               </div>
@@ -263,7 +263,7 @@ const About = () => {
               <LayoutGrid className="w-6 h-6" aria-hidden="true" />
               Skills_&amp;_Tech_Inventory
             </h2>
-            <p className="font-mono text-[10px] font-bold tracking-[0.3em] uppercase text-primary/40 mt-1">
+            <p className="font-mono text-[10px] font-bold tracking-[0.3em] uppercase text-primary-muted mt-1">
               Peripheral_Modules &amp; Core_Competencies
             </p>
           </div>
@@ -285,7 +285,7 @@ const About = () => {
                     {group.skills.map(skill => (
                       <span
                         key={skill}
-                        className="px-2 py-1 bg-background border border-primary/20 text-[10px] font-bold uppercase text-primary/60"
+                        className="px-2 py-1 bg-background border border-primary/20 text-[10px] font-bold uppercase text-primary-sub"
                       >
                         {skill}
                       </span>
@@ -310,7 +310,7 @@ const About = () => {
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                       <div>
                         <p className="font-heading font-bold text-primary uppercase text-sm">{cert.name}</p>
-                        <p className="text-[10px] font-medium text-primary/50 uppercase">
+                        <p className="text-[10px] font-medium text-primary-muted uppercase">
                           {cert.issuer} • {cert.year}
                         </p>
                       </div>

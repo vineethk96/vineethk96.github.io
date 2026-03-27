@@ -12,7 +12,7 @@ const Footer = () => {
         <span className="font-heading font-bold text-primary text-sm tracking-tight">
           VK<span className="text-accent">.</span>
         </span>
-        <span className="hidden sm:inline font-mono text-xs text-primary/40 ml-2 uppercase tracking-wider">
+        <span className="hidden sm:inline font-mono text-xs text-primary-muted ml-2 uppercase tracking-wider">
           Vineeth Kirandumkara
         </span>
       </div>
@@ -25,7 +25,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => track('external_link_clicked', { type: 'github', page: 'footer' })}
-            className="font-mono text-xs uppercase tracking-widest text-primary/50 hover:text-primary transition-colors duration-200"
+            className="font-mono text-xs uppercase tracking-widest text-primary-muted hover:text-primary transition-colors duration-200"
           >
             GitHub
           </a>
@@ -36,7 +36,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => track('external_link_clicked', { type: 'linkedin', page: 'footer' })}
-            className="font-mono text-xs uppercase tracking-widest text-primary/50 hover:text-primary transition-colors duration-200"
+            className="font-mono text-xs uppercase tracking-widest text-primary-muted hover:text-primary transition-colors duration-200"
           >
             LinkedIn
           </a>
@@ -47,7 +47,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => track('external_link_clicked', { type: 'resume', page: 'footer' })}
-            className="font-mono text-xs uppercase tracking-widest text-primary/50 hover:text-primary transition-colors duration-200"
+            className="font-mono text-xs uppercase tracking-widest text-primary-muted hover:text-primary transition-colors duration-200"
           >
             Resume
           </a>
@@ -58,10 +58,10 @@ const Footer = () => {
       <div className="flex-1 min-w-0 flex justify-end">
         <div className="flex items-center gap-2 px-3 py-1.5 border-2 border-success/40 bg-success/10 rounded-full">
           <span className="led-indicator" aria-hidden="true" />
-          <span className="font-mono text-xs uppercase tracking-widest text-success font-bold hidden sm:inline">
+          <span className="font-mono text-xs uppercase tracking-widest text-success-text font-bold hidden sm:inline">
             System: Optimal
           </span>
-          <span className="font-mono text-xs uppercase tracking-widest text-success font-bold sm:hidden">
+          <span className="font-mono text-xs uppercase tracking-widest text-success-text font-bold sm:hidden">
             OK
           </span>
         </div>

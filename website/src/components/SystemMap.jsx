@@ -175,25 +175,25 @@ const SystemMap = () => {
             </div>
             <button
               onClick={() => setSelectedNode(null)}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="text-primary-muted hover:text-primary-sub dark:hover:text-gray-300"
             >
               ×
             </button>
           </div>
           
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-primary-sub dark:text-gray-300 mb-4">
             {selectedNode.description}
           </p>
           
           <div className="space-y-2">
-            <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            <h4 className="font-medium text-sm text-primary-muted dark:text-gray-400 uppercase tracking-wide">
               Technologies
             </h4>
             <div className="flex flex-wrap gap-2">
               {selectedNode.technologies.map((tech) => (
                 <span
                   key={tech}
-                  className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded"
+                  className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-primary-sub dark:text-gray-300 rounded"
                 >
                   {tech}
                 </span>
@@ -204,7 +204,7 @@ const SystemMap = () => {
       )}
 
       {/* Instructions */}
-      <div className="mt-6 text-center text-gray-600 dark:text-gray-400">
+      <div className="mt-6 text-center text-primary-sub dark:text-gray-400">
         <p className="text-sm">
           Click on nodes to explore projects • Drag to rearrange • Scroll to zoom • Click background to reset
         </p>

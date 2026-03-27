@@ -106,7 +106,7 @@ export function CADModelViewer({ modelUrl, cameraView, modelRotation }) {
         <p className="font-mono text-xs text-accent tracking-widest uppercase">
           CAD_Model // TBD
         </p>
-        <span className="font-mono text-[10px] text-primary/40 border border-primary/20 px-3 py-1 rounded">
+        <span className="font-mono text-[10px] text-primary-muted border border-primary/20 px-3 py-1 rounded">
           INTERACTIVE_MODEL // COMING_SOON
         </span>
       </div>

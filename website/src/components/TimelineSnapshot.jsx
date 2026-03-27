@@ -67,7 +67,7 @@ const TimelineSnapshot = () => {
                       {item.year}
                     </div>
                     <h3 className="text-lg font-semibold mb-1">{item.company || item.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-300">{item.position || item.subtitle}</p>
+                    <p className="text-primary-sub dark:text-gray-300">{item.position || item.subtitle}</p>
                   </div>
                 </div>
               </motion.div>

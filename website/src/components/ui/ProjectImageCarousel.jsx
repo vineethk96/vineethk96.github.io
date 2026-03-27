@@ -26,7 +26,7 @@ function ProjectImageCarousel({ images = [] }) {
   if (!images.length) {
     return (
       <div className="flex items-center justify-center h-40">
-        <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">
+        <span className="font-mono text-xs text-primary-muted uppercase tracking-widest">
           No_Schematics_Available
         </span>
       </div>

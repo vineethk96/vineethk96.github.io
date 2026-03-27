@@ -112,7 +112,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
           <h3 className="text-xl font-semibold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
             {project.title}
           </h3>
-          <p className={`text-gray-600 dark:text-gray-300 mb-4 ${variant === 'grid' ? 'flex-1 text-sm leading-relaxed' : 'line-clamp-3'}`}>
+          <p className={`text-primary-sub dark:text-gray-300 mb-4 ${variant === 'grid' ? 'flex-1 text-sm leading-relaxed' : 'line-clamp-3'}`}>
             {project.description}
           </p>
 
@@ -121,7 +121,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
             {tags.map((tag) => (
               <span
                 key={tag}
-                className={`py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full ${variant === 'grid' ? 'px-2' : 'px-3'}`}
+                className={`py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-primary-sub dark:text-gray-300 rounded-full ${variant === 'grid' ? 'px-2' : 'px-3'}`}
               >
                 {tag}
               </span>
@@ -137,7 +137,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300"
+                    className="p-2 text-primary-sub dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300"
                     aria-label={`${project.title} on GitHub`}
                   >
                     <Github className="w-5 h-5" aria-hidden="true" />
@@ -148,7 +148,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
                     href={project.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300"
+                    className="p-2 text-primary-sub dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300"
                     aria-label={`${project.title} live demo`}
                   >
                     <ExternalLink className="w-5 h-5" aria-hidden="true" />

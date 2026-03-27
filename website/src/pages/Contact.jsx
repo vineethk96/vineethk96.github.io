@@ -36,7 +36,7 @@ const Contact = () => {
   };
 
   const inputClass =
-    'w-full px-4 py-3 border-2 border-primary/20 bg-background text-primary font-body text-sm rounded-xl focus:border-primary focus:outline-none transition-colors duration-200 placeholder:text-primary/30';
+    'w-full px-4 py-3 border-2 border-primary/20 bg-background text-primary font-body text-sm rounded-xl focus:border-primary focus:outline-none transition-colors duration-200 placeholder:text-primary-muted';
 
   return (
     <motion.div
@@ -74,7 +74,7 @@ const Contact = () => {
                   return (
                     <div key={i} className="technic-module p-4 flex items-center gap-4">
                       <div className="p-2 border-2 border-primary/20 bg-faint rounded-lg flex-shrink-0">
-                        {Icon && <Icon className="w-4 h-4 text-primary/60" aria-hidden="true" />}
+                        {Icon && <Icon className="w-4 h-4 text-primary-sub" aria-hidden="true" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="section-label">{info.label}</div>
@@ -89,7 +89,7 @@ const Contact = () => {
                             <ExternalLink className="w-3 h-3 flex-shrink-0" aria-hidden="true" />
                           </a>
                         ) : (
-                          <span className="font-body text-sm text-primary/70">{info.value}</span>
+                          <span className="font-body text-sm text-primary-sub">{info.value}</span>
                         )}
                       </div>
                     </div>
@@ -137,10 +137,10 @@ const Contact = () => {
               <div className="flex items-start gap-3">
                 <span className="led-indicator mt-1 flex-shrink-0" aria-hidden="true" />
                 <div>
-                  <div className="font-mono text-xs uppercase tracking-wider text-success font-bold mb-1">
+                  <div className="font-mono text-xs uppercase tracking-wider text-success-text font-bold mb-1">
                     Currently Available
                   </div>
-                  <p className="font-body text-sm text-primary/60 leading-relaxed">
+                  <p className="font-body text-sm text-primary-sub leading-relaxed">
                     Open to IoT architecture roles, product design positions, and consulting.
                     Expected graduation: 2025.
                   </p>
@@ -220,8 +220,8 @@ const Contact = () => {
 
             {/* Response time */}
             <div className="mt-4 flex items-start gap-3 px-1">
-              <MessageSquare className="w-4 h-4 text-primary/30 flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <p className="font-body text-xs text-primary/40 leading-relaxed">
+              <MessageSquare className="w-4 h-4 text-primary-muted flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="font-body text-xs text-primary-muted leading-relaxed">
                 I typically respond within 24 hours. For urgent matters, reach out via LinkedIn.
               </p>
             </div>

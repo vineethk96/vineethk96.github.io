@@ -64,7 +64,7 @@ const ProjectDetail = () => {
           </h1>
           <button
             onClick={() => navigate('/projects')}
-            className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary/60 hover:text-primary transition-colors duration-200 mx-auto"
+            className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary-sub hover:text-primary transition-colors duration-200 mx-auto"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             Return to Inventory
@@ -93,7 +93,7 @@ const ProjectDetail = () => {
           variants={fadeUp}
           custom={0}
           onClick={() => navigate('/projects')}
-          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary/50 hover:text-primary transition-colors duration-200 mb-10"
+          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary-muted hover:text-primary transition-colors duration-200 mb-10"
         >
           <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           Component Inventory
@@ -106,7 +106,7 @@ const ProjectDetail = () => {
           {hasCadModel ? (
             <React.Suspense fallback={
               <div className="technic-module flex items-center justify-center" style={{ minHeight: '360px' }}>
-                <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">Loading_CAD_Model...</span>
+                <span className="font-mono text-xs text-primary-muted uppercase tracking-widest">Loading_CAD_Model...</span>
               </div>
             }>
               <CADModelViewer modelUrl={project.cad_model_url} cameraView={project.cad_camera_view} modelRotation={project.cad_model_rotation} />
@@ -121,7 +121,7 @@ const ProjectDetail = () => {
             </div>
           ) : (
             <div className="technic-module flex items-center justify-center" style={{ minHeight: '360px' }}>
-              <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">No_Preview_Available</span>
+              <span className="font-mono text-xs text-primary-muted uppercase tracking-widest">No_Preview_Available</span>
             </div>
           )}
 
@@ -143,7 +143,7 @@ const ProjectDetail = () => {
                 </span>
               )}
             </h1>
-            <p className="font-body text-primary/60 text-base leading-relaxed">
+            <p className="font-body text-primary-sub text-base leading-relaxed">
               {project.description}
             </p>
             <div className="flex gap-3 flex-wrap">
@@ -242,7 +242,7 @@ const ProjectDetail = () => {
               <ProjectImageCarousel images={carouselImages} />
             ) : (
               <div className="flex items-center justify-center h-40">
-                <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">
+                <span className="font-mono text-xs text-primary-muted uppercase tracking-widest">
                   No_Schematics_Available
                 </span>
               </div>
@@ -256,17 +256,17 @@ const ProjectDetail = () => {
             <p className="font-mono text-xs text-primary tracking-widest uppercase">
               Execution_Log // {project.title}
             </p>
-            <span className="font-mono text-[10px] text-primary/40 uppercase border border-primary/20 px-2 py-0.5 rounded">
+            <span className="font-mono text-[10px] text-primary-muted uppercase border border-primary/20 px-2 py-0.5 rounded">
               Field_Notes
             </span>
           </div>
           {project.detailed_description ? (
             <div
-              className="prose prose-sm max-w-none text-primary/70 prose-headings:font-heading prose-headings:text-primary prose-strong:text-primary dark:prose-invert"
+              className="prose prose-sm max-w-none text-primary-sub prose-headings:font-heading prose-headings:text-primary prose-strong:text-primary prose-a:text-primary dark:prose-invert"
               dangerouslySetInnerHTML={createMarkup(project.detailed_description)}
             />
           ) : (
-            <p className="font-body text-primary/60 leading-relaxed">{project.description}</p>
+            <p className="font-body text-primary-sub leading-relaxed">{project.description}</p>
           )}
         </motion.div>
 

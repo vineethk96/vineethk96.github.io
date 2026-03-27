@@ -53,7 +53,7 @@ const BlogDetail = () => {
           </h1>
           <button
             onClick={() => navigate('/blog')}
-            className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary/60 hover:text-primary transition-colors duration-200 mx-auto"
+            className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary-sub hover:text-primary transition-colors duration-200 mx-auto"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             Return to Blog
@@ -76,7 +76,7 @@ const BlogDetail = () => {
           variants={fadeUp}
           custom={0}
           onClick={() => navigate('/blog')}
-          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary/50 hover:text-primary transition-colors duration-200 mb-8"
+          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary-muted hover:text-primary transition-colors duration-200 mb-8"
         >
           <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           Field Notes
@@ -111,7 +111,7 @@ const BlogDetail = () => {
             </span>
           </h1>
           <div className="flex flex-wrap items-center gap-4 mb-3">
-            <div className="flex items-center gap-1.5 font-mono text-xs text-primary/40">
+            <div className="flex items-center gap-1.5 font-mono text-xs text-primary-muted">
               <Clock className="w-3 h-3" aria-hidden="true" />
               {blog.read_time} min read
             </div>
@@ -128,7 +128,7 @@ const BlogDetail = () => {
           <div className="lg:col-span-3 space-y-5">
             <motion.div variants={fadeUp} custom={3} className="technic-module p-6">
               <div
-                className="prose prose-sm max-w-none text-primary/70 prose-headings:font-heading prose-headings:text-primary prose-headings:font-bold prose-strong:text-primary prose-a:text-accent prose-code:text-primary/80 prose-code:bg-faint prose-code:font-mono"
+                className="prose prose-sm max-w-none text-primary-sub prose-headings:font-heading prose-headings:text-primary prose-headings:font-bold prose-strong:text-primary prose-a:text-accent prose-code:text-primary/80 prose-code:bg-faint prose-code:font-mono"
               >
                 {blog.content ? (
                   <div dangerouslySetInnerHTML={createMarkup(blog.content)} />
@@ -162,15 +162,15 @@ const BlogDetail = () => {
               <div className="section-label mb-3">Article Info</div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Author</span>
+                  <span className="font-mono text-xs text-primary-muted uppercase tracking-wider">Author</span>
                   <span className="font-mono text-xs text-primary">Vineeth K.</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Published</span>
+                  <span className="font-mono text-xs text-primary-muted uppercase tracking-wider">Published</span>
                   <span className="font-mono text-xs text-primary">{blog.publish_date}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-mono text-xs text-primary/40 uppercase tracking-wider">Read Time</span>
+                  <span className="font-mono text-xs text-primary-muted uppercase tracking-wider">Read Time</span>
                   <span className="font-mono text-xs text-primary">{blog.read_time} min</span>
                 </div>
               </div>
@@ -185,7 +185,7 @@ const BlogDetail = () => {
                     <Link
                       key={projectId}
                       to={`/projects/${projectId}`}
-                      className="flex items-center gap-2 font-mono text-xs text-primary/50 hover:text-primary transition-colors duration-200"
+                      className="flex items-center gap-2 font-mono text-xs text-primary-muted hover:text-primary transition-colors duration-200"
                     >
                       <LinkIcon className="w-3 h-3" aria-hidden="true" />
                       {projectId}

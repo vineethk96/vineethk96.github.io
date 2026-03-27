@@ -123,7 +123,7 @@ const Carousel = memo(({ handleClick, cards, isCarouselActive, rotation }) => {
                   />
                 ) : (
                   <div className="w-full aspect-square flex items-center justify-center bg-background p-2">
-                    <span className="font-mono text-xs text-primary/30 uppercase tracking-wider text-center">
+                    <span className="font-mono text-xs text-primary-muted uppercase tracking-wider text-center">
                       No Image
                     </span>
                   </div>

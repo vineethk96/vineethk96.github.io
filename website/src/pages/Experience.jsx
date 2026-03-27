@@ -101,7 +101,7 @@ const CardContent = ({ exp, isCurrent }) => (
       <div className="flex items-center gap-2 mb-1">
         <span
           className={`font-mono text-[10px] font-bold uppercase tracking-widest ${
-            isCurrent ? 'text-accent' : 'text-primary/40'
+            isCurrent ? 'text-accent' : 'text-primary-muted'
           }`}
         >
           {exp.end_year ? `${exp.start_year} — ${exp.end_year}` : `${exp.start_year} — Present`}
@@ -109,7 +109,7 @@ const CardContent = ({ exp, isCurrent }) => (
         <span className={`font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 border ${
           exp.type === 'education'
             ? 'border-blue-400/40 text-blue-400/70'
-            : 'border-accent/40 text-accent/70'
+            : 'border-accent/40 text-accent'
         }`}>
           {exp.type === 'education' ? 'Education' : 'Work'}
         </span>
@@ -117,7 +117,7 @@ const CardContent = ({ exp, isCurrent }) => (
       <h3 className="font-heading font-bold text-lg text-primary uppercase tracking-tight leading-tight mb-1">
         {exp.position}
       </h3>
-      <span className="font-mono text-xs text-primary/60 font-bold uppercase tracking-wider">
+      <span className="font-mono text-xs text-primary-sub font-bold uppercase tracking-wider">
         {exp.company}
       </span>
     </div>
@@ -125,13 +125,13 @@ const CardContent = ({ exp, isCurrent }) => (
     {/* Meta row */}
     <div className="flex flex-wrap items-center gap-4 mb-4">
       {exp.location && (
-        <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-primary/40">
+        <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-primary-muted">
           <MapPin className="w-3 h-3" aria-hidden="true" />
           {exp.location}
         </span>
       )}
       {exp.technologies?.length > 0 && (
-        <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-primary/40">
+        <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-primary-muted">
           <Cpu className="w-3 h-3" aria-hidden="true" />
           {exp.technologies.length} Technologies
         </span>
@@ -139,7 +139,7 @@ const CardContent = ({ exp, isCurrent }) => (
     </div>
 
     {/* Description */}
-    <p className="font-body text-sm text-primary/60 leading-relaxed mb-5">
+    <p className="font-body text-sm text-primary-sub leading-relaxed mb-5">
       {exp.description}
     </p>
 
@@ -158,7 +158,7 @@ const CardContent = ({ exp, isCurrent }) => (
                 }`}
                 aria-hidden="true"
               />
-              <span className="font-body text-xs text-primary/60 leading-relaxed">{item}</span>
+              <span className="font-body text-xs text-primary-sub leading-relaxed">{item}</span>
             </li>
           ))}
         </ul>
