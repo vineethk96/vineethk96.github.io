@@ -1,15 +1,45 @@
-import { Suspense, useEffect, useState } from 'react';
-import { Canvas, useLoader } from '@react-three/fiber';
+import { Suspense, useEffect } from 'react';
+import { Canvas, useLoader, useThree } from '@react-three/fiber';
 import { OrbitControls, Center } from '@react-three/drei';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-import { sanityClient } from '../../lib/sanityClient';
+import { Vector3 } from 'three';
 
-const GROQ_QUERY = `*[_type == "project" && slug.current == $projectId][0]{
-  "stlUrl": cadModel.asset->url
-}`;
+const CAMERA_POSITIONS = {
+  'iso-top-front-right':    [ 1,  1,  1],
+  'iso-top-front-left':     [-1,  1,  1],
+  'iso-top-back-right':     [ 1,  1, -1],
+  'iso-top-back-left':      [-1,  1, -1],
+  'iso-bottom-front-right': [ 1, -1,  1],
+  'iso-bottom-front-left':  [-1, -1,  1],
+  'iso-bottom-back-right':  [ 1, -1, -1],
+  'iso-bottom-back-left':   [-1, -1, -1],
+  'front':  [ 0,  0,  1],
+  'back':   [ 0,  0, -1],
+  'right':  [ 1,  0,  0],
+  'left':   [-1,  0,  0],
+  'top':    [ 0,  1,  0],
+  'bottom': [ 0, -1,  0],
+};
+const DEFAULT_CAMERA_POSITION = [1, 1, 1];
 
-function STLMesh({ url }) {
+function STLMesh({ url, cameraPosition }) {
   const geometry = useLoader(STLLoader, url);
+  const { camera } = useThree();
+
+  useEffect(() => {
+    geometry.computeBoundingSphere();
+    const radius = geometry.boundingSphere.radius;
+    const fovRad = (camera.fov * Math.PI) / 180;
+    const distance = (radius / Math.tan(fovRad / 2)) * 1.4;
+
+    const dir = new Vector3(...cameraPosition).normalize();
+    camera.position.copy(dir.multiplyScalar(distance));
+    camera.lookAt(0, 0, 0);
+    camera.near = distance / 100;
+    camera.far = distance * 100;
+    camera.updateProjectionMatrix();
+  }, [geometry, camera, cameraPosition]);
+
   return (
     <Center>
       <mesh geometry={geometry} castShadow>
@@ -28,25 +58,10 @@ function WireframeCube() {
   );
 }
 
-export function CADModelViewer({ projectId }) {
-  const [stlUrl, setStlUrl] = useState(null);
-  const [fetched, setFetched] = useState(false);
+export function CADModelViewer({ modelUrl, cameraView }) {
+  const cameraPosition = CAMERA_POSITIONS[cameraView] ?? DEFAULT_CAMERA_POSITION;
 
-  useEffect(() => {
-    if (!projectId) {
-      setFetched(true);
-      return;
-    }
-    sanityClient
-      .fetch(GROQ_QUERY, { projectId })
-      .then(data => {
-        setStlUrl(data?.stlUrl ?? null);
-        setFetched(true);
-      })
-      .catch(() => setFetched(true));
-  }, [projectId]);
-
-  if (!fetched || !stlUrl) {
+  if (!modelUrl) {
     return (
       <div className="relative min-h-[360px] technic-module overflow-hidden blueprint-bg flex flex-col items-center justify-center gap-4">
         <p className="font-mono text-xs text-accent tracking-widest uppercase">
@@ -62,7 +77,7 @@ export function CADModelViewer({ projectId }) {
   return (
     <div className="relative min-h-[360px] technic-module overflow-hidden">
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 50 }}
+        camera={{ position: cameraPosition, fov: 50 }}
         style={{ width: '100%', height: '100%', minHeight: '360px' }}
       >
         <ambientLight intensity={0.6} />
@@ -70,7 +85,7 @@ export function CADModelViewer({ projectId }) {
         <directionalLight position={[-5, -5, -5]} intensity={0.3} />
 
         <Suspense fallback={<WireframeCube />}>
-          <STLMesh url={stlUrl} />
+          <STLMesh url={modelUrl} cameraPosition={cameraPosition} />
         </Suspense>
 
         <OrbitControls enableDamping dampingFactor={0.05} />

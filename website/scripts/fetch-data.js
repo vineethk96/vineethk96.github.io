@@ -3,6 +3,7 @@ require('dotenv').config({ path: '.env.local' });
 
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 const { createClient } = require('@sanity/client');
 const imageUrlBuilder = require('@sanity/image-url');
 
@@ -28,6 +29,28 @@ const sanityClient = createClient({
 // Image URL builder for Sanity CDN transforms
 const builder = imageUrlBuilder(sanityClient);
 const urlFor = (source) => builder.image(source);
+
+// Downloads a file from a URL (with optional Bearer token auth) to a local path.
+function downloadFile(url, destPath, token) {
+  return new Promise((resolve, reject) => {
+    const options = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    const file = fs.createWriteStream(destPath);
+    https.get(url, options, (res) => {
+      if (res.statusCode !== 200) {
+        file.close();
+        fs.unlink(destPath, () => {});
+        reject(new Error(`Failed to download ${url}: HTTP ${res.statusCode}`));
+        return;
+      }
+      res.pipe(file);
+      file.on('finish', () => file.close(resolve));
+    }).on('error', (err) => {
+      file.close();
+      fs.unlink(destPath, () => {});
+      reject(err);
+    });
+  });
+}
 
 /**
  * Shared sort comparator: descending by start year.
@@ -121,10 +144,19 @@ async function fetchProjects() {
       alt,
       caption,
       asset
-    }
+    },
+    cadModel {
+      asset-> {
+        url
+      }
+    },
+    "cad_camera_view": cadCameraView
   }`;
 
   const rawProjects = await sanityClient.fetch(query);
+
+  // DEBUG: log cad_camera_view for each project
+  rawProjects.forEach(p => console.log(`[DEBUG] ${p.id}: cad_camera_view =`, p.cad_camera_view));
 
   // ESM-only package: dynamic import required inside CommonJS async function
   const { toHTML } = await import('@portabletext/to-html');
@@ -169,13 +201,14 @@ async function fetchProjects() {
       };
     }).filter(Boolean);
 
-    const { detailedDescription: _pt, ...rest } = project;
+    const { detailedDescription: _pt, cadModel: _cad, ...rest } = project;
 
     return {
       ...rest,
       year,
       detailed_description,
       images,
+      cad_model_url: project.cadModel?.asset?.url ?? null,
     };
   });
 
@@ -503,6 +536,19 @@ async function main() {
       fetchSystemMapLinks(),
       fetchPersonalInfo(),
     ]);
+
+    // Download STL files and replace private CDN URLs with local static paths
+    const modelsDir = path.join(__dirname, '..', 'public', 'models');
+    if (!fs.existsSync(modelsDir)) fs.mkdirSync(modelsDir, { recursive: true });
+    for (const project of projects) {
+      if (project.cad_model_url) {
+        const localPath = path.join(modelsDir, `${project.id}.stl`);
+        console.log(`⬇️  Downloading CAD model for ${project.id}...`);
+        await downloadFile(project.cad_model_url, localPath, SANITY_TOKEN);
+        project.cad_model_url = `/models/${project.id}.stl`;
+        console.log(`   ✅ Saved to public/models/${project.id}.stl`);
+      }
+    }
 
     console.log('\n📝 Generating constants.js...');
 

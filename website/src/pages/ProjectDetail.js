@@ -6,7 +6,10 @@ import { PROJECTS } from '../data/constants';
 import DOMPurify from 'dompurify';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { ProjectImageCarousel } from '../components/ui/ProjectImageCarousel';
-import { CADModelViewer } from '../components/ui/CADModelViewer';
+
+const CADModelViewer = React.lazy(() =>
+  import('../components/ui/CADModelViewer').then(m => ({ default: m.CADModelViewer }))
+);
 
 const createMarkup = (html) => ({
   __html: DOMPurify.sanitize(html, {
@@ -82,7 +85,13 @@ const ProjectDetail = () => {
         <motion.div variants={fadeUp} custom={1} className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
 
           {/* Left: CAD Model Viewer */}
-          <CADModelViewer projectId={projectId} />
+          <React.Suspense fallback={
+            <div className="technic-module flex items-center justify-center" style={{ minHeight: '360px' }}>
+              <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">Loading_CAD_Model...</span>
+            </div>
+          }>
+            <CADModelViewer modelUrl={project.cad_model_url} cameraView={project.cad_camera_view} />
+          </React.Suspense>
 
           {/* Right: Title + Meta */}
           <div className="flex flex-col justify-center gap-4 lg:pl-4">
