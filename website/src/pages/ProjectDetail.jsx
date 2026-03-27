@@ -61,6 +61,9 @@ const ProjectDetail = () => {
 
   const isOperational = project.status === 'Completed' || project.status === 'Active';
   const projectImages = project.images?.filter(img => img.url) ?? [];
+  const hasCadModel = Boolean(project.cad_model_url);
+  const featuredImage = !hasCadModel ? projectImages[0] ?? null : null;
+  const carouselImages = !hasCadModel ? projectImages.slice(1) : projectImages;
 
   return (
     <motion.div
@@ -84,14 +87,28 @@ const ProjectDetail = () => {
         {/* Section 1: Hero — 2-col */}
         <motion.div variants={fadeUp} custom={1} className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
 
-          {/* Left: CAD Model Viewer */}
-          <React.Suspense fallback={
-            <div className="technic-module flex items-center justify-center" style={{ minHeight: '360px' }}>
-              <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">Loading_CAD_Model...</span>
+          {/* Left: CAD Model Viewer or Featured Image */}
+          {hasCadModel ? (
+            <React.Suspense fallback={
+              <div className="technic-module flex items-center justify-center" style={{ minHeight: '360px' }}>
+                <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">Loading_CAD_Model...</span>
+              </div>
+            }>
+              <CADModelViewer modelUrl={project.cad_model_url} cameraView={project.cad_camera_view} modelRotation={project.cad_model_rotation} />
+            </React.Suspense>
+          ) : featuredImage ? (
+            <div className="technic-module flex items-center justify-center p-4" style={{ minHeight: '360px' }}>
+              <img
+                src={featuredImage.url}
+                alt={featuredImage.alt || project.title}
+                className="max-h-80 w-full object-contain rounded-lg"
+              />
             </div>
-          }>
-            <CADModelViewer modelUrl={project.cad_model_url} cameraView={project.cad_camera_view} modelRotation={project.cad_model_rotation} />
-          </React.Suspense>
+          ) : (
+            <div className="technic-module flex items-center justify-center" style={{ minHeight: '360px' }}>
+              <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">No_Preview_Available</span>
+            </div>
+          )}
 
           {/* Right: Title + Meta */}
           <div className="flex flex-col justify-center gap-4 lg:pl-4">
@@ -206,8 +223,8 @@ const ProjectDetail = () => {
             <p className="font-mono text-xs text-primary tracking-widest uppercase mb-4">
               System_Schematics
             </p>
-            {projectImages.length > 0 ? (
-              <ProjectImageCarousel images={projectImages} />
+            {carouselImages.length > 0 ? (
+              <ProjectImageCarousel images={carouselImages} />
             ) : (
               <div className="flex items-center justify-center h-40">
                 <span className="font-mono text-xs text-primary/30 uppercase tracking-widest">
