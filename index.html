@@ -1,1 +1,53 @@
-<!doctype html><html lang="en"><head><script>!function(){var e=window.location.search.slice(1).split("&").reduce(function(e,n){var o=n.split("=");return e[decodeURIComponent(o[0])]=decodeURIComponent(o[1]||""),e},{});e.p&&window.history.replaceState(null,null,e.p+(e.h?e.h:"")+window.location.search.replace(/[?&]p=[^&]*/,"").replace(/[?&]h=[^&]*/,"").replace(/^&/,"?"))}()</script><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Vineeth Kirandumkara - IoT Systems Engineer & Product Designer"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><title>Vineeth Kirandumkara - IoT Systems Engineer</title><script defer="defer" src="/static/js/main.0bc265d8.js"></script><link href="/static/css/main.c9790f94.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      // Restore URL from GitHub Pages SPA redirect
+      (function () {
+        var p = window.location.search.slice(1)
+          .split('&')
+          .reduce(function (q, kv) {
+            var parts = kv.split('=');
+            q[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+            return q;
+          }, {});
+        if (p['p']) {
+          var path = decodeURIComponent(p['p']);
+          // Only allow safe path characters — reject javascript: and other protocol injections
+          if (/^\/[a-zA-Z0-9\-_./#?=&%]*$/.test(path)) {
+            var qs = window.location.search
+              .replace(/[?&]p=[^&]*/, '')
+              .replace(/[?&]h=[^&]*/, '')
+              .replace(/^&/, '?');
+            var hash = p['h'] ? '#' + p['h'] : '';
+            window.history.replaceState(null, null, path + qs + hash);
+          }
+        }
+      })();
+    </script>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://us.i.posthog.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://us.i.posthog.com https://cdn.sanity.io https://api.github.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Vineeth Kirandumkara - IoT Systems Engineer & Product Designer"
+    />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Vineeth Kirandumkara - IoT Systems Engineer</title>
+    <script type="module" crossorigin src="/assets/index-C7pLXOyd.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CKNKM8NZ.css">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
