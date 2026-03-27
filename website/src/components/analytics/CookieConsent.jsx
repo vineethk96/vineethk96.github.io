@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { usePostHog } from 'posthog-js/react';
+import posthog from 'posthog-js';
 
 const STORAGE_KEY = 'ph-dismissed';
+const OPT_OUT_KEY = 'ph-opted-out';
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
-  const posthog = usePostHog();
 
   useEffect(() => {
     if (!localStorage.getItem(STORAGE_KEY)) {
@@ -15,14 +15,27 @@ export default function CookieConsent() {
 
   if (!visible) return null;
 
-  function dismiss() {
+  function optIn() {
     localStorage.setItem(STORAGE_KEY, 'true');
+    localStorage.removeItem(OPT_OUT_KEY);
+    if (!posthog.__loaded) {
+      posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
+        api_host: import.meta.env.VITE_POSTHOG_HOST,
+        capture_pageview: false,
+        capture_pageleave: true,
+        autocapture: false,
+        session_recording: false,
+        capture_exceptions: true,
+      });
+    }
     setVisible(false);
   }
 
   function optOut() {
-    if (posthog) posthog.opt_out_capturing();
-    dismiss();
+    localStorage.setItem(STORAGE_KEY, 'true');
+    localStorage.setItem(OPT_OUT_KEY, 'true');
+    posthog.opt_out_capturing();
+    setVisible(false);
   }
 
   return (
@@ -43,7 +56,7 @@ export default function CookieConsent() {
           Opt out
         </button>
         <button
-          onClick={dismiss}
+          onClick={optIn}
           className="px-3 py-1.5 border-2 border-primary bg-primary text-background rounded-xl font-mono text-xs uppercase tracking-wider hover:bg-primary/80 transition-colors duration-200"
         >
           Got it

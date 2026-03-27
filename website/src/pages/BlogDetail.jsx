@@ -9,8 +9,16 @@ import { useAnalytics } from '../hooks/useAnalytics';
 
 const createMarkup = (html) => ({
   __html: DOMPurify.sanitize(html, {
-    FORBID_ATTR: ['style', 'onerror', 'onclick', 'onload'],
-    FORBID_TAGS: ['style', 'link', 'script'],
+    ALLOWED_TAGS: [
+      'p', 'br', 'strong', 'em', 'a', 'code', 'pre',
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'ul', 'ol', 'li', 'blockquote',
+      'img', 'figure', 'figcaption',
+      'table', 'thead', 'tbody', 'tr', 'td', 'th',
+      'div', 'span',
+    ],
+    ALLOWED_ATTR: ['href', 'target', 'rel', 'alt', 'src', 'width', 'height', 'class'],
+    FORCE_BODY: true,
   }),
 });
 

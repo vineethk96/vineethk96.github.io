@@ -101,12 +101,16 @@ export function useGitHubData() {
     let cancelled = false;
 
     async function fetchData() {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
       try {
         const [eventsRes, reposRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events?per_page=100`),
-          fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&type=all`),
+          fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events?per_page=100`, { signal: controller.signal }),
+          fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&type=all`, { signal: controller.signal }),
         ]);
+        clearTimeout(timeoutId);
 
+        if (eventsRes.status === 403 || reposRes.status === 403) throw new Error('GitHub API rate limit reached');
         if (!eventsRes.ok || !reposRes.ok) throw new Error('GitHub API error');
 
         const [events, repos] = await Promise.all([eventsRes.json(), reposRes.json()]);

@@ -28,8 +28,11 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    track('contact_form_submitted', { subject: formData.subject });
-    console.log('Form submitted:', formData);
+    if (!formData.name.trim() || formData.name.length > 100) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return;
+    if (!formData.subject.trim() || formData.subject.length > 200) return;
+    if (!formData.message.trim() || formData.message.length > 5000) return;
+    track('contact_form_submitted');
   };
 
   const inputClass =

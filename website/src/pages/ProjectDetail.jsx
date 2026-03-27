@@ -11,10 +11,25 @@ const CADModelViewer = React.lazy(() =>
   import('../components/ui/CADModelViewer').then(m => ({ default: m.CADModelViewer }))
 );
 
+const isSafeUrl = (url) => {
+  try {
+    const { protocol } = new URL(url);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch { return false; }
+};
+
 const createMarkup = (html) => ({
   __html: DOMPurify.sanitize(html, {
-    FORBID_ATTR: ['style', 'class'],
-    FORBID_TAGS: ['style', 'link'],
+    ALLOWED_TAGS: [
+      'p', 'br', 'strong', 'em', 'a', 'code', 'pre',
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'ul', 'ol', 'li', 'blockquote',
+      'img', 'figure', 'figcaption',
+      'table', 'thead', 'tbody', 'tr', 'td', 'th',
+      'div', 'span',
+    ],
+    ALLOWED_ATTR: ['href', 'target', 'rel', 'alt', 'src', 'width', 'height', 'class'],
+    FORCE_BODY: true,
   }),
 });
 
@@ -132,7 +147,7 @@ const ProjectDetail = () => {
               {project.description}
             </p>
             <div className="flex gap-3 flex-wrap">
-              {project.github && (
+              {project.github && isSafeUrl(project.github) && (
                 <a
                   href={project.github}
                   target="_blank"
@@ -147,7 +162,7 @@ const ProjectDetail = () => {
                   View_Github
                 </a>
               )}
-              {project.demo && (
+              {project.demo && isSafeUrl(project.demo) && (
                 <a
                   href={project.demo}
                   target="_blank"
