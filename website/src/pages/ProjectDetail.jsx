@@ -93,7 +93,7 @@ const ProjectDetail = () => {
           variants={fadeUp}
           custom={0}
           onClick={() => navigate('/projects')}
-          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary-muted hover:text-primary transition-colors duration-200 mb-10"
+          className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary hover:text-primary transition-colors duration-200 mb-10"
         >
           <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           Component Inventory
