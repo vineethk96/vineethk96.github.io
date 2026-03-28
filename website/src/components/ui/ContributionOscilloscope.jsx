@@ -206,7 +206,7 @@ export default function ContributionOscilloscope({ data, isPowered, weeklyCommit
                 textAnchor="middle"
                 opacity="0.85"
               >
-                AVERAGE 50ms
+                GITHUB CONTRIBUTIONS THIS WEEK
               </text>
             )}
           </svg>

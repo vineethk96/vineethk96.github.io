@@ -13,30 +13,38 @@ import { ThreeDPhotoCarousel } from '../components/ui/ThreeDCarousel';
 const GITHUB_USERNAME = 'vineethk96';
 
 
-const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
+const TelemetryModule = ({ label, value, unit, secondValue, secondUnit, isActive, isError = false }) => {
   const [displayValue, setDisplayValue] = useState('—');
   const isAnimatingRef = useRef(false);
   const timerRef       = useRef(null);
   const displayRef     = useRef('—');
+
+  const [displaySecondValue, setDisplaySecondValue] = useState('—');
+  const isAnimating2Ref = useRef(false);
+  const timer2Ref       = useRef(null);
+  const display2Ref     = useRef('—');
 
   const setDisplay = (v) => {
     displayRef.current = String(v);
     setDisplayValue(String(v));
   };
 
-  // Boot / shutdown animation — only triggers on isActive toggle
+  const setDisplay2 = (v) => {
+    display2Ref.current = String(v);
+    setDisplaySecondValue(String(v));
+  };
+
+  // Boot / shutdown animation for primary value — only triggers on isActive toggle
   useEffect(() => {
     if (timerRef.current) clearInterval(timerRef.current);
 
     if (!isActive) {
-      // Aborted mid-boot: snap off immediately
       if (isAnimatingRef.current) {
         isAnimatingRef.current = false;
         setDisplay('—');
         return;
       }
 
-      // Shutdown animation from current display
       const snapshot = displayRef.current;
       if (snapshot === '—') return;
 
@@ -51,7 +59,7 @@ const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
         timerRef.current = setInterval(() => {
           step++;
           const t   = step / STEPS;
-          const cur = numVal * (1 - Math.pow(t, 3)); // ease-in
+          const cur = numVal * (1 - Math.pow(t, 3));
           setDisplay(hasDecimal ? cur.toFixed(1) : String(Math.round(cur)));
           if (step >= STEPS) {
             clearInterval(timerRef.current);
@@ -76,7 +84,6 @@ const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
       return;
     }
 
-    // Boot animation
     isAnimatingRef.current = true;
     const numVal    = parseFloat(value);
     const isNumeric = !isNaN(numVal) && value !== '';
@@ -115,6 +122,69 @@ const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [isActive]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Boot / shutdown animation for secondary value (always numeric)
+  useEffect(() => {
+    if (secondValue === undefined) return;
+    if (timer2Ref.current) clearInterval(timer2Ref.current);
+
+    if (!isActive) {
+      if (isAnimating2Ref.current) {
+        isAnimating2Ref.current = false;
+        setDisplay2('—');
+        return;
+      }
+
+      const snapshot = display2Ref.current;
+      if (snapshot === '—') return;
+
+      const numVal = parseFloat(snapshot);
+      if (isNaN(numVal)) { setDisplay2('—'); return; }
+
+      const hasDecimal = snapshot.includes('.');
+      isAnimating2Ref.current = true;
+      let step = 0;
+      const STEPS = 36;
+      timer2Ref.current = setInterval(() => {
+        step++;
+        const t   = step / STEPS;
+        const cur = numVal * (1 - Math.pow(t, 3));
+        setDisplay2(hasDecimal ? cur.toFixed(1) : String(Math.round(cur)));
+        if (step >= STEPS) {
+          clearInterval(timer2Ref.current);
+          isAnimating2Ref.current = false;
+          setDisplay2('—');
+        }
+      }, 33);
+      return;
+    }
+
+    // Boot: if no data yet, show — without animating
+    if (secondValue === null || secondValue === undefined) {
+      setDisplay2('—');
+      return;
+    }
+
+    const numVal     = parseFloat(secondValue);
+    const hasDecimal = String(secondValue).includes('.');
+    isAnimating2Ref.current = true;
+    let step = 0;
+    const STEPS = 36;
+    timer2Ref.current = setInterval(() => {
+      step++;
+      const t     = step / STEPS;
+      const eased = 1 - Math.pow(1 - t, 3);
+      const cur   = numVal * eased;
+      setDisplay2(hasDecimal ? cur.toFixed(1) : String(Math.round(cur)));
+      if (step >= STEPS) {
+        clearInterval(timer2Ref.current);
+        isAnimating2Ref.current = false;
+        setDisplay2(String(secondValue));
+      }
+    }, 33);
+
+    return () => { if (timer2Ref.current) clearInterval(timer2Ref.current); };
+  }, [isActive]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Live value pass-through (after boot animation completes)
   useEffect(() => {
     if (isActive && !isAnimatingRef.current) {
@@ -122,19 +192,49 @@ const TelemetryModule = ({ label, value, unit, isActive, isError = false }) => {
     }
   }, [value, isActive]);
 
+  useEffect(() => {
+    if (secondValue === undefined) return;
+    if (isActive && !isAnimating2Ref.current) {
+      setDisplay2(secondValue !== null ? String(secondValue) : '—');
+    }
+  }, [secondValue, isActive]);
+
+  const hasDualValues = secondValue !== undefined;
+
   return (
     <div className="technic-module p-4">
       <div className="section-label">{label}</div>
-      <div className="flex items-end gap-1.5 mt-1">
-        <span className={`font-mono font-bold text-2xl transition-colors duration-500 ${
-          isActive ? (isError ? 'text-danger-text' : 'text-accent') : 'text-primary-muted'
-        }`}>
-          {displayValue}
-        </span>
-        {unit && isActive && (
-          <span className="font-mono text-xs text-primary-muted mb-1">{unit}</span>
-        )}
-      </div>
+      {hasDualValues ? (
+        <div className="flex items-end gap-4 mt-1">
+          <span className={`font-mono font-bold text-2xl transition-colors duration-500 ${
+            isActive ? (isError ? 'text-danger-text' : 'text-accent') : 'text-primary-muted'
+          }`}>
+            {displayValue}
+          </span>
+          <span className="font-mono font-bold text-2xl text-primary">/</span>
+          <div className="flex items-end gap-1.5">
+            <span className={`font-mono font-bold text-2xl transition-colors duration-500 ${
+              isActive ? (isError ? 'text-danger-text' : 'text-accent') : 'text-primary-muted'
+            }`}>
+              {displaySecondValue}
+            </span>
+            {secondUnit && (
+              <span className="font-mono text-xs text-primary-muted mb-1">{secondUnit}</span>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-end gap-1.5 mt-1">
+          <span className={`font-mono font-bold text-2xl transition-colors duration-500 ${
+            isActive ? (isError ? 'text-danger-text' : 'text-accent') : 'text-primary-muted'
+          }`}>
+            {displayValue}
+          </span>
+          {unit && (
+            <span className="font-mono text-xs text-primary-muted mb-1">{unit}</span>
+          )}
+        </div>
+      )}
       <div className="flex items-center gap-1.5 mt-2">
         <span
           className={`inline-block w-3 h-3 rounded-full transition-all duration-500 ${
@@ -268,7 +368,8 @@ const Home = () => {
             <TelemetryModule
               label="Connection Status"
               value={connectionLabel}
-              unit={downlink != null ? `${downlink} Mbps` : ''}
+              secondValue={downlink}
+              secondUnit="Mbps"
               isActive={isPowerEngaged}
               isError={!isOnline}
             />
@@ -281,7 +382,7 @@ const Home = () => {
             <TelemetryModule
               label="Ongoing Projects"
               value={ongoingProjectsCount ?? '—'}
-              unit="active"
+              unit=""
               isActive={isPowerEngaged}
             />
           </div>
