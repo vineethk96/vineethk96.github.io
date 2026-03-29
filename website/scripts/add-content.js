@@ -84,11 +84,6 @@ async function addProject() {
   const technologies = await question('Technologies used (comma-separated): ');
   const github = await question('GitHub URL (optional): ');
   const demo = await question('Demo URL (optional): ');
-  const challenges = await question('Technical challenges (optional): ');
-  const solutions = await question('Solutions implemented (optional): ');
-  const outcomes = await question('Project outcomes (optional): ');
-  const learnings = await question('Key learnings (optional): ');
-  
   // For SystemMap
   const includeInMap = await question('Include in SystemMap? (y/n): ');
   let map_color = '';
@@ -126,10 +121,6 @@ async function addProject() {
         caption: 'Project overview'
       }
     ],
-    ...(challenges && { challenges }),
-    ...(solutions && { solutions }),
-    ...(outcomes && { outcomes }),
-    ...(learnings && { learnings })
   };
 
   return { type: 'project', data: projectData };

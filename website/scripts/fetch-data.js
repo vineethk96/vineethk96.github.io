@@ -174,8 +174,6 @@ async function fetchProjects() {
 
   const rawProjects = await sanityClient.fetch(query);
 
-  // DEBUG: log cad_camera_view for each project
-  rawProjects.forEach(p => console.log(`[DEBUG] ${p.id}: cad_camera_view =`, p.cad_camera_view));
 
   // ESM-only package: dynamic import required inside CommonJS async function
   const { toHTML } = await import('@portabletext/to-html');
