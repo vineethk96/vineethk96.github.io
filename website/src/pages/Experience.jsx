@@ -227,7 +227,7 @@ const Experience = () => {
           <p className="font-mono text-xs font-bold text-accent tracking-widest mb-2 uppercase">
             System_Documentation // Vol_01
           </p>
-          <h1 className="font-heading font-extrabold text-5xl sm:text-7xl text-primary tracking-tighter uppercase leading-none">
+          <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-7xl text-primary tracking-tighter uppercase leading-none">
             Experience:<br />
             <span
               className="italic text-accent"

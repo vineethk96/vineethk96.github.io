@@ -102,7 +102,7 @@ const BlogDetail = () => {
           <p className="font-mono text-xs text-primary tracking-widest uppercase mb-3">
             FIELD_NOTE_REF: {blog.publish_date}
           </p>
-          <h1 className="font-heading font-extrabold text-4xl sm:text-5xl text-primary tracking-tighter uppercase leading-none mb-4">
+          <h1 className="font-heading font-extrabold text-2xl sm:text-4xl lg:text-5xl text-primary tracking-tighter uppercase leading-none mb-4">
             <span
               className="italic text-accent"
               style={{ textShadow: '4px 4px 0px rgba(50, 50, 50, 0.7)' }}
