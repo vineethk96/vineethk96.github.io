@@ -66,7 +66,7 @@ const About = () => {
           <p className="font-mono text-xs font-bold text-accent tracking-widest mb-2 uppercase">
             System_Documentation // Vol_01
           </p>
-          <h1 className="font-heading font-extrabold text-5xl sm:text-7xl text-primary tracking-tighter uppercase leading-none">
+          <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-7xl text-primary tracking-tighter uppercase leading-none">
             System_Manual:<br />
             <span
               className="italic text-accent"
@@ -259,7 +259,7 @@ const About = () => {
         {/* Skills & Tech Inventory */}
         <motion.section variants={fadeUp} custom={5} className="mt-12 w-full">
           <div className="mb-8 border-l-4 border-accent pl-4">
-            <h2 className="font-heading font-bold text-3xl tracking-tight uppercase flex items-center gap-3 text-primary">
+            <h2 className="font-heading font-bold text-xl sm:text-3xl tracking-tight uppercase flex items-center gap-3 text-primary">
               <LayoutGrid className="w-6 h-6" aria-hidden="true" />
               Skills_&amp;_Tech_Inventory
             </h2>
