@@ -253,7 +253,9 @@ const TelemetryModule = ({ label, value, unit, secondValue, secondUnit, isActive
 };
 
 const Home = () => {
-  const [isPowerEngaged, setIsPowerEngaged] = useState(false);
+  const [isPowerEngaged, setIsPowerEngaged] = useState(
+    () => localStorage.getItem('faderPowerEngaged') === 'true'
+  );
   const { track } = useAnalytics();
   const { isOnline, connectionLabel, downlink, uptimePercent } = useConnectionStatus();
   const { weeklyCommits, currentStreak, ongoingProjectsCount, contributionsByDay } = useGitHubData();
@@ -263,6 +265,7 @@ const Home = () => {
   const handlePowerToggle = (next) => {
     const value = typeof next === 'boolean' ? next : !isPowerEngaged;
     setIsPowerEngaged(value);
+    localStorage.setItem('faderPowerEngaged', value);
     track('hero_power_engaged', { state: value ? 'active' : 'standby' });
   };
 
