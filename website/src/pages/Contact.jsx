@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Calendar, ExternalLink, MessageSquare } from 'lucide-react';
+import { Calendar, ExternalLink } from 'lucide-react';
 import { CONTACT_INFO, EXTERNAL_LINKS } from '../data/constants';
 import { useAnalytics } from '../hooks/useAnalytics';
 
@@ -13,30 +13,42 @@ const fadeUp = {
   }),
 };
 
+const CALENDLY_URL = 'https://calendly.com/vineethkirandumkara/30min?hide_landing_page_details=1&hide_gdpr_banner=1&background_color=fbf9f4&text_color=031632&primary_color=ffbf00';
+
 const Contact = () => {
   const { track } = useAnalytics();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
+  const widgetRef = useRef(null);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    const initWidget = () => {
+      if (!widgetRef.current || !window.Calendly) return;
+      widgetRef.current.innerHTML = '';
+      window.Calendly.initInlineWidget({
+        url: CALENDLY_URL,
+        parentElement: widgetRef.current,
+      });
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.name.trim() || formData.name.length > 100) return;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return;
-    if (!formData.subject.trim() || formData.subject.length > 200) return;
-    if (!formData.message.trim() || formData.message.length > 5000) return;
-    track('contact_form_submitted');
-  };
+    const existingScript = document.getElementById('calendly-script');
+    if (existingScript) {
+      if (window.Calendly) {
+        initWidget();
+      } else {
+        existingScript.addEventListener('load', initWidget);
+      }
+    } else {
+      const script = document.createElement('script');
+      script.id = 'calendly-script';
+      script.src = 'https://assets.calendly.com/assets/external/widget.js';
+      script.async = true;
+      script.onload = initWidget;
+      document.body.appendChild(script);
+    }
 
-  const inputClass =
-    'w-full px-4 py-3 border-2 border-primary/20 bg-background text-primary font-body text-sm rounded-xl focus:border-primary focus:outline-none transition-colors duration-200 placeholder:text-primary-muted';
+    return () => {
+      if (widgetRef.current) widgetRef.current.innerHTML = '';
+    };
+  }, []);
 
   return (
     <motion.div
@@ -149,81 +161,14 @@ const Contact = () => {
             </motion.div>
           </div>
 
-          {/* Right — Contact Form */}
+          {/* Right — Calendly Embed */}
           <motion.div variants={fadeUp} custom={2}>
-            <div className="section-label mb-3">Send Message</div>
-            <form onSubmit={handleSubmit} className="technic-module p-5 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="name" className="section-label block mb-1">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your name"
-                    className={inputClass}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="section-label block mb-1">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="you@email.com"
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-              <div>
-                <label htmlFor="subject" className="section-label block mb-1">Subject</label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                  placeholder="What would you like to discuss?"
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label htmlFor="message" className="section-label block mb-1">Message</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={6}
-                  placeholder="Tell me about your project or opportunity…"
-                  className={`${inputClass} resize-vertical`}
-                />
-              </div>
-              <motion.button
-                type="submit"
-                whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 border-2 border-primary bg-primary text-background rounded-xl font-mono text-xs uppercase tracking-wider hover:bg-primary/80 transition-colors duration-200"
-                style={{ boxShadow: '4px 4px 0px 0px #FFBF00' }}
-              >
-                <Send className="w-4 h-4" aria-hidden="true" />
-                Send Message
-              </motion.button>
-            </form>
-
-            {/* Response time */}
-            <div className="mt-4 flex items-start gap-3 px-1">
-              <MessageSquare className="w-4 h-4 text-primary-muted flex-shrink-0 mt-0.5" aria-hidden="true" />
-              <p className="font-body text-xs text-primary-muted leading-relaxed">
-                I typically respond within 24 hours. For urgent matters, reach out via LinkedIn.
-              </p>
+            <div className="section-label mb-3">Schedule a Meeting</div>
+            <div className="technic-module overflow-hidden">
+              <div
+                ref={widgetRef}
+                style={{ minWidth: '320px', height: '700px' }}
+              />
             </div>
           </motion.div>
         </div>
