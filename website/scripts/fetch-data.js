@@ -485,7 +485,7 @@ export const PERSONAL_INFO = ${JSON.stringify(PERSONAL_INFO, null, 2)};
 export const SOCIAL_LINKS = ${JSON.stringify(SOCIAL_LINKS, null, 2)};
 
 export const EXTERNAL_LINKS = {
-  calendly: ${JSON.stringify(info.calendlyUrl || '')},
+  calendly: ${JSON.stringify(info.calendlyUrl || 'https://calendly.com/vineethkirandumkara')},
   resume: ${JSON.stringify(info.resumeUrl || '')}
 };
 
