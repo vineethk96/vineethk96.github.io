@@ -18,13 +18,13 @@ export const itemVariants = {
 const getStatusColor = (status) => {
   switch (status) {
     case 'Completed':
-      return 'bg-green-500/90 text-white dark:bg-green-600/90';
+      return 'bg-green-500/90 text-white';
     case 'In Progress':
-      return 'bg-yellow-500/90 text-gray-900 dark:bg-yellow-600/90 dark:text-white';
+      return 'bg-yellow-500/90 text-gray-900';
     case 'Planning':
-      return 'bg-blue-500/90 text-white dark:bg-blue-600/90';
+      return 'bg-blue-500/90 text-white';
     default:
-      return 'bg-gray-500/90 text-white dark:bg-gray-600/90';
+      return 'bg-gray-500/90 text-white';
   }
 };
 
@@ -55,7 +55,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
       whileHover={{ y: -5 }}
       className="group"
     >
-      <div className={`relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 ${variant === 'grid' ? 'h-full flex flex-col' : ''}`}>
+      <div className={`relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 ${variant === 'grid' ? 'h-full flex flex-col' : ''}`}>
         {/* Image or Gradient header */}
         <div className="relative h-48 lg:h-56 overflow-hidden">
           {featuredImage ? (
@@ -109,10 +109,10 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
 
         {/* Content */}
         <div className={`p-6 ${variant === 'grid' ? 'flex-1 flex flex-col' : ''}`}>
-          <h3 className="text-xl font-semibold mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+          <h3 className="text-xl font-semibold mb-3 group-hover:text-primary-600 transition-colors duration-300">
             {project.title}
           </h3>
-          <p className={`text-primary-sub dark:text-gray-300 mb-4 ${variant === 'grid' ? 'flex-1 text-sm leading-relaxed' : 'line-clamp-3'}`}>
+          <p className={`text-primary-sub mb-4 ${variant === 'grid' ? 'flex-1 text-sm leading-relaxed' : 'line-clamp-3'}`}>
             {project.description}
           </p>
 
@@ -121,7 +121,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
             {tags.map((tag) => (
               <span
                 key={tag}
-                className={`py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-primary-sub dark:text-gray-300 rounded-full ${variant === 'grid' ? 'px-2' : 'px-3'}`}
+                className={`py-1 text-xs font-medium bg-gray-100 text-primary-sub rounded-full ${variant === 'grid' ? 'px-2' : 'px-3'}`}
               >
                 {tag}
               </span>
@@ -137,7 +137,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 text-primary-sub dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300"
+                    className="p-2 text-primary-sub hover:text-primary-600 transition-colors duration-300"
                     aria-label={`${project.title} on GitHub`}
                   >
                     <Github className="w-5 h-5" aria-hidden="true" />
@@ -148,7 +148,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
                     href={project.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 text-primary-sub dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300"
+                    className="p-2 text-primary-sub hover:text-primary-600 transition-colors duration-300"
                     aria-label={`${project.title} live demo`}
                   >
                     <ExternalLink className="w-5 h-5" aria-hidden="true" />
@@ -157,7 +157,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
               </div>
               <Link
                 to={projectLink}
-                className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors duration-300 text-sm"
+                className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium transition-colors duration-300 text-sm"
               >
                 <span>Case Study</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
@@ -166,7 +166,7 @@ const ProjectCard = ({ project, variant = 'grid' }) => {
           ) : (
             <Link
               to={projectLink}
-              className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors duration-300"
+              className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 font-medium transition-colors duration-300"
             >
               <span>Learn more</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
