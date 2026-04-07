@@ -128,7 +128,7 @@ const BlogDetail = () => {
           <div className="lg:col-span-3 space-y-5">
             <motion.div variants={fadeUp} custom={3} className="technic-module p-6">
               <div
-                className="prose prose-sm max-w-none text-primary-sub prose-headings:font-heading prose-headings:text-primary prose-headings:font-bold prose-strong:text-primary prose-a:text-accent prose-code:text-primary/80 prose-code:bg-faint prose-code:font-mono"
+                className="prose prose-sm max-w-none text-primary-sub prose-headings:font-heading prose-headings:text-primary prose-headings:font-bold prose-strong:text-primary prose-a:text-primary dark:prose-invert prose-code:text-primary/80 prose-code:bg-faint prose-code:font-mono prose-img:mx-auto prose-img:block prose-figure:mx-auto prose-blockquote:[color:var(--tw-prose-body)]"
               >
                 {blog.content ? (
                   <div dangerouslySetInnerHTML={createMarkup(blog.content)} />

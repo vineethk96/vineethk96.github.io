@@ -335,14 +335,22 @@ async function fetchBlogPosts() {
           components: {
             types: {
               image: ({ value }) => {
-                if (!value?.asset?._ref) return '';
-                const src = urlFor(value).width(800).auto('format').quality(85).url();
                 const alt = sanitizeAttr(value.alt);
                 const caption = sanitizeAttr(value.caption);
+
+                // External GIF URL takes priority over uploaded Sanity asset
+                const src = value.gifUrl
+                  ? sanitizeAttr(value.gifUrl)
+                  : value?.asset?._ref
+                    ? urlFor(value).width(800).auto('format').quality(85).url()
+                    : null;
+
+                if (!src) return '';
+
                 if (caption) {
-                  return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
+                  return `<figure><img src="${src}" alt="${alt}" loading="lazy" /><figcaption>${caption}</figcaption></figure>`;
                 }
-                return `<figure><img src="${src}" alt="${alt}" /></figure>`;
+                return `<figure><img src="${src}" alt="${alt}" loading="lazy" /></figure>`;
               },
               codeBlock: ({ value }) => {
                 const language = sanitizeAttr(value.language ?? 'other');
