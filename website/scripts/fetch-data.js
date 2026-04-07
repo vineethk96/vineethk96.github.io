@@ -132,7 +132,7 @@ async function fetchEducation() {
 async function fetchProjects() {
   console.log('📡 Fetching projects (Sanity)...');
 
-  const query = `*[_type == "project"] | order(startYear desc) {
+  const query = `*[_type == "project" && !(_id in path('drafts.**'))] | order(startYear desc) {
     "id": slug.current,
     title,
     description,
@@ -240,7 +240,7 @@ async function fetchProjects() {
  */
 async function fetchSystemMapLinks() {
   console.log('📡 Fetching system map links (Sanity)...');
-  const query = `*[_type == "project" && count(projectLinks) > 0] {
+  const query = `*[_type == "project" && !(_id in path('drafts.**')) && count(projectLinks) > 0] {
     "id": slug.current,
     "links": projectLinks[] {
       "target": target->slug.current,
@@ -295,7 +295,7 @@ async function fetchPersonalInfo() {
 async function fetchBlogPosts() {
   console.log('📡 Fetching blog posts (Sanity)...');
 
-  const query = `*[_type == "blogPost"] | order(publishedAt desc) {
+  const query = `*[_type == "blogPost" && !(_id in path('drafts.**'))] | order(publishedAt desc) {
     "id": slug.current,
     title,
     "publish_date": publishedAt,
@@ -335,14 +335,22 @@ async function fetchBlogPosts() {
           components: {
             types: {
               image: ({ value }) => {
-                if (!value?.asset?._ref) return '';
-                const src = urlFor(value).width(800).auto('format').quality(85).url();
                 const alt = sanitizeAttr(value.alt);
                 const caption = sanitizeAttr(value.caption);
+
+                // External GIF URL takes priority over uploaded Sanity asset
+                const src = value.gifUrl
+                  ? sanitizeAttr(value.gifUrl)
+                  : value?.asset?._ref
+                    ? urlFor(value).width(800).auto('format').quality(85).url()
+                    : null;
+
+                if (!src) return '';
+
                 if (caption) {
-                  return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
+                  return `<figure><img src="${src}" alt="${alt}" loading="lazy" /><figcaption>${caption}</figcaption></figure>`;
                 }
-                return `<figure><img src="${src}" alt="${alt}" /></figure>`;
+                return `<figure><img src="${src}" alt="${alt}" loading="lazy" /></figure>`;
               },
               codeBlock: ({ value }) => {
                 const language = sanitizeAttr(value.language ?? 'other');
@@ -399,6 +407,10 @@ function generateConstantsFile(projects, workExperience, education, blogPosts, s
   const info = personalInfo || {};
   const timestamp = new Date().toISOString();
 
+  // Strip dark: prefixed Tailwind classes (site is light-mode only)
+  const stripDarkClasses = (str) =>
+    str ? str.split(' ').filter(c => !c.startsWith('dark:')).join(' ') : str;
+
   // Reconstruct keyed SOCIAL_LINKS object from Sanity array
   const SOCIAL_LINKS = {};
   (info.socialLinks || []).forEach(link => {
@@ -407,7 +419,7 @@ function generateConstantsFile(projects, workExperience, education, blogPosts, s
       displayUrl: link.displayUrl,
       icon: link.icon,
       label: link.label,
-      color: link.color,
+      color: stripDarkClasses(link.color),
     };
   });
 

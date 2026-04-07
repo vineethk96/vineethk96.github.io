@@ -102,6 +102,12 @@ export const blogPostType = defineType({
           fields: [
             defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
             defineField({ name: 'caption', title: 'Caption', type: 'string' }),
+            defineField({
+              name: 'gifUrl',
+              title: 'GIF URL (external)',
+              type: 'url',
+              description: 'Paste an external GIF link here. Overrides the uploaded image above.',
+            }),
           ],
         },
         {
