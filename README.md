@@ -282,6 +282,33 @@ docker compose exec portfolio-dev npm run deploy
 
 This builds the production bundle (including a fresh `fetch-data` run) and pushes `website/build/` to the `gh-pages` branch, making the site live at `https://vineethk96.github.io`.
 
+### Deploying Sanity Studio Schema Changes
+
+Schema changes (new block types, new fields, updated validation) live in `sanity_cms/schemaTypes/`. After editing them, you must redeploy the Studio so the updated editor UI is available at `vineethk96-portfolio.sanity.studio`.
+
+The deploy **must run inside the `sanity-studio` container** — the Sanity CLI and its `node_modules` live in the `sanity_node_modules` Docker volume, not on the host.
+
+```bash
+# 1. Exec into the container with an interactive TTY
+docker exec -it sanity-studio sh
+
+# 2. Inside the container, deploy the Studio
+npm run deploy
+```
+
+The Sanity auth token is shared from the host via the `~/.config/sanity` volume mount, so no separate login is needed.
+
+> **Gotcha**: `studioHost` must be set at the **top level** of `defineCliConfig` in `sanity_cms/sanity.cli.ts`, not nested inside `deployment`. If it is nested, the CLI ignores it and shows an interactive hostname prompt that blocks in a non-interactive shell.
+
+**Full end-to-end workflow after a schema change:**
+
+| Step | Command | Where |
+|---|---|---|
+| 1. Deploy updated Studio | `docker exec -it sanity-studio sh` → `npm run deploy` | Inside container |
+| 2. Add/edit content in Studio | Open `vineethk96-portfolio.sanity.studio` | Browser |
+| 3. Pull changes to local | `docker compose exec portfolio-dev npm run fetch-data` | Host terminal |
+| 4. Deploy portfolio site | `git push origin main` or `docker compose exec portfolio-dev npm run deploy` | Host terminal |
+
 ### Custom Domain (Optional)
 1. Add a `CNAME` file to `website/public/` with your domain
 2. Configure DNS with your domain provider

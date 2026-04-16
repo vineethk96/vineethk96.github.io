@@ -1,4 +1,5 @@
 import { defineField, defineType, defineArrayMember } from 'sanity'
+import { richContentBlocks } from './richContentBlocks'
 import { ProjectLinkInput } from '../components/ProjectLinkInput'
 import { BacklinksInput } from '../components/BacklinksInput'
 
@@ -61,17 +62,7 @@ export const projectType = defineType({
       name: 'detailedDescription',
       title: 'Detailed Description',
       type: 'array',
-      of: [
-        { type: 'block' },
-        {
-          type: 'image',
-          options: { hotspot: true },
-          fields: [
-            defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
-            defineField({ name: 'caption', title: 'Caption', type: 'string' }),
-          ],
-        },
-      ],
+      of: richContentBlocks,
     }),
     defineField({
       name: 'images',
