@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Github, ExternalLink, User } from 'lucide-react';
+import { ArrowRight, Github, ExternalLink, User, ChevronDown } from 'lucide-react';
 import FaderSwitch from '../components/ui/fader-switch';
 import { PERSONAL_INFO, SOCIAL_LINKS, PROJECTS } from '../data/constants';
 import { useAnalytics } from '../hooks/useAnalytics';
@@ -278,12 +278,62 @@ const Home = () => {
     >
       <div className="max-w-7xl mx-auto">
 
-        {/* === HERO NAME TITLE === */}
-        <h1 className="font-heading font-bold text-5xl sm:text-7xl lg:text-8xl xl:text-9xl text-primary leading-none mb-4 tracking-tight drop-shadow-[8px_8px_0px_#FFBF00]">
+        {/* === MOBILE HERO (hidden on md+) === */}
+        <div className="flex md:hidden flex-col items-center justify-between min-h-[calc(100vh-7rem)] py-8">
+          {/* Centered photo card */}
+          <div className="flex-1 flex items-center justify-center w-full">
+            <div className="relative flex-shrink-0">
+              <div className="absolute inset-0 bg-primary translate-x-2 translate-y-2 rounded-xl" />
+              <div className="relative w-64 h-80 border-[3px] border-primary rounded-xl overflow-hidden flex flex-col bg-primary/5">
+                <div className="flex-1 relative group overflow-hidden bg-faint">
+                  <div className="absolute inset-0 flex items-center justify-center text-primary/20 pointer-events-none">
+                    <User className="w-20 h-20" aria-hidden="true" />
+                  </div>
+                  <img
+                    src={PERSONAL_INFO?.headshotUrl || "/headshot.jpg"}
+                    alt="Vineeth Kirandumkara"
+                    className="w-full h-full object-cover brightness-100"
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                  <div className="absolute top-2 left-2 flex flex-col gap-1 pointer-events-none">
+                    <div className="w-5 h-1 bg-accent" />
+                    <div className="w-3 h-1 bg-accent" />
+                  </div>
+                  <div className="absolute top-2 right-2 bg-accent px-1.5 py-0.5 rounded text-[8px] font-mono font-black text-primary pointer-events-none">
+                    OP_01
+                  </div>
+                </div>
+                <div className="bg-primary px-3 py-2 flex justify-between items-center">
+                  <span className="text-[9px] font-mono font-black tracking-widest text-background/70 uppercase">
+                    System_Architect_ID
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Name + tagline */}
+          <div className="w-full">
+            <h1 className="font-heading font-bold text-5xl text-primary leading-none mb-3 tracking-tight drop-shadow-[8px_8px_0px_#FFBF00]">
+              {PERSONAL_INFO?.name || 'Vineeth_Kirandumkara'}
+            </h1>
+            <p className="font-mono text-sm text-primary-sub uppercase tracking-widest">
+              {PERSONAL_INFO?.tagline || 'IoT Systems Engineer & Product Designer'}
+            </p>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="flex flex-col items-center animate-bounce text-primary/50 mt-6">
+            <ChevronDown className="w-8 h-8" aria-hidden="true" />
+          </div>
+        </div>
+
+        {/* === HERO NAME TITLE (hidden on mobile) === */}
+        <h1 className="hidden md:block font-heading font-bold text-5xl sm:text-7xl lg:text-8xl xl:text-9xl text-primary leading-none mb-4 tracking-tight drop-shadow-[8px_8px_0px_#FFBF00]">
           {PERSONAL_INFO?.name || 'Vineeth_Kirandumkara'}
         </h1>
 
-        <p className="font-mono text-sm sm:text-xl text-primary-sub uppercase tracking-widest mb-8">
+        <p className="hidden md:block font-mono text-sm sm:text-xl text-primary-sub uppercase tracking-widest mb-8">
           {PERSONAL_INFO?.tagline || 'IoT Systems Engineer & Product Designer'}
         </p>
 
@@ -297,8 +347,8 @@ const Home = () => {
               {/* Top row: headshot + bio text */}
               <div className="flex flex-col md:flex-row items-start gap-8 mb-6">
 
-                {/* Headshot */}
-                <div className="relative flex-shrink-0">
+                {/* Headshot — hidden on mobile (shown in mobile hero above) */}
+                <div className="hidden md:block relative flex-shrink-0">
                   {/* Chunky shadow offset */}
                   <div className="absolute inset-0 bg-primary translate-x-2 translate-y-2 rounded-xl" />
 
