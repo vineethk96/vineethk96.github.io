@@ -187,6 +187,30 @@ The SystemMap is a D3.js force-directed graph that visualizes relationships betw
 - Deploy process: `npm run deploy` from `website/` builds and pushes to gh-pages branch
 - Requires Supabase credentials in `website/.env.local` for build step
 
+**Sanity Studio**:
+- Studio hosted at `https://vineethk96-portfolio.sanity.studio/`
+- Deploy process must run **inside the `sanity-studio` Docker container** — the Sanity CLI and `node_modules` live in the `sanity_node_modules` named volume, not on the host
+- Sanity auth token is shared from the host via the `~/.config/sanity` volume mount — no separate login needed inside the container
+
+```bash
+# Exec into the container interactively (required — non-interactive shells block the CLI)
+docker exec -it sanity-studio sh
+
+# Inside the container:
+npm run deploy
+```
+
+- `studioHost` is set to `vineethk96-portfolio` in `sanity_cms/sanity.cli.ts` — this must remain at the **top level** of `defineCliConfig`, not nested under `deployment`, otherwise the CLI ignores it and prompts interactively
+- Schema changes (new block types, fields) take effect in the Studio UI immediately after deploy
+- After editing content in Studio, run `npm run fetch-data` from `website/` to pull changes into `constants.js`
+
+**Full content update workflow** (schema change → live site):
+1. Edit `sanity_cms/schemaTypes/` files
+2. `docker exec -it sanity-studio sh` → `npm run deploy` (publishes updated Studio)
+3. Add/edit content in the Studio at `vineethk96-portfolio.sanity.studio`
+4. `cd website && npm run fetch-data` (pulls Sanity data → regenerates `constants.js`)
+5. `npm run deploy` from `website/` (builds + pushes to GitHub Pages)
+
 ## Common Patterns
 
 **Icon Usage**:

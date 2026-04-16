@@ -247,3 +247,21 @@
   letter-spacing: 2px;
   color: rgba(3, 22, 50, 0.847);
 }
+
+.audio-clip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.audio-clip audio {
+  max-width: 100%;
+}
+
+.audio-caption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+}

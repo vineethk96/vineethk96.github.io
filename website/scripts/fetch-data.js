@@ -150,7 +150,8 @@ async function fetchProjects() {
       ...,
       asset,
       crop,
-      hotspot
+      hotspot,
+      "audioFile": audioFile { "asset": asset-> { url } }
     },
     images[] {
       alt,
@@ -198,6 +199,19 @@ async function fetchProjects() {
                   return `<figure><img src="${src}" alt="${alt}" /><figcaption>${caption}</figcaption></figure>`;
                 }
                 return `<img src="${src}" alt="${alt}" />`;
+              },
+              audioClip: ({ value }) => {
+                const src = value?.audioFile?.asset?.url
+                  ? sanitizeAttr(value.audioFile.asset.url)
+                  : value.audioUrl
+                    ? sanitizeAttr(value.audioUrl)
+                    : null;
+                if (!src) return '';
+                const title = sanitizeAttr(value.title ?? '');
+                const caption = value.caption
+                  ? `<figcaption class="audio-caption">${sanitizeAttr(value.caption)}</figcaption>`
+                  : '';
+                return `<figure class="audio-clip"><audio controls preload="metadata" src="${src}"></audio>${caption}</figure>`;
               },
             },
           },
@@ -303,7 +317,7 @@ async function fetchBlogPosts() {
     excerpt,
     tags,
     "coverImage": coverImage { alt, caption, asset, crop, hotspot },
-    "body": body[] { ..., asset, crop, hotspot },
+    "body": body[] { ..., asset, crop, hotspot, "audioFile": audioFile { "asset": asset-> { url } } },
     "related_projects": relatedProjects[]->slug.current
   }`;
 
@@ -365,6 +379,19 @@ async function fetchBlogPosts() {
                 const emoji = CALLOUT_EMOJIS[value.variant ?? 'info'] ?? 'ℹ️';
                 const body = sanitizeAttr(value.content);
                 return `<div class="callout callout-${variant}"><span class="callout-icon">${emoji}</span><div class="callout-body">${body}</div></div>`;
+              },
+              audioClip: ({ value }) => {
+                const src = value?.audioFile?.asset?.url
+                  ? sanitizeAttr(value.audioFile.asset.url)
+                  : value.audioUrl
+                    ? sanitizeAttr(value.audioUrl)
+                    : null;
+                if (!src) return '';
+                const title = sanitizeAttr(value.title ?? '');
+                const caption = value.caption
+                  ? `<figcaption class="audio-caption">${sanitizeAttr(value.caption)}</figcaption>`
+                  : '';
+                return `<figure class="audio-clip"><audio controls preload="metadata" src="${src}"></audio>${caption}</figure>`;
               },
             },
           },

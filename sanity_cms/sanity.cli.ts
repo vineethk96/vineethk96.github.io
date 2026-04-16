@@ -5,6 +5,7 @@ export default defineCliConfig({
     projectId: 'jwneocyf',
     dataset: 'production'
   },
+  studioHost: 'vineethk96-portfolio',
   deployment: {
     /**
      * Enable auto-updates for studios.

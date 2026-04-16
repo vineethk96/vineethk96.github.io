@@ -16,8 +16,9 @@ const createMarkup = (html) => ({
       'img', 'figure', 'figcaption',
       'table', 'thead', 'tbody', 'tr', 'td', 'th',
       'div', 'span',
+      'audio', 'source',
     ],
-    ALLOWED_ATTR: ['href', 'target', 'rel', 'alt', 'src', 'width', 'height', 'class'],
+    ALLOWED_ATTR: ['href', 'target', 'rel', 'alt', 'src', 'width', 'height', 'class', 'controls', 'preload', 'type'],
     FORCE_BODY: true,
   }),
 });
