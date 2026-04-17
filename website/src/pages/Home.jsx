@@ -314,7 +314,7 @@ const Home = () => {
 
           {/* Name + tagline */}
           <div className="w-full">
-            <h1 className="font-heading font-bold text-5xl text-primary leading-none mb-3 tracking-tight drop-shadow-[8px_8px_0px_#FFBF00]">
+            <h1 className="font-heading font-bold text-5xl text-primary leading-none mb-3 tracking-tight shadow-accent-fluid">
               {PERSONAL_INFO?.name || 'Vineeth_Kirandumkara'}
             </h1>
             <p className="font-mono text-sm text-primary-sub uppercase tracking-widest">
@@ -329,7 +329,7 @@ const Home = () => {
         </div>
 
         {/* === HERO NAME TITLE (hidden on mobile) === */}
-        <h1 className="hidden md:block font-heading font-bold text-5xl sm:text-7xl lg:text-8xl xl:text-9xl text-primary leading-none mb-4 tracking-tight drop-shadow-[8px_8px_0px_#FFBF00]">
+        <h1 className="hidden md:block font-heading font-bold text-5xl sm:text-7xl lg:text-8xl xl:text-9xl text-primary leading-none mb-4 tracking-tight shadow-accent-fluid">
           {PERSONAL_INFO?.name || 'Vineeth_Kirandumkara'}
         </h1>
 

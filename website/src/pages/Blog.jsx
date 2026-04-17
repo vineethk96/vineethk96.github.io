@@ -34,8 +34,7 @@ const Blog = () => {
           <h1 className="font-heading font-extrabold text-5xl sm:text-7xl text-primary tracking-tighter uppercase leading-none">
             Blog:<br />
             <span
-              className="italic text-accent"
-              style={{ textShadow: '4px 4px 0px rgba(50, 50, 50, 0.7)' }}
+              className="italic text-accent text-shadow-dark-fluid"
             >
               Field_Notes
             </span>

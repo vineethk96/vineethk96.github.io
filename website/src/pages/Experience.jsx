@@ -35,8 +35,7 @@ const ExperienceCard = ({ exp, index, isLeft, nodeRef }) => {
           </motion.div>
         ) : (
           <span
-            className="font-heading font-extrabold text-5xl text-primary tracking-tighter uppercase select-none"
-            style={{ textShadow: isCurrent ? '6px 6px 0px #FFBF00' : 'none' }}
+            className={`font-heading font-extrabold text-5xl text-primary tracking-tighter uppercase select-none${isCurrent ? ' text-shadow-accent-fluid' : ''}`}
             aria-hidden="true"
           >
             {yearLabel}
@@ -75,8 +74,7 @@ const ExperienceCard = ({ exp, index, isLeft, nodeRef }) => {
           </motion.div>
         ) : (
           <span
-            className="font-heading font-extrabold text-5xl text-primary tracking-tighter uppercase select-none"
-            style={{ textShadow: isCurrent ? '6px 6px 0px #FFBF00' : 'none' }}
+            className={`font-heading font-extrabold text-5xl text-primary tracking-tighter uppercase select-none${isCurrent ? ' text-shadow-accent-fluid' : ''}`}
             aria-hidden="true"
           >
             {yearLabel}
@@ -230,8 +228,7 @@ const Experience = () => {
           <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-7xl text-primary tracking-tighter uppercase leading-none">
             Experience:<br />
             <span
-              className="italic text-accent"
-              style={{ textShadow: '4px 4px 0px rgba(3, 22, 50, 0.4)' }}
+              className="italic text-accent text-shadow-dark-fluid"
             >
               Service_Record
             </span>

@@ -124,8 +124,7 @@ const Projects = () => {
           <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-7xl text-primary tracking-tighter uppercase leading-none">
             Projects:<br />
             <span
-              className="italic text-accent"
-              style={{ textShadow: '4px 4px 0px rgba(50, 50, 50, 0.7)' }}
+              className="italic text-accent text-shadow-dark-fluid"
             >
               Component_Inventory
             </span>

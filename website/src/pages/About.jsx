@@ -69,8 +69,7 @@ const About = () => {
           <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-7xl text-primary tracking-tighter uppercase leading-none">
             System_Manual:<br />
             <span
-              className="italic text-accent"
-              style={{ textShadow: '4px 4px 0px rgba(3, 22, 50, 0.4)' }}
+              className="italic text-accent text-shadow-dark-fluid"
             >
               Origins_&amp;_Pivot
             </span>
